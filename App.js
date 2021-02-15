@@ -8,6 +8,7 @@
 
 import React from 'react';
 import { StyleSheet, View, Button } from 'react-native';
+import NavigationBar from './NavigationBar';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -28,10 +29,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '40%',
     backgroundColor: 'white',
-    borderWidth: 1,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     borderColor: 'white',
+    overflow: "hidden"
   }
  });
  
@@ -49,7 +50,8 @@ const styles = StyleSheet.create({
       >
       </MapView>
       <View style={styles.menu}>
-        
+        <NavigationBar style={{backgroundColor: "red"}} />
       </View>
+      
     </View>
  );
