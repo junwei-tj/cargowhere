@@ -7,14 +7,16 @@
  */
 
 import React from 'react';
-import { StyleSheet, View, Button } from 'react-native';
-import NavigationBar from './NavigationBar';
-
+import { StyleSheet, View, Text } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+
+import StatusBar from './StatusBar';
+import NavigationBar from './NavigationBar';
 
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
+    
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
@@ -29,16 +31,20 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '40%',
     backgroundColor: 'white',
+    borderTopWidth: 1,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    borderColor: 'white',
+    borderColor: 'lightgrey',
     overflow: "hidden"
   }
  });
  
  export default () => (
     <View style={styles.container}>
-      <MapView
+      <StatusBar backgroundColor="#2EBD6B" barStyle="light-content" />
+      {/* temp view so I don't keep making requests to Google Maps */}
+      <View style={[styles.map, {backgroundColor: "grey", alignItems: 'center', justifyContent: 'center'}]}><Text>Map goes here</Text></View>
+      {/* <MapView
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={styles.map}
         region={{
@@ -48,9 +54,9 @@ const styles = StyleSheet.create({
           longitudeDelta: 0.0121,
         }}
       >
-      </MapView>
+      </MapView> */}
       <View style={styles.menu}>
-        <NavigationBar style={{backgroundColor: "red"}} />
+        <NavigationBar />
       </View>
       
     </View>
