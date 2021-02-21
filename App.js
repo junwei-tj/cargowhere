@@ -11,7 +11,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import StatusBar from './StatusBar';
-import NavigationBar from './NavigationBar';
+import BottomDisplay from './BottomDisplay';
 
 const styles = StyleSheet.create({
   container: {
@@ -37,27 +37,33 @@ const styles = StyleSheet.create({
     borderColor: 'lightgrey',
     overflow: "hidden"
   }
- });
+});
  
- export default () => (
-    <View style={styles.container}>
-      <StatusBar backgroundColor="#2EBD6B" barStyle="light-content" />
-      {/* temp view so I don't keep making requests to Google Maps */}
-      <View style={[styles.map, {backgroundColor: "grey", alignItems: 'center', justifyContent: 'center'}]}><Text>Map goes here</Text></View>
-      {/* <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-        style={styles.map}
-        region={{
-          latitude: 1.3483099,
-          longitude: 103.680946,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}
-      >
-      </MapView> */}
-      <View style={styles.menu}>
-        <NavigationBar />
-      </View>
-      
+function onTabPressed(tab) {
+
+}
+ 
+export default function App() {
+  return (
+  <View style={styles.container}>
+    <StatusBar backgroundColor="#2EBD6B" barStyle="light-content" />
+    {/* temp view so I don't keep making requests to Google Maps */}
+    <View style={[styles.map, {backgroundColor: "grey", alignItems: 'center', justifyContent: 'center'}]}><Text>Map goes here</Text></View>
+    {/* <MapView
+      provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+      style={styles.map}
+      region={{
+        latitude: 1.3483099,
+        longitude: 103.680946,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.0121,
+      }}
+    >
+    </MapView> */}
+    <View style={styles.menu}>
+      <BottomDisplay />
     </View>
- );
+    
+  </View>
+  )
+}
