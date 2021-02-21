@@ -1,5 +1,11 @@
 # Temporary readme for troubleshooting
 
+## Important Files/Folders
+- App.js: "main" file
+- BottomDisplay.js: as the name suggests
+- screens folder: where the 4 different screens are located. 
+- images folder: as the name suggests
+
 ## Set up React Native environment
 https://reactnative.dev/docs/environment-setup
 
