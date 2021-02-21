@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: 'lightgrey',
     },
-    active: {
+    activeTab: {
         borderBottomWidth: 1,
         borderBottomColor: 'blue',
     },
@@ -29,10 +29,14 @@ const styles = StyleSheet.create({
     icon: {
         width: 20,
         height: 20,
+        tintColor: 'grey',
+    },
+    activeIcon: {
+        tintColor: '#2f60f4',
     }
 })
 
-export default function BottomDisplay() {
+export default function NavigationBar() {
     const [activeTabs, setActiveTabs] = useState({
         navigation: true,
         favourites: false,
@@ -41,8 +45,10 @@ export default function BottomDisplay() {
     });
 
     // set styles for active/inactive tabs
-    const activeTabStyle = [styles.tab, styles.active];
+    const activeTabStyle = [styles.tab, styles.activeTab];
     const inactiveTabStyle = styles.tab;
+    const activeIconStyle = [styles.icon, styles.activeIcon];
+    const inactiveIconStyle = styles.icon;
 
     return (
         <View style={styles.container}>
@@ -52,7 +58,7 @@ export default function BottomDisplay() {
                     onPress={() => setActiveTabs({navigation: true, favourites: false, search: false, about: false})}
                     android_ripple={{color: "lightgrey"}}>
                     <Image
-                        style={styles.icon}
+                        style={activeTabs.navigation ? activeIconStyle : inactiveIconStyle}
                         source={require("./images/navigation_arrow.png")}
                     />
                 </Pressable>
@@ -62,7 +68,7 @@ export default function BottomDisplay() {
                     onPress={() => setActiveTabs({navigation: false, favourites: true, search: false, about: false})}
                     android_ripple={{color: "lightgrey"}}>
                     <Image
-                        style={styles.icon}
+                        style={activeTabs.favourites ? activeIconStyle : inactiveIconStyle}
                         source={require("./images/heart.png")}
                     />
                 </Pressable>
@@ -72,7 +78,7 @@ export default function BottomDisplay() {
                     onPress={() => setActiveTabs({navigation: false, favourites: false, search: true, about: false})}
                     android_ripple={{color: "lightgrey"}}>
                     <Image
-                        style={styles.icon}
+                        style={activeTabs.search ? activeIconStyle : inactiveIconStyle}
                         source={require("./images/search.png")}
                     />
                 </Pressable>
@@ -82,7 +88,7 @@ export default function BottomDisplay() {
                     onPress={() => setActiveTabs({navigation: false, favourites: false, search: false, about: true})}
                     android_ripple={{color: "lightgrey"}}>
                     <Image
-                        style={styles.icon}
+                        style={activeTabs.about ? activeIconStyle : inactiveIconStyle}
                         source={require("./images/information.png")}
                     />
                 </Pressable>

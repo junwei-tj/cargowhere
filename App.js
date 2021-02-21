@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    height: '61%',
+    height: '62%',
   },
   menu: {
     position: 'absolute',
