@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function NearbyScreen() {
+export default function AboutScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>CarGoWhere</Text>

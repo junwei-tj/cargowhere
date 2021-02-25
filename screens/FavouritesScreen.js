@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function NearbyScreen() {
+export default function FavouritesScreen() {
   return (
     <View style={styles.container}>
       <Text>Favourites Screen</Text>
