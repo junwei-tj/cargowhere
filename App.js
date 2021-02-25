@@ -9,6 +9,7 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
 
 import StatusBar from './StatusBar';
 import BottomDisplay from './BottomDisplay';
@@ -42,6 +43,11 @@ const styles = StyleSheet.create({
 function onTabPressed(tab) {}
 
 export default function App() {
+  // code for geolocation for reference
+  function currentLocation() {
+    Geolocation.getCurrentPosition((info) => console.log(info));
+  }
+  currentLocation();
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#2EBD6B" barStyle="default" />

@@ -21,3 +21,7 @@ https://stackoverflow.com/a/63766111/14092223
 ## Other troubleshooting 
 ### Installing maps (should not need to install again for this project)
 https://github.com/react-native-maps/react-native-maps/blob/master/docs/installation.md
+
+## @react-native-community/geolocation
+Used to get current device location.
+[Installation details](https://github.com/react-native-geolocation/react-native-geolocation)
