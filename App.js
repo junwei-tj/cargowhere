@@ -7,8 +7,8 @@
  */
 
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import {StyleSheet, View, Text} from 'react-native';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 
 import StatusBar from './StatusBar';
 import BottomDisplay from './BottomDisplay';
@@ -16,7 +16,7 @@ import BottomDisplay from './BottomDisplay';
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    
+
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
@@ -35,21 +35,30 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     borderColor: 'lightgrey',
-    overflow: "hidden"
-  }
+    overflow: 'hidden',
+  },
 });
- 
-function onTabPressed(tab) {
 
-}
- 
+function onTabPressed(tab) {}
+
 export default function App() {
   return (
-  <View style={styles.container}>
-    <StatusBar backgroundColor="#2EBD6B" barStyle="light-content" />
-    {/* temp view so I don't keep making requests to Google Maps */}
-    <View style={[styles.map, {backgroundColor: "grey", alignItems: 'center', justifyContent: 'center'}]}><Text>Map goes here</Text></View>
-    {/* <MapView
+    <View style={styles.container}>
+      <StatusBar backgroundColor="#2EBD6B" barStyle="default" />
+      {/* temp view so I don't keep making requests to Google Maps */}
+      <View
+        style={[
+          styles.map,
+          // eslint-disable-next-line react-native/no-inline-styles
+          {
+            backgroundColor: 'grey',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+        ]}>
+        <Text>Map goes here</Text>
+      </View>
+      {/* <MapView
       provider={PROVIDER_GOOGLE} // remove if not using Google Maps
       style={styles.map}
       region={{
@@ -60,10 +69,9 @@ export default function App() {
       }}
     >
     </MapView> */}
-    <View style={styles.menu}>
-      <BottomDisplay />
+      <View style={styles.menu}>
+        <BottomDisplay />
+      </View>
     </View>
-    
-  </View>
-  )
+  );
 }
