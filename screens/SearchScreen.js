@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function SearchScreen() {
+export default function SearchScreen(props) {
   const [searchValue, setSearchValue] = React.useState('');
 
   async function getLocation(queryTerm) {
@@ -52,6 +52,9 @@ export default function SearchScreen() {
     getLocation(nativeEvent.text).then((location) => {
       console.log(location.position);
       console.log(location.address);
+      // update map view
+      props.setLatitude(location.position.lat);
+      props.setLongitude(location.position.lon);
     });
   }
 

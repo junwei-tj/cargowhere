@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
   },
   bar: {
     flexDirection: 'row',
-    overflow: 'hidden',
     justifyContent: 'space-evenly',
     height: '12%',
     borderBottomWidth: 1,
@@ -40,7 +39,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function NavigationBar() {
+export default function NavigationBar(props) {
   const [activeTabs, setActiveTabs] = useState({
     navigation: true,
     favourites: false,
@@ -127,9 +126,13 @@ export default function NavigationBar() {
       </View>
 
       {/* Switching of tab screen is done here */}
-      {activeTabs.navigation && <NearbyScreen />}
-      {activeTabs.favourites && <FavouritesScreen />}
-      {activeTabs.search && <SearchScreen />}
+      {activeTabs.navigation && <NearbyScreen  />}
+      {activeTabs.favourites && <FavouritesScreen  />}
+      {activeTabs.search && 
+        <SearchScreen 
+          setLatitude={props.setLatitude} setLongitude={props.setLongitude} 
+        />
+      }
       {activeTabs.about && <AboutScreen />}
     </View>
   );
