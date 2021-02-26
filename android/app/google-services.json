@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "783545997288",
+    "firebase_url": "https://cargowhere-a2ccf-default-rtdb.firebaseio.com",
+    "project_id": "cargowhere-a2ccf",
+    "storage_bucket": "cargowhere-a2ccf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783545997288:android:429fbb3646e5b41197365d",
+        "android_client_info": {
+          "package_name": "com.cargowhere"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "783545997288-ftfjg187kite2a4jgc15n8u199vpkvc3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyAetYS1Fex5Ncdth7JbjUFutMiBycN90"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "783545997288-ftfjg187kite2a4jgc15n8u199vpkvc3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
