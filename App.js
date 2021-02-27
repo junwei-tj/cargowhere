@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 
 import StatusBar from './StatusBar';
@@ -29,6 +29,20 @@ const styles = StyleSheet.create({
     borderColor: 'lightgrey',
     overflow: 'hidden',
   },
+});
+
+// create array of car parks for making markers
+const allCarparksJSON = require("./all_carparks.json");
+let allCarparks = [];
+allCarparksJSON.forEach(obj => {
+  let carpark = {
+    latlng: {
+      latitude: obj.latitude,
+      longitude: obj.longitude,
+    },
+    title: obj.name,      
+  }
+  allCarparks.push(carpark);
 });
 
 export default function App() {
@@ -66,8 +80,16 @@ export default function App() {
           longitude: longitude,
           latitudeDelta: 0.015,
           longitudeDelta: 0.0121,
-      }}
+        }}
       >
+        {allCarparks.map((marker, index) => (
+          <Marker
+            key={index}
+            coordinate={marker.latlng}
+            title={marker.title}
+            onCalloutPress={() => alert("pressed " + marker.title)}
+          />
+        ))}
       </MapView>
       <View style={styles.menu}>
         {/* pass update state functions to child components so they can update on behalf of this component */}
