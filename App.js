@@ -9,6 +9,7 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import carparkData from './DataManager'
 import Geolocation from '@react-native-community/geolocation';
 
 import StatusBar from './StatusBar';
@@ -45,6 +46,11 @@ function onTabPressed(tab) {}
 export default function App() {
   // code for geolocation for reference
   function currentLocation() {
+    /* // added for testing retrieval of data
+    carparkData.retrieveInCoords(44990.0,41380.0, 44996.0, 41389.0, function(resultArray) {
+      console.log(resultArray);
+    });
+    */
     Geolocation.getCurrentPosition((info) => console.log(info));
   }
   currentLocation();
