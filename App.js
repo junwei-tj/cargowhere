@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text, Image, ImageBackground} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 
@@ -43,8 +43,10 @@ allCarparksJSON.forEach(obj => {
     },
     title: obj.name,
   }
-  allCarparks.push(carpark);
+  if (!allCarparks.some(item => item.title == carpark.title)) allCarparks.push(carpark);
 });
+allCarparks = allCarparks.slice(0, 20);
+console.log(allCarparks)
 
 export default function App() {
   // code for geolocation for reference
@@ -104,17 +106,23 @@ export default function App() {
             coordinate={marker.latlng}
             title={marker.title}
             onCalloutPress={() => alert("pressed " + marker.title)}
-            pinColor={'#7fa3ff'}
-          />
+          >
+            <ImageBackground
+              source={require('./images/marker.png')}
+              style={{width: 44, height: 44, justifyContent: 'center', alignItems: 'center'}}
+            >
+              <Text style={{paddingBottom: 10, color: 'white'}}>20</Text>
+            </ImageBackground>
+          </Marker>
         ))}
         {specificLocation.active && 
           <Marker 
             coordinate={specificLocation.latlng}
             title={specificLocation.title}            
           >
-            <Image 
+            <Image
               source={require('./images/pin.png')} 
-              style={{width: 32, height: 32}}
+              style={{width: 44, height: 44}}
             />
           </Marker>
         }
