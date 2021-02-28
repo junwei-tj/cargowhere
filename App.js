@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, Image} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 
@@ -62,6 +62,16 @@ export default function App() {
   const [latitude, setLatitude] = useState(1.3483099);
   const [longitude, setLongitude] = useState(103.680946);
 
+  // used for marking user's searched location. set active to false when user is using GPS
+  const [specificLocation, setSpecificLocation] = useState({
+    latlng: {
+      latitude: 1.3483099,
+      longitude: 103.680946,
+    },    
+    title: "Nanyang Technological University",
+    active: true,
+  });
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#2EBD6B" barStyle="default" />
@@ -94,14 +104,27 @@ export default function App() {
             coordinate={marker.latlng}
             title={marker.title}
             onCalloutPress={() => alert("pressed " + marker.title)}
+            pinColor={'#7fa3ff'}
           />
         ))}
+        {specificLocation.active && 
+          <Marker 
+            coordinate={specificLocation.latlng}
+            title={specificLocation.title}            
+          >
+            <Image 
+              source={require('./images/pin.png')} 
+              style={{width: 32, height: 32}}
+            />
+          </Marker>
+        }
       </MapView>
       <View style={styles.menu}>
         {/* pass update state functions to child components so they can update on behalf of this component */}
         <BottomDisplay
           setLatitude={setLatitude}
           setLongitude={setLongitude}
+          setSpecificLocation={setSpecificLocation}
         />
       </View>
     </View>

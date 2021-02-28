@@ -55,6 +55,14 @@ export default function SearchScreen(props) {
       // update map view
       props.setLatitude(location.position.lat);
       props.setLongitude(location.position.lon);
+      props.setSpecificLocation({
+        latlng: {
+          latitude: location.position.lat,
+          longitude: location.position.lon,
+        },
+        active: true,
+        title: searchValue,
+      });
     });
   }
 

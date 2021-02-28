@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 1,
-    borderBottomColor: 'blue',
+    borderBottomColor: '#2f60f4',
   },
   tab: {
     flex: 1,
@@ -130,7 +130,9 @@ export default function NavigationBar(props) {
       {activeTabs.favourites && <FavouritesScreen  />}
       {activeTabs.search && 
         <SearchScreen 
-          setLatitude={props.setLatitude} setLongitude={props.setLongitude} 
+          setLatitude={props.setLatitude}
+          setLongitude={props.setLongitude} 
+          setSpecificLocation={props.setSpecificLocation}
         />
       }
       {activeTabs.about && <AboutScreen />}
