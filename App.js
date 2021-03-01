@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import {StyleSheet, View, Text, Image, ImageBackground} from 'react-native';
+import {StyleSheet, View, Text, Image, ImageBackground, ToastAndroid} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 
 import StatusBar from './StatusBar';
 import BottomDisplay from './BottomDisplay';
-//import carparkData from './DataManager'
+import carparkData from './DataManager'
 
 const styles = StyleSheet.create({
   container: {
@@ -32,21 +32,40 @@ const styles = StyleSheet.create({
   },
 });
 
-// create array of car parks for making markers
-const allCarparksJSON = require("./all_carparks.json");
-let allCarparks = [];
-allCarparksJSON.forEach(obj => {
-  let carpark = {
-    latlng: {
-      latitude: obj.latitude,
-      longitude: obj.longitude,
-    },
-    title: obj.name,
+function updateCarparkMarkers({ latitude, longitude, latitudeDelta, longitudeDelta, callback }) {
+  let bottomLeftLat = latitude - latitudeDelta/2;
+  let bottomLeftLongitude = longitude - longitudeDelta/2;
+  let topRightLat = latitude + latitudeDelta/2;
+  let topRightLongitude = longitude + longitudeDelta/2;
+
+  ToastAndroid.show("Updating carpark markers...", ToastAndroid.SHORT);
+  carparkData.retrieveInLongLat(bottomLeftLongitude, bottomLeftLat, topRightLongitude, topRightLat, callback);
+}
+
+// custom hook
+// currently max carparks is 15 for performance reasons
+// TODO: get 15 carparks based on SORTING criteria
+function useCarparks(carparkList) {
+  const [carparks, setCarparks] = useState(carparkList);
+  
+  const updateCarparks = (carparkList) => {
+    let carparkObjs = [];
+    carparkList.forEach(obj => {
+      let carpark = {
+        latlng: {
+          latitude: obj.latitude,
+          longitude: obj.longitude,
+        },
+        title: obj.name,
+      };
+      if (carparkObjs.length < 15 && !carparkObjs.some(item => item.title == carpark.title)) 
+        carparkObjs.push(carpark);
+    })
+    setCarparks(carparkObjs);
+    ToastAndroid.show("Carpark markers updated", ToastAndroid.SHORT);
   }
-  if (!allCarparks.some(item => item.title == carpark.title)) allCarparks.push(carpark);
-});
-allCarparks = allCarparks.slice(0, 20);
-console.log(allCarparks)
+  return [carparks, updateCarparks];
+}
 
 export default function App() {
   // code for geolocation for reference
@@ -63,6 +82,10 @@ export default function App() {
   // declare latitude and logitude as state. default values point to NTU
   const [latitude, setLatitude] = useState(1.3483099);
   const [longitude, setLongitude] = useState(103.680946);
+  const [latitudeDelta, setLatitudeDelta] = useState(0.015);
+  const [longitudeDelta, setLongitudeDelta] = useState(0.0121);
+
+  const [carparks, setCarparks] = useCarparks([]);
 
   // used for marking user's searched location. set active to false when user is using GPS
   const [specificLocation, setSpecificLocation] = useState({
@@ -93,14 +116,21 @@ export default function App() {
       <MapView
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={styles.map}
-        region={{
+        initialRegion={{
           latitude: latitude,
           longitude: longitude,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
+          latitudeDelta: latitudeDelta,
+          longitudeDelta: longitudeDelta,
+        }}
+        onRegionChangeComplete={(region) => {
+          setLatitude(region.latitude);
+          setLongitude(region.longitude);
+          setLatitudeDelta(region.latitudeDelta);
+          setLongitudeDelta(region.longitudeDelta);
+          updateCarparkMarkers({ latitude, longitude, latitudeDelta, longitudeDelta, callback: setCarparks });
         }}
       >
-        {allCarparks.map((marker, index) => (
+        {carparks.map((marker, index) => (
           <Marker
             key={index}
             coordinate={marker.latlng}
@@ -111,7 +141,7 @@ export default function App() {
               source={require('./images/marker.png')}
               style={{width: 44, height: 44, justifyContent: 'center', alignItems: 'center'}}
             >
-              <Text style={{paddingBottom: 10, color: 'white'}}>20</Text>
+              <Text style={{paddingBottom: 10, color: 'white'}}>{index+1}</Text>
             </ImageBackground>
           </Marker>
         ))}
