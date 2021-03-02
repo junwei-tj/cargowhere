@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
+import {View, Text, StyleSheet, TextInput, FlatList} from 'react-native';
 import axios from 'axios';
 
 const styles = StyleSheet.create({
@@ -78,6 +78,17 @@ export default function SearchScreen(props) {
         />
       </View>
       <Text>Search Screen</Text>
+      <FlatList
+        data={props.carparks}
+        keyExtractor={(item, index) => item.key}
+        renderItem={({item}) => {
+          return(
+            <Text>
+              {item.title}
+            </Text>
+          );
+        }}
+        />
     </View>
   );
 }

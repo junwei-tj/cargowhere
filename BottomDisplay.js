@@ -133,6 +133,7 @@ export default function NavigationBar(props) {
           setLatitude={props.setLatitude}
           setLongitude={props.setLongitude} 
           setSpecificLocation={props.setSpecificLocation}
+          carparks = {props.carparks}
         />
       }
       {activeTabs.about && <AboutScreen />}
