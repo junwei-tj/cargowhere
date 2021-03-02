@@ -130,8 +130,7 @@ export default function NavigationBar(props) {
       {activeTabs.favourites && <FavouritesScreen  />}
       {activeTabs.search && 
         <SearchScreen 
-          setLatitude={props.setLatitude}
-          setLongitude={props.setLongitude} 
+          setRegion={props.setRegion}
           setSpecificLocation={props.setSpecificLocation}
           carparks = {props.carparks}
         />

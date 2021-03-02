@@ -53,8 +53,11 @@ export default function SearchScreen(props) {
       console.log(location.position);
       console.log(location.address);
       // update map view
-      props.setLatitude(location.position.lat);
-      props.setLongitude(location.position.lon);
+      props.setRegion((prevState) => ({
+        ...prevState,
+        latitude: location.position.lat,
+        longitude: location.position.lon,
+      }));
       props.setSpecificLocation({
         latlng: {
           latitude: location.position.lat,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, View, Text, Image, ImageBackground, ToastAndroid} from 'react-native';
+import {StyleSheet, View, Text, Image, ImageBackground, ToastAndroid, Pressable} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 
@@ -30,13 +30,38 @@ const styles = StyleSheet.create({
     borderColor: 'lightgrey',
     overflow: 'hidden',
   },
+  refreshButtonContainer: {
+    width: 36, 
+    height: 36, 
+    position: "absolute", 
+    top: 10, 
+    right: 10,
+    backgroundColor: 'white',
+    borderRadius: 18,
+    borderColor: 'grey',
+    borderWidth: 1,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  refreshPressable: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  refreshButton: {
+    width: '80%',
+    height: '80%',
+    tintColor: 'grey'
+  }
 });
 
-function updateCarparkMarkers({ latitude, longitude, latitudeDelta, longitudeDelta, callback }) {
-  let bottomLeftLat = latitude - latitudeDelta/2;
-  let bottomLeftLongitude = longitude - longitudeDelta/2;
-  let topRightLat = latitude + latitudeDelta/2;
-  let topRightLongitude = longitude + longitudeDelta/2;
+function updateCarparkMarkers({ region, callback }) {
+  let bottomLeftLat = region.latitude - region.latitudeDelta/2;
+  let bottomLeftLongitude = region.longitude - region.longitudeDelta/2;
+  let topRightLat = region.latitude + region.latitudeDelta/2;
+  let topRightLongitude = region.longitude + region.longitudeDelta/2;
 
   ToastAndroid.show("Updating carpark markers...", ToastAndroid.SHORT);
   carparkData.retrieveInLongLat(bottomLeftLongitude, bottomLeftLat, topRightLongitude, topRightLat, callback);
@@ -49,6 +74,8 @@ function useCarparks(carparkList) {
   const [carparks, setCarparks] = useState(carparkList);
   
   const updateCarparks = (carparkList) => {
+    console.log("before filtering:")
+    console.log(carparkList)
     let carparkObjs = [];
     carparkList.forEach(obj => {
       let carpark = {
@@ -62,6 +89,8 @@ function useCarparks(carparkList) {
         carparkObjs.push(carpark);
     })
     setCarparks(carparkObjs);
+    console.log("after filtering:")
+    console.log(carparkObjs)
     ToastAndroid.show("Carpark markers updated", ToastAndroid.SHORT);
   }
   return [carparks, updateCarparks];
@@ -69,10 +98,12 @@ function useCarparks(carparkList) {
 
 export default function App() {
   // declare latitude and logitude as state. default values point to NTU
-  const [latitude, setLatitude] = useState(1.3483099);
-  const [longitude, setLongitude] = useState(103.680946);
-  const [latitudeDelta, setLatitudeDelta] = useState(0.015);
-  const [longitudeDelta, setLongitudeDelta] = useState(0.0121);
+  const [region, setRegion] = useState({
+    latitude: 1.3483099,
+    longitude: 103.680946,
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.0121,
+  });
 
   const [carparks, setCarparks] = useCarparks([]);
 
@@ -86,6 +117,10 @@ export default function App() {
     title: "Nanyang Technological University",
     active: true,
   });
+  
+  // carparkData.retrieveInCoords(103.74847572537429, 1.3609900957056642, 103.75131886701433, 1.3638109818660649,  function(resultArray) {
+  //   console.log(resultArray);
+  // });
 
   // code for geolocation for reference
   function currentLocation() {
@@ -109,9 +144,9 @@ export default function App() {
     });
   }
 
-  useEffect(() => {
-    currentLocation();
-  }, []);
+  // useEffect(() => {
+  //   currentLocation();
+  // }, []);
   
   return (
     <View style={styles.container}>
@@ -132,18 +167,10 @@ export default function App() {
       <MapView
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={styles.map}
-        region={{
-          latitude: latitude,
-          longitude: longitude,
-          latitudeDelta: latitudeDelta,
-          longitudeDelta: longitudeDelta,
-        }}
+        region={region}
         onRegionChangeComplete={(region) => {
-          setLatitude(region.latitude);
-          setLongitude(region.longitude);
-          setLatitudeDelta(region.latitudeDelta);
-          setLongitudeDelta(region.longitudeDelta);
-          updateCarparkMarkers({ latitude, longitude, latitudeDelta, longitudeDelta, callback: setCarparks });
+          setRegion(region);     
+          console.log("onRegionChangeComplete completed")  
         }}
       >
         {carparks.map((marker, index) => (
@@ -173,11 +200,21 @@ export default function App() {
           </Marker>
         }
       </MapView>
+
+      <View style={styles.refreshButtonContainer}>
+        <Pressable
+          android_ripple={{color: 'lightgrey'}} 
+          style={styles.refreshPressable}
+          onPress={() => updateCarparkMarkers({ region, callback: setCarparks })}
+        >
+          <Image source={require('./images/refresh.png')} style={styles.refreshButton}/>
+        </Pressable>        
+      </View>
+      
       <View style={styles.menu}>
-        {/* pass update state functions to child components so they can update on behalf of this component */}
+        {/* pass update state functions to child components so they can update on behalf of this component */}        
         <BottomDisplay
-          setLatitude={setLatitude}
-          setLongitude={setLongitude}
+          setRegion={setRegion}
           setSpecificLocation={setSpecificLocation}
           carparks={carparks}
         />
