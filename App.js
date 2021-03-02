@@ -113,9 +113,6 @@ export default function App() {
     currentLocation();
   }, []);
   
-
-  
-
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#2EBD6B" barStyle="default" />
@@ -182,6 +179,7 @@ export default function App() {
           setLatitude={setLatitude}
           setLongitude={setLongitude}
           setSpecificLocation={setSpecificLocation}
+          carparks={carparks}
         />
       </View>
     </View>
