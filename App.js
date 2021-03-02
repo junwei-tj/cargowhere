@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {StyleSheet, View, Text, Image, ImageBackground, ToastAndroid} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -68,17 +68,6 @@ function useCarparks(carparkList) {
 }
 
 export default function App() {
-  // code for geolocation for reference
-  function currentLocation() {
-    /* // added for testing retrieval of data
-    carparkData.retrieveInCoords(44990.0,41380.0, 44996.0, 41389.0, function(resultArray) {
-      console.log(resultArray);
-    });
-    */
-    Geolocation.getCurrentPosition((info) => console.log(info));
-  }
-  currentLocation();
-
   // declare latitude and logitude as state. default values point to NTU
   const [latitude, setLatitude] = useState(1.3483099);
   const [longitude, setLongitude] = useState(103.680946);
@@ -88,6 +77,7 @@ export default function App() {
   const [carparks, setCarparks] = useCarparks([]);
 
   // used for marking user's searched location. set active to false when user is using GPS
+  // Can we use this to pin current location also? (Jun Jie)
   const [specificLocation, setSpecificLocation] = useState({
     latlng: {
       latitude: 1.3483099,
@@ -96,6 +86,35 @@ export default function App() {
     title: "Nanyang Technological University",
     active: true,
   });
+
+  // code for geolocation for reference
+  function currentLocation() {
+    /* // added for testing retrieval of data
+    carparkData.retrieveInCoords(44990.0,41380.0, 44996.0, 41389.0, function(resultArray) {
+      console.log(resultArray);
+    });
+    */
+    Geolocation.getCurrentPosition((info) => {
+      console.log(info);
+      setLatitude(info.coords.latitude);
+      setLongitude(info.coords.longitude);
+      setSpecificLocation({
+        latlng: {
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+        },    
+        title: "Nanyang Technological University",
+        active: true,
+      })
+    });
+  }
+
+  useEffect(() => {
+    currentLocation();
+  }, []);
+  
+
+  
 
   return (
     <View style={styles.container}>
@@ -116,7 +135,7 @@ export default function App() {
       <MapView
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={styles.map}
-        initialRegion={{
+        region={{
           latitude: latitude,
           longitude: longitude,
           latitudeDelta: latitudeDelta,
