@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TextInput, FlatList} from 'react-native';
 import axios from 'axios';
+import Carpark from './Carpark';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,7 +12,8 @@ const styles = StyleSheet.create({
   },
   searchField: {
     width: '94%',
-    padding: 8,
+    height: 50,
+    padding: 3,
     paddingLeft: 20,
     paddingRight: 20,
     borderStyle: 'solid',
@@ -80,15 +82,12 @@ export default function SearchScreen(props) {
           onSubmitEditing={onSubmitSearch}
         />
       </View>
-      <Text>Search Screen</Text>
-      <FlatList
+      <FlatList style={{width: '100%',}}
         data={props.carparks}
         keyExtractor={(item, index) => item.key}
         renderItem={({item}) => {
           return(
-            <Text>
-              {item.title}
-            </Text>
+            <Carpark carpark={item} currentRegion={props.currentRegion} />
           );
         }}
         />
