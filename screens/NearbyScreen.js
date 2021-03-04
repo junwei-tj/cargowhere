@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function NearbyScreen() {
+export default function NearbyScreen(props) {
   const [value, setValue] = useState("key0");
 
   return (
@@ -51,7 +51,19 @@ export default function NearbyScreen() {
             <Picker.Item label="Availability" value="key1" />
         </Picker>
       </View>
-      <FlatList data={Array(9).fill(0)} renderItem={() => <Carpark />} />
+      {/* <FlatList data={Array(9).fill(0)} renderItem={() => <Carpark />} /> */}
+      
+      <>
+      <FlatList
+        data={props.carparks}
+        keyExtractor={(item, index) => item.key}
+        renderItem={({item}) => {
+          return(
+            <Carpark carpark={item} currentRegion={props.currentRegion} />
+          );
+        }}
+        />
+      </>
     </View>
   );
 }

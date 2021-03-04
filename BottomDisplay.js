@@ -126,7 +126,10 @@ export default function NavigationBar(props) {
       </View>
 
       {/* Switching of tab screen is done here */}
-      {activeTabs.navigation && <NearbyScreen  />}
+      {activeTabs.navigation && 
+        <NearbyScreen 
+          carparks= {props.carparks}  
+          currentRegion = {props.currentRegion} />}
       {activeTabs.favourites && 
         <FavouritesScreen
           favourites = {props.favourites}
@@ -137,6 +140,7 @@ export default function NavigationBar(props) {
           setRegion={props.setRegion}
           setSpecificLocation={props.setSpecificLocation}
           carparks = {props.carparks}
+          currentRegion = {props.currentRegion}
         />
       }
       {activeTabs.about && <AboutScreen />}

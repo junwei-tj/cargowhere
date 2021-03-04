@@ -101,7 +101,7 @@ function useCarparks(carparkList) {
 
 
 export default function App() {
-  // declare latitude and logitude as state. default values point to NTU
+  // declare latitude and logitude as state. default values point to NTU 
   const [region, setRegion] = useState({
     latitude: 1.3483099,
     longitude: 103.680946,
@@ -170,6 +170,7 @@ export default function App() {
   // Can we use this to pin current location also? (Jun Jie)
   const [specificLocation, setSpecificLocation] = useState({
     latlng: {
+      
       latitude: 1.3483099,
       longitude: 103.680946,
     },
@@ -197,7 +198,7 @@ export default function App() {
           latitude: info.coords.latitude,
           longitude: info.coords.longitude,
         },
-        title: "Nanyang Technological University",
+        title: "Current Location",
         active: true,
       })
     });
@@ -279,6 +280,7 @@ export default function App() {
           removeFavourite = {removeFavourite}
           addFavourite = {addFavourite}
           favourites={favourites}
+          currentRegion={region}
         />
       </View>
     </View>
