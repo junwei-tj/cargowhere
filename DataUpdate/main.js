@@ -97,11 +97,11 @@ function getData() {
             responseArr[1]['data']['Result'].forEach((obj) => {
                 switch(obj['lotType']){
                     case('C'):
-                        lotType = 'car';
+                        lotType = 'Car';
                         availHeader = 'availableLots_car';
                         break;
                     case ('M'):
-                        lotType = 'motorcycle';
+                        lotType = 'Motorcycle';
                         availHeader = 'availableLots_motorcycle';
                         break;
                     case('H'):
@@ -114,7 +114,7 @@ function getData() {
                         break;
                 }
                 Object.keys(oldData).forEach((key) => {
-                    if (key.includes("URA_" + obj["carparkNo"])) {
+                    if (key.includes("URA_" + obj["carparkNo"] + "_" + lotType)) {
                         if (key in resultObj) resultObj[key][availHeader] = Number(obj['lotsAvailable']);
                         else resultObj[key] = {[availHeader]: Number(obj['lotsAvailable'])}
                     }
