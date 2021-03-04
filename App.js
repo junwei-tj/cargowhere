@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, View, Text, Image, ImageBackground, ToastAndroid, Pressable} from 'react-native';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import { StyleSheet, View, Text, Image, ImageBackground, ToastAndroid, Pressable } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import StatusBar from './StatusBar';
 import BottomDisplay from './BottomDisplay';
-import carparkData from './DataManager'
+import carparkData from './DataManager';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,10 +32,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   refreshButtonContainer: {
-    width: 36, 
-    height: 36, 
-    position: "absolute", 
-    top: 10, 
+    width: 36,
+    height: 36,
+    position: "absolute",
+    top: 10,
     right: 10,
     backgroundColor: 'white',
     borderRadius: 18,
@@ -57,11 +58,12 @@ const styles = StyleSheet.create({
   }
 });
 
+
 function updateCarparkMarkers({ region, callback }) {
-  let bottomLeftLat = region.latitude - region.latitudeDelta/2;
-  let bottomLeftLongitude = region.longitude - region.longitudeDelta/2;
-  let topRightLat = region.latitude + region.latitudeDelta/2;
-  let topRightLongitude = region.longitude + region.longitudeDelta/2;
+  let bottomLeftLat = region.latitude - region.latitudeDelta / 2;
+  let bottomLeftLongitude = region.longitude - region.longitudeDelta / 2;
+  let topRightLat = region.latitude + region.latitudeDelta / 2;
+  let topRightLongitude = region.longitude + region.longitudeDelta / 2;
 
   ToastAndroid.show("Updating carpark markers...", ToastAndroid.SHORT);
   carparkData.retrieveInLongLat(bottomLeftLongitude, bottomLeftLat, topRightLongitude, topRightLat, callback);
@@ -72,7 +74,7 @@ function updateCarparkMarkers({ region, callback }) {
 // TODO: get 15 carparks based on SORTING criteria
 function useCarparks(carparkList) {
   const [carparks, setCarparks] = useState(carparkList);
-  
+
   const updateCarparks = (carparkList) => {
     console.log("before filtering:")
     console.log(carparkList)
@@ -85,7 +87,7 @@ function useCarparks(carparkList) {
         },
         title: obj.name,
       };
-      if (carparkObjs.length < 15 && !carparkObjs.some(item => item.title == carpark.title)) 
+      if (carparkObjs.length < 15 && !carparkObjs.some(item => item.title == carpark.title))
         carparkObjs.push(carpark);
     })
     setCarparks(carparkObjs);
@@ -96,6 +98,8 @@ function useCarparks(carparkList) {
   return [carparks, updateCarparks];
 }
 
+
+
 export default function App() {
   // declare latitude and logitude as state. default values point to NTU
   const [region, setRegion] = useState({
@@ -105,6 +109,61 @@ export default function App() {
     longitudeDelta: 0.0121,
   });
 
+//--------------------------------------------------------------------------------------------------
+  //Functions to CRUD local storage of favourites
+  //TODO: Shift out to seperate .js file if possible and use real carpark data
+
+  //Used to add a favourite to local storage, will be
+  //passed down to FavouritesScreen to be executed
+  const addFavourite = async (key, value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem(key, jsonValue);
+    } catch (err) {
+      alert(err);
+    }
+  }
+
+  //Used to load all favourites from local storage, called at
+  //startup of app using useEffect()
+  const loadAllFavourites = async () => {
+    let keys = [];
+    let jsonValues = [];
+    try {
+      keys = await AsyncStorage.getAllKeys();
+      jsonValues = await AsyncStorage.multiGet(keys);
+      console.log(jsonValues);
+      setFavourites(jsonValues);
+      //finalAns.push(JSON.parse(value));
+    } catch (err) {
+      alert(err);
+    }
+  }
+
+  //Used to remove a favourite from local storage, will be
+  //passed down to FavouritesScreen to be executed
+  const removeFavourite = async (key) => {
+    try {
+      await AsyncStorage.removeItem(key)
+      console.log("Removed success");
+    } catch (err){
+      alert(err);
+    }
+  }
+  //--------------------------------------------------------------------------------------------------
+
+  const [favourites, setFavourites] = useState();
+
+  //Can use the below for testing if you want, to initialise values on startup
+  //by uncommenting the lines you want to run
+  useEffect(() => {
+    //addFavourite("Favourites_Key0", "carpark0 details");
+    //addFavourite("Favourites_Key1", "carpark1 details");
+    //removeFavourite("Favourites_Key1");
+    //removeFavourite("Favourites_Key0");
+      loadAllFavourites()
+  }, []);
+
   const [carparks, setCarparks] = useCarparks([]);
 
   // used for marking user's searched location. set active to false when user is using GPS
@@ -113,11 +172,11 @@ export default function App() {
     latlng: {
       latitude: 1.3483099,
       longitude: 103.680946,
-    },    
+    },
     title: "Nanyang Technological University",
     active: true,
   });
-  
+
   // carparkData.retrieveInCoords(103.74847572537429, 1.3609900957056642, 103.75131886701433, 1.3638109818660649,  function(resultArray) {
   //   console.log(resultArray);
   // });
@@ -137,7 +196,7 @@ export default function App() {
         latlng: {
           latitude: info.coords.latitude,
           longitude: info.coords.longitude,
-        },    
+        },
         title: "Nanyang Technological University",
         active: true,
       })
@@ -147,7 +206,7 @@ export default function App() {
   // useEffect(() => {
   //   currentLocation();
   // }, []);
-  
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#2EBD6B" barStyle="default" />
@@ -169,8 +228,8 @@ export default function App() {
         style={styles.map}
         region={region}
         onRegionChangeComplete={(region) => {
-          setRegion(region);     
-          console.log("onRegionChangeComplete completed")  
+          setRegion(region);
+          console.log("onRegionChangeComplete completed")
         }}
       >
         {carparks.map((marker, index) => (
@@ -182,20 +241,20 @@ export default function App() {
           >
             <ImageBackground
               source={require('./images/marker.png')}
-              style={{width: 44, height: 44, justifyContent: 'center', alignItems: 'center'}}
+              style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}
             >
-              <Text style={{paddingBottom: 10, color: 'white'}}>{index+1}</Text>
+              <Text style={{ paddingBottom: 10, color: 'white' }}>{index + 1}</Text>
             </ImageBackground>
           </Marker>
         ))}
-        {specificLocation.active && 
-          <Marker 
+        {specificLocation.active &&
+          <Marker
             coordinate={specificLocation.latlng}
-            title={specificLocation.title}            
+            title={specificLocation.title}
           >
             <Image
-              source={require('./images/pin.png')} 
-              style={{width: 44, height: 44}}
+              source={require('./images/pin.png')}
+              style={{ width: 44, height: 44 }}
             />
           </Marker>
         }
@@ -203,20 +262,23 @@ export default function App() {
 
       <View style={styles.refreshButtonContainer}>
         <Pressable
-          android_ripple={{color: 'lightgrey'}} 
+          android_ripple={{ color: 'lightgrey' }}
           style={styles.refreshPressable}
           onPress={() => updateCarparkMarkers({ region, callback: setCarparks })}
         >
           <Image source={require('./images/refresh.png')} style={styles.refreshButton}/>
         </Pressable>        
       </View>
-      
+
       <View style={styles.menu}>
-        {/* pass update state functions to child components so they can update on behalf of this component */}        
+        {/* pass update state functions to child components so they can update on behalf of this component */}
         <BottomDisplay
           setRegion={setRegion}
           setSpecificLocation={setSpecificLocation}
           carparks={carparks}
+          removeFavourite = {removeFavourite}
+          addFavourite = {addFavourite}
+          favourites={favourites}
         />
       </View>
     </View>

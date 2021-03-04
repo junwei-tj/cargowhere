@@ -127,7 +127,11 @@ export default function NavigationBar(props) {
 
       {/* Switching of tab screen is done here */}
       {activeTabs.navigation && <NearbyScreen  />}
-      {activeTabs.favourites && <FavouritesScreen  />}
+      {activeTabs.favourites && 
+        <FavouritesScreen
+          favourites = {props.favourites}
+          removeFavourite = {props.removeFavourite}
+          addFavourite = {props.addFavourite} />}
       {activeTabs.search && 
         <SearchScreen 
           setRegion={props.setRegion}
