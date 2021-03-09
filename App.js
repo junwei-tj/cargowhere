@@ -7,6 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import StatusBar from './StatusBar';
 import BottomDisplay from './BottomDisplay';
 import carparkData from './DataManager';
+import { getDistanceFromLatLonInM } from "./screens/Carpark";
+
+const MAX_CARPARKS_TO_DISPLAY = 15;
 
 const styles = StyleSheet.create({
   container: {
@@ -76,8 +79,8 @@ function useCarparks(carparkList) {
   const [carparks, setCarparks] = useState(carparkList);
 
   const updateCarparks = (carparkList) => {
-    console.log("before filtering:")
-    console.log(carparkList)
+    // console.log("before filtering:")
+    // console.log(carparkList)
     let carparkObjs = [];
     carparkList.forEach(obj => {
       let carpark = {
@@ -87,16 +90,72 @@ function useCarparks(carparkList) {
         },
         title: obj.name,
       };
-      if (carparkObjs.length < 15 && !carparkObjs.some(item => item.title == carpark.title))
+      if (!carparkObjs.some(item => item.title == carpark.title)) // filter out duplicates
         carparkObjs.push(carpark);
     })
     setCarparks(carparkObjs);
-    console.log("after filtering:")
+    console.log("after setting:")
     console.log(carparkObjs)
+    // ToastAndroid.show("Carpark markers updated", ToastAndroid.SHORT);
+  }
+
+  const sortCarparks = (carparks, sortingCriteria, pointOfReference) => {
+    if (sortingCriteria === "distance" && pointOfReference === undefined) {
+      throw "Unable to sort by distance when pointOfReference is not provided"
+    }
+    console.log("before sorting:");
+    console.log(carparks);
+    if (sortingCriteria === "distance") {
+      // get each carpark's distance
+      carparks.forEach(carpark => {
+        let distance = getDistanceFromLatLonInM(pointOfReference.latitude, pointOfReference.longitude, carpark.latlng.latitude, carpark.latlng.longitude);
+        carpark["distance"] = distance;
+      })
+      // sort carparks by distance, in ascending order
+      carparks.sort((a, b) => {
+        return a.distance - b.distance;
+      })
+    } else {
+      console.log("Not supported yet");
+    }
+    console.log("after sorting:");
+    console.log(carparks);
     ToastAndroid.show("Carpark markers updated", ToastAndroid.SHORT);
   }
-  return [carparks, updateCarparks];
+
+  return [carparks, updateCarparks, sortCarparks];
 }
+
+/**
+ * Function to handle sorting of carparks. Sorting can only be done based on distance and availability
+ * @param {Array} carparks 
+ * @param {string} sortingCriteria accepts "distance" or "availability"
+ * @param {region} pointOfReference optional - coordinates (in latitude and longitude) of the point distance is to be calculated from
+ */
+// function sortCarparks(carparks, sortingCriteria, pointOfReference) {
+//   if (sortingCriteria === "distance" && pointOfReference === undefined) {
+//     throw "Unable to sort by distance when pointOfReference is not provided"
+//   }
+//   console.log("before sorting:");
+//   console.log(carparks);
+//   if (sortingCriteria === "distance") {
+//     // get each carpark's distance
+//     carparks.forEach(carpark => {
+//       let distance = getDistanceFromLatLonInM(pointOfReference.latitude, pointOfReference.longitude, carpark.latlng.latitude, carpark.latlng.longitude);
+//       carpark["distance"] = distance;
+//     })
+//     // sort carparks by distance, in ascending order
+//     carparks.sort((a, b) => {
+//       return a.distance - b.distance;
+//     })
+//   } else {
+//     console.log("Not supported yet");
+//   }
+//   //setCarparks(carparks);
+//   console.log("after sorting:");
+//   console.log(carparks);
+//   ToastAndroid.show("Carpark markers updated", ToastAndroid.SHORT);
+// }
 
 
 
@@ -164,13 +223,12 @@ export default function App() {
       loadAllFavourites()
   }, []);
 
-  const [carparks, setCarparks] = useCarparks([]);
+  const [carparks, setCarparks, sortCarparks] = useCarparks([]);
 
   // used for marking user's searched location. set active to false when user is using GPS
   // Can we use this to pin current location also? (Jun Jie)
   const [specificLocation, setSpecificLocation] = useState({
-    latlng: {
-      
+    latlng: {      
       latitude: 1.3483099,
       longitude: 103.680946,
     },
@@ -208,24 +266,20 @@ export default function App() {
   //   currentLocation();
   // }, []);
 
+  // function carparksCallback(carparkList) {
+  //   setCarparks(carparkList);
+  //   sortCarparks(carparks, "distance", region);
+  // }
+
+  useEffect(() => {
+    sortCarparks(carparks, "distance", region);
+  }, [carparks])
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#2EBD6B" barStyle="default" />
-      {/* temp view so I don't keep making requests to Google Maps */}
-      {/* <View
-        style={[
-          styles.map,
-          // eslint-disable-next-line react-native/no-inline-styles
-          {
-            backgroundColor: 'grey',
-            alignItems: 'center',
-            justifyContent: 'center',
-          },
-        ]}>
-        <Text>Map goes here</Text>
-      </View> */}
       <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+        provider={PROVIDER_GOOGLE} 
         style={styles.map}
         region={region}
         onRegionChangeComplete={(region) => {
@@ -233,21 +287,25 @@ export default function App() {
           console.log("onRegionChangeComplete completed")
         }}
       >
-        {carparks.map((marker, index) => (
-          <Marker
-            key={index}
-            coordinate={marker.latlng}
-            title={marker.title}
-            onCalloutPress={() => alert("pressed " + marker.title)}
-          >
-            <ImageBackground
-              source={require('./images/marker.png')}
-              style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}
-            >
-              <Text style={{ paddingBottom: 10, color: 'white' }}>{index + 1}</Text>
-            </ImageBackground>
-          </Marker>
-        ))}
+        {carparks.map((marker, index) => {
+          if (index < MAX_CARPARKS_TO_DISPLAY) {
+            return (
+              <Marker
+                key={index}
+                coordinate={marker.latlng}
+                title={marker.title}
+                onCalloutPress={() => alert("pressed " + marker.title)}
+              >
+                <ImageBackground
+                  source={require('./images/marker.png')}
+                  style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}
+                >
+                  <Text style={{ paddingBottom: 10, color: 'white' }}>{index + 1}</Text>
+                </ImageBackground>
+              </Marker>
+            );
+          }
+        })}
         {specificLocation.active &&
           <Marker
             coordinate={specificLocation.latlng}
@@ -265,7 +323,10 @@ export default function App() {
         <Pressable
           android_ripple={{ color: 'lightgrey' }}
           style={styles.refreshPressable}
-          onPress={() => updateCarparkMarkers({ region, callback: setCarparks })}
+          onPress={() => {
+            updateCarparkMarkers({ region, callback: setCarparks });            
+            
+          }}
         >
           <Image source={require('./images/refresh.png')} style={styles.refreshButton}/>
         </Pressable>        
