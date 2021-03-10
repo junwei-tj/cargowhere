@@ -73,29 +73,66 @@ function getCarparks({ region, callback }) {
 }
 
 /**
+ * Function to filter the retrieved carparks to only include the desired fields.
+ * Current fields kept are: latitude and longitude (combined to latlng), title, availableLots_H, availableLots_L, availableLots_car, availableLots_motorcycle
+ * @param {Array} carparkList 
+ */
+function filterCarparksJSON(carparkList) {
+  let carparkObjs = [];
+  carparkList.forEach(obj => {
+    let carpark = {
+      latlng: {
+        latitude: obj.latitude,
+        longitude: obj.longitude,
+      },
+      title: obj.name,
+      availableLots_H: obj.availableLots_H,
+      availableLots_L: obj.availableLots_L,
+      availableLots_car: obj.availableLots_car,
+      availableLots_motorcycle: obj.availableLots_motorcycle,
+    };
+    if (!carparkObjs.some(item => item.title == carpark.title)) // filter out duplicates
+      carparkObjs.push(carpark);
+  })
+
+  return carparkObjs;
+}
+
+/**
  * Function to handle sorting of carparks. Sorting can only be done based on distance and availability
  * @param {Array} carparks 
  * @param {string} sortingCriteria accepts "distance" or "availability"
  * @param {region} pointOfReference optional - coordinates (in latitude and longitude) of the point distance is to be calculated from
  */
-function sortCarparks(carparks, sortingCriteria, pointOfReference, setCarparks) {
+function sortCarparks(carparks, setCarparks, sortingCriteria, pointOfReference) {
   if (sortingCriteria === "distance" && pointOfReference === undefined) {
-    throw "Unable to sort by distance when pointOfReference is not provided"
+    throw "Unable to sort by distance when pointOfReference is not provided";
   }
+
   if (sortingCriteria === "distance") { 
     // get each carpark's distance
     carparks.forEach(carpark => {
       let distance = getDistanceFromLatLonInM(pointOfReference.latitude, pointOfReference.longitude, carpark.latlng.latitude, carpark.latlng.longitude);
       carpark["distance"] = distance;
-    })
+    });
     // sort carparks by distance, in ascending order
     carparks.sort((a, b) => {
       return a.distance - b.distance;
-    })
-  } else { // sort by availability
-    console.log("Not supported yet");
-  }  
+    });
+  } 
+  
+  else if (sortingCriteria === "availability") { // sort by availability (CURRENTLY ONLY CARS)
+    carparks.sort((a, b) => {
+      return b.availableLots_car - a.availableLots_car;
+    });
+  } 
+  
+  else {
+    throw "Invalid sorting criteria specified.";
+  }
   setCarparks(carparks);
+  console.log("after sorting:");
+  console.log(carparks);
   ToastAndroid.show("Carpark markers updated", ToastAndroid.SHORT);
 }
 
@@ -209,19 +246,9 @@ export default function App() {
   // }, []);
 
   function carparksRetrieved(carparkList) {
-    let carparkObjs = [];
-    carparkList.forEach(obj => {
-      let carpark = {
-        latlng: {
-          latitude: obj.latitude,
-          longitude: obj.longitude,
-        },
-        title: obj.name,
-      };
-      if (!carparkObjs.some(item => item.title == carpark.title)) // filter out duplicates
-        carparkObjs.push(carpark);
-    })
-    sortCarparks(carparkObjs, "distance", region, setCarparks);
+    let carparkObjs = filterCarparksJSON(carparkList);
+    //sortCarparks(carparkObjs, setCarparks, "distance", region);
+    sortCarparks(carparkObjs, setCarparks, "availability", );
   }
 
   return (
