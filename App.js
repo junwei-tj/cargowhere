@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 });
 
 
-function updateCarparkMarkers({ region, callback }) {
+function getCarparks({ region, callback }) {
   let bottomLeftLat = region.latitude - region.latitudeDelta / 2;
   let bottomLeftLongitude = region.longitude - region.longitudeDelta / 2;
   let topRightLat = region.latitude + region.latitudeDelta / 2;
@@ -72,90 +72,32 @@ function updateCarparkMarkers({ region, callback }) {
   carparkData.retrieveInLongLat(bottomLeftLongitude, bottomLeftLat, topRightLongitude, topRightLat, callback);
 }
 
-// custom hook
-// currently max carparks is 15 for performance reasons
-// TODO: get 15 carparks based on SORTING criteria
-function useCarparks(carparkList) {
-  const [carparks, setCarparks] = useState(carparkList);
-
-  const updateCarparks = (carparkList) => {
-    // console.log("before filtering:")
-    // console.log(carparkList)
-    let carparkObjs = [];
-    carparkList.forEach(obj => {
-      let carpark = {
-        latlng: {
-          latitude: obj.latitude,
-          longitude: obj.longitude,
-        },
-        title: obj.name,
-      };
-      if (!carparkObjs.some(item => item.title == carpark.title)) // filter out duplicates
-        carparkObjs.push(carpark);
-    })
-    setCarparks(carparkObjs);
-    console.log("after setting:")
-    console.log(carparkObjs)
-    // ToastAndroid.show("Carpark markers updated", ToastAndroid.SHORT);
-  }
-
-  const sortCarparks = (carparks, sortingCriteria, pointOfReference) => {
-    if (sortingCriteria === "distance" && pointOfReference === undefined) {
-      throw "Unable to sort by distance when pointOfReference is not provided"
-    }
-    console.log("before sorting:");
-    console.log(carparks);
-    if (sortingCriteria === "distance") {
-      // get each carpark's distance
-      carparks.forEach(carpark => {
-        let distance = getDistanceFromLatLonInM(pointOfReference.latitude, pointOfReference.longitude, carpark.latlng.latitude, carpark.latlng.longitude);
-        carpark["distance"] = distance;
-      })
-      // sort carparks by distance, in ascending order
-      carparks.sort((a, b) => {
-        return a.distance - b.distance;
-      })
-    } else {
-      console.log("Not supported yet");
-    }
-    console.log("after sorting:");
-    console.log(carparks);
-    ToastAndroid.show("Carpark markers updated", ToastAndroid.SHORT);
-  }
-
-  return [carparks, updateCarparks, sortCarparks];
-}
-
 /**
  * Function to handle sorting of carparks. Sorting can only be done based on distance and availability
  * @param {Array} carparks 
  * @param {string} sortingCriteria accepts "distance" or "availability"
  * @param {region} pointOfReference optional - coordinates (in latitude and longitude) of the point distance is to be calculated from
  */
-// function sortCarparks(carparks, sortingCriteria, pointOfReference) {
-//   if (sortingCriteria === "distance" && pointOfReference === undefined) {
-//     throw "Unable to sort by distance when pointOfReference is not provided"
-//   }
-//   console.log("before sorting:");
-//   console.log(carparks);
-//   if (sortingCriteria === "distance") {
-//     // get each carpark's distance
-//     carparks.forEach(carpark => {
-//       let distance = getDistanceFromLatLonInM(pointOfReference.latitude, pointOfReference.longitude, carpark.latlng.latitude, carpark.latlng.longitude);
-//       carpark["distance"] = distance;
-//     })
-//     // sort carparks by distance, in ascending order
-//     carparks.sort((a, b) => {
-//       return a.distance - b.distance;
-//     })
-//   } else {
-//     console.log("Not supported yet");
-//   }
-//   //setCarparks(carparks);
-//   console.log("after sorting:");
-//   console.log(carparks);
-//   ToastAndroid.show("Carpark markers updated", ToastAndroid.SHORT);
-// }
+function sortCarparks(carparks, sortingCriteria, pointOfReference, setCarparks) {
+  if (sortingCriteria === "distance" && pointOfReference === undefined) {
+    throw "Unable to sort by distance when pointOfReference is not provided"
+  }
+  if (sortingCriteria === "distance") { 
+    // get each carpark's distance
+    carparks.forEach(carpark => {
+      let distance = getDistanceFromLatLonInM(pointOfReference.latitude, pointOfReference.longitude, carpark.latlng.latitude, carpark.latlng.longitude);
+      carpark["distance"] = distance;
+    })
+    // sort carparks by distance, in ascending order
+    carparks.sort((a, b) => {
+      return a.distance - b.distance;
+    })
+  } else { // sort by availability
+    console.log("Not supported yet");
+  }  
+  setCarparks(carparks);
+  ToastAndroid.show("Carpark markers updated", ToastAndroid.SHORT);
+}
 
 
 
@@ -223,7 +165,7 @@ export default function App() {
       loadAllFavourites()
   }, []);
 
-  const [carparks, setCarparks, sortCarparks] = useCarparks([]);
+  const [carparks, setCarparks] = useState([]);
 
   // used for marking user's searched location. set active to false when user is using GPS
   // Can we use this to pin current location also? (Jun Jie)
@@ -266,14 +208,21 @@ export default function App() {
   //   currentLocation();
   // }, []);
 
-  // function carparksCallback(carparkList) {
-  //   setCarparks(carparkList);
-  //   sortCarparks(carparks, "distance", region);
-  // }
-
-  useEffect(() => {
-    sortCarparks(carparks, "distance", region);
-  }, [carparks])
+  function carparksRetrieved(carparkList) {
+    let carparkObjs = [];
+    carparkList.forEach(obj => {
+      let carpark = {
+        latlng: {
+          latitude: obj.latitude,
+          longitude: obj.longitude,
+        },
+        title: obj.name,
+      };
+      if (!carparkObjs.some(item => item.title == carpark.title)) // filter out duplicates
+        carparkObjs.push(carpark);
+    })
+    sortCarparks(carparkObjs, "distance", region, setCarparks);
+  }
 
   return (
     <View style={styles.container}>
@@ -323,10 +272,7 @@ export default function App() {
         <Pressable
           android_ripple={{ color: 'lightgrey' }}
           style={styles.refreshPressable}
-          onPress={() => {
-            updateCarparkMarkers({ region, callback: setCarparks });            
-            
-          }}
+          onPress={() => getCarparks({ region, callback: carparksRetrieved })}
         >
           <Image source={require('./images/refresh.png')} style={styles.refreshButton}/>
         </Pressable>        
