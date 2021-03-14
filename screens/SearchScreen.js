@@ -82,15 +82,14 @@ export default function SearchScreen(props) {
           onSubmitEditing={onSubmitSearch}
         />
       </View>
-      <FlatList style={{width: '100%',}}
+      <FlatList
+        style={{width: '100%'}}
         data={props.carparks}
         keyExtractor={(item, index) => item.key}
         renderItem={({item}) => {
-          return(
-            <Carpark carpark={item} currentRegion={props.currentRegion} />
-          );
+          return <Carpark carpark={item} currentRegion={props.currentRegion} />;
         }}
-        />
+      />
     </View>
   );
 }

@@ -247,8 +247,8 @@ export default function App() {
     */
     Geolocation.getCurrentPosition((info) => {
       console.log(info);
-      setLatitude(info.coords.latitude);
-      setLongitude(info.coords.longitude);
+      // setLatitude(info.coords.latitude);
+      // setLongitude(info.coords.longitude);
       setSpecificLocation({
         latlng: {
           latitude: info.coords.latitude,
