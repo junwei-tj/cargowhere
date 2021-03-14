@@ -92,6 +92,25 @@ const carparkData = {
     });
   },
 
+  /**
+   * Retrieve availability data for all carparks
+   * @param callback Not sure yet
+   */
+  retrieveAvailabilityData: function (callback) {
+    axios
+      .get('http://demonicmushy.dyndns.org:7020/availability', {
+        auth: {username: 'cargowhere', password: 'cargowhere'},
+      })
+      .then((response) => {
+        const availabilityData = response.data.data;
+        console.log(availabilityData);
+        console.log('Availability data retrieved.');
+      })
+      .catch((err) => {
+        console.log('Error occured at retrieving availability data:', err);
+      });
+  },
+
   // updateCarparkData: function (json, callback) {
   //   //This json object should contain the dynamic fields (carpark lots) and a key (carpark code).
   //   database().ref('/').update(json).then(callback);
