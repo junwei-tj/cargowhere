@@ -1,4 +1,4 @@
-import database from '@react-native-firebase/database';
+import axios from 'axios';
 
 /**
  * Retrieves carpark data based on various querying options
@@ -7,6 +7,26 @@ import database from '@react-native-firebase/database';
  * which will contain an array of objects
  **/
 const carparkData = {
+  // static carpark data to be stored in memory
+  _carparksData: [],
+  /**
+   * Retrieves carpark data from backend
+   * Intended to be used once on app startup
+   */
+  retrieveCarparkStaticData: function () {
+    axios
+      .get('http://demonicmushy.dyndns.org:7020/carparks', {
+        auth: {username: 'cargowhere', password: 'cargowhere'},
+      })
+      .then((response) => {
+        const carparks = response.data.carparks;
+        this._carparksData = carparks;
+        console.log('Static carpark data retrieved and stored.');
+      })
+      .catch((err) => {
+        console.log('Error occured at retrieving static carpark data:', err);
+      });
+  },
   /**
    * Retrieves carpark data within P1[x1,y1] to P2[x2,y2],
    * P1 should be the bottom left corner, P2 top right
@@ -17,23 +37,18 @@ const carparkData = {
    * @param callback Should accept a single result parameter, which contains an array of objects
    */
   retrieveInCoords: function (x1, y1, x2, y2, callback) {
-    database()
-      .ref('/')
-      .orderByChild('coordinates/x')
-      .startAt(x1)
-      .endAt(x2)
-      .once('value', (snapshot) => {
-        const resultArray = [];
-        const carpark = snapshot.val();
-        for (var key in carpark) {
-          if (
-            carpark[key]['coordinates']['y'] >= y1 &&
-            carpark[key]['coordinates']['y'] <= y2
-          )
-            resultArray.push(carpark[key]);
-        }
-        callback(resultArray);
-      });
+    const resultArray = [];
+    this._carparksData.forEach((cp) => {
+      if (
+        cp.coordinates.y >= y1 &&
+        cp.coordinates.y <= y2 &&
+        cp.coordinates.x >= x1 &&
+        cp.coordinates.x <= x2
+      ) {
+        resultArray.push(cp);
+      }
+    });
+    callback(resultArray);
   },
 
   /**
@@ -46,28 +61,20 @@ const carparkData = {
    * @param callback Should accept a single result parameter, which contains an array of objects
    */
   retrieveInLongLat: function (long1, lat1, long2, lat2, callback) {
-    database()
-      .ref('/')
-      .orderByChild('longitude')
-      .startAt(long1)
-      .endAt(long2)
-      .once('value', (snapshot) => {
-        const resultArray = [];
-        const carpark = snapshot.val();
-        for (var key in carpark) {
-          if (
-            carpark[key]['latitude'] >= lat1 &&
-            carpark[key]['latitude'] <= lat2
-          )
-            resultArray.push(carpark[key]);
-        }
-        callback(resultArray);
-      });
+    const resultArray = [];
+    this._carparksData.forEach((cp) => {
+      if (
+        cp.latitude >= lat1 &&
+        cp.latitude <= lat2 &&
+        cp.longitude >= long1 &&
+        cp.longitude <= long2
+      ) {
+        resultArray.push(cp);
+      }
+    });
+    callback(resultArray);
   },
 
-  /*
-
-     */
   /**
    * Retrieve carparks based on carpark name
    * Does exact string matching, may still return multiple objects since there are
@@ -76,24 +83,19 @@ const carparkData = {
    * @param callback Should accept a single result parameter, which contains an array of objects
    */
   retrieveByName: function (name, callback) {
-    database()
-      .ref('/')
-      .equalTo(name)
-      .once('value', (snapshot) => {
-        // we use an array instead of the object returned to standardise the format of return values
-        const resultArray = [];
-        const carpark = snapshot.val();
-        for (var key in carpark) {
-          resultArray.push(carpark[key]);
-        }
-        callback(resultArray);
-      });
+    const resultArray = [];
+    this._carparksData.forEach((cp) => {
+      if (cp.identifier === name) {
+        resultArray.push(cp);
+      }
+      callback(resultArray);
+    });
   },
 
-  updateCarparkData: function (json, callback) {
-    //This json object should contain the dynamic fields (carpark lots) and a key (carpark code).
-    database().ref('/').update(json).then(callback);
-  },
+  // updateCarparkData: function (json, callback) {
+  //   //This json object should contain the dynamic fields (carpark lots) and a key (carpark code).
+  //   database().ref('/').update(json).then(callback);
+  // },
 };
 
 export default carparkData;

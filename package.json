@@ -16,6 +16,7 @@
     "@react-native-firebase/database": "^10.8.1",
     "@react-native-picker/picker": "^1.9.11",
     "axios": "^0.21.1",
+    "base-64": "^1.0.0",
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-maps": "0.27.1"
