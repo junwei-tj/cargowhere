@@ -1,6 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, ImageBackground, ToastAndroid, Pressable } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import React, {useState, useEffect} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  ImageBackground,
+  ToastAndroid,
+  Pressable,
+} from 'react-native';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -34,7 +42,7 @@ const styles = StyleSheet.create({
   refreshButtonContainer: {
     width: 36,
     height: 36,
-    position: "absolute",
+    position: 'absolute',
     top: 10,
     right: 10,
     backgroundColor: 'white',
@@ -54,19 +62,24 @@ const styles = StyleSheet.create({
   refreshButton: {
     width: '80%',
     height: '80%',
-    tintColor: 'grey'
-  }
+    tintColor: 'grey',
+  },
 });
 
-
-function updateCarparkMarkers({ region, callback }) {
+function updateCarparkMarkers({region, callback}) {
   let bottomLeftLat = region.latitude - region.latitudeDelta / 2;
   let bottomLeftLongitude = region.longitude - region.longitudeDelta / 2;
   let topRightLat = region.latitude + region.latitudeDelta / 2;
   let topRightLongitude = region.longitude + region.longitudeDelta / 2;
 
-  ToastAndroid.show("Updating carpark markers...", ToastAndroid.SHORT);
-  carparkData.retrieveInLongLat(bottomLeftLongitude, bottomLeftLat, topRightLongitude, topRightLat, callback);
+  // ToastAndroid.show('Updating carpark markers...', ToastAndroid.SHORT);
+  carparkData.retrieveInLongLat(
+    bottomLeftLongitude,
+    bottomLeftLat,
+    topRightLongitude,
+    topRightLat,
+    callback,
+  );
 }
 
 // custom hook
@@ -76,10 +89,10 @@ function useCarparks(carparkList) {
   const [carparks, setCarparks] = useState(carparkList);
 
   const updateCarparks = (carparkList) => {
-    console.log("before filtering:")
-    console.log(carparkList)
+    // console.log('before filtering:');
+    // console.log(carparkList);
     let carparkObjs = [];
-    carparkList.forEach(obj => {
+    carparkList.forEach((obj) => {
       let carpark = {
         latlng: {
           latitude: obj.latitude,
@@ -87,21 +100,22 @@ function useCarparks(carparkList) {
         },
         title: obj.name,
       };
-      if (carparkObjs.length < 15 && !carparkObjs.some(item => item.title == carpark.title))
+      if (
+        carparkObjs.length < 15 &&
+        !carparkObjs.some((item) => item.title == carpark.title)
+      )
         carparkObjs.push(carpark);
-    })
+    });
     setCarparks(carparkObjs);
-    console.log("after filtering:")
-    console.log(carparkObjs)
-    ToastAndroid.show("Carpark markers updated", ToastAndroid.SHORT);
-  }
+    // console.log('after filtering:');
+    // console.log(carparkObjs);
+    // ToastAndroid.show('Carpark markers updated', ToastAndroid.SHORT);
+  };
   return [carparks, updateCarparks];
 }
 
-
-
 export default function App() {
-  // declare latitude and logitude as state. default values point to NTU 
+  // declare latitude and logitude as state. default values point to NTU
   const [region, setRegion] = useState({
     latitude: 1.3483099,
     longitude: 103.680946,
@@ -109,7 +123,7 @@ export default function App() {
     longitudeDelta: 0.0121,
   });
 
-//--------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------
   //Functions to CRUD local storage of favourites
   //TODO: Shift out to seperate .js file if possible and use real carpark data
 
@@ -122,7 +136,7 @@ export default function App() {
     } catch (err) {
       alert(err);
     }
-  }
+  };
 
   //Used to load all favourites from local storage, called at
   //startup of app using useEffect()
@@ -138,18 +152,18 @@ export default function App() {
     } catch (err) {
       alert(err);
     }
-  }
+  };
 
   //Used to remove a favourite from local storage, will be
   //passed down to FavouritesScreen to be executed
   const removeFavourite = async (key) => {
     try {
-      await AsyncStorage.removeItem(key)
-      console.log("Removed success");
-    } catch (err){
+      await AsyncStorage.removeItem(key);
+      console.log('Removed success');
+    } catch (err) {
       alert(err);
     }
-  }
+  };
   //--------------------------------------------------------------------------------------------------
 
   const [favourites, setFavourites] = useState();
@@ -161,7 +175,7 @@ export default function App() {
     //addFavourite("Favourites_Key1", "carpark1 details");
     //removeFavourite("Favourites_Key1");
     //removeFavourite("Favourites_Key0");
-      loadAllFavourites()
+    loadAllFavourites();
   }, []);
 
   const [carparks, setCarparks] = useCarparks([]);
@@ -170,11 +184,10 @@ export default function App() {
   // Can we use this to pin current location also? (Jun Jie)
   const [specificLocation, setSpecificLocation] = useState({
     latlng: {
-      
       latitude: 1.3483099,
       longitude: 103.680946,
     },
-    title: "Nanyang Technological University",
+    title: 'Nanyang Technological University',
     active: true,
   });
 
@@ -198,9 +211,9 @@ export default function App() {
           latitude: info.coords.latitude,
           longitude: info.coords.longitude,
         },
-        title: "Current Location",
+        title: 'Current Location',
         active: true,
-      })
+      });
     });
   }
 
@@ -230,45 +243,51 @@ export default function App() {
         region={region}
         onRegionChangeComplete={(region) => {
           setRegion(region);
-          console.log("onRegionChangeComplete completed")
-        }}
-      >
+          updateCarparkMarkers({region, callback: setCarparks});
+          // console.log('onRegionChangeComplete completed');
+        }}>
         {carparks.map((marker, index) => (
           <Marker
             key={index}
             coordinate={marker.latlng}
             title={marker.title}
-            onCalloutPress={() => alert("pressed " + marker.title)}
-          >
+            onCalloutPress={() => alert('pressed ' + marker.title)}>
             <ImageBackground
               source={require('./images/marker.png')}
-              style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}
-            >
-              <Text style={{ paddingBottom: 10, color: 'white' }}>{index + 1}</Text>
+              style={{
+                width: 44,
+                height: 44,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{paddingBottom: 10, color: 'white'}}>
+                {index + 1}
+              </Text>
             </ImageBackground>
           </Marker>
         ))}
-        {specificLocation.active &&
+        {specificLocation.active && (
           <Marker
             coordinate={specificLocation.latlng}
-            title={specificLocation.title}
-          >
+            title={specificLocation.title}>
             <Image
               source={require('./images/pin.png')}
-              style={{ width: 44, height: 44 }}
+              style={{width: 44, height: 44}}
             />
           </Marker>
-        }
+        )}
       </MapView>
 
       <View style={styles.refreshButtonContainer}>
         <Pressable
-          android_ripple={{ color: 'lightgrey' }}
+          android_ripple={{color: 'lightgrey'}}
           style={styles.refreshPressable}
-          onPress={() => updateCarparkMarkers({ region, callback: setCarparks })}
-        >
-          <Image source={require('./images/refresh.png')} style={styles.refreshButton}/>
-        </Pressable>        
+          onPress={() => updateCarparkMarkers({region, callback: setCarparks})}>
+          <Image
+            source={require('./images/refresh.png')}
+            style={styles.refreshButton}
+          />
+        </Pressable>
       </View>
 
       <View style={styles.menu}>
@@ -277,8 +296,8 @@ export default function App() {
           setRegion={setRegion}
           setSpecificLocation={setSpecificLocation}
           carparks={carparks}
-          removeFavourite = {removeFavourite}
-          addFavourite = {addFavourite}
+          removeFavourite={removeFavourite}
+          addFavourite={addFavourite}
           favourites={favourites}
           currentRegion={region}
         />
