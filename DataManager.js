@@ -15,7 +15,7 @@ const carparkData = {
    */
   retrieveCarparkStaticData: function () {
     axios
-      .get('http://demonicmushy.dyndns.org:7020/carparks', {
+      .get('http://demonicmushy.com:7020/carparks', {
         auth: {username: 'cargowhere', password: 'cargowhere'},
       })
       .then((response) => {
@@ -98,7 +98,7 @@ const carparkData = {
    */
   retrieveAvailabilityData: function (callback) {
     axios
-      .get('http://demonicmushy.dyndns.org:7020/availability', {
+      .get('http://demonicmushy.com:7020/availability', {
         auth: {username: 'cargowhere', password: 'cargowhere'},
       })
       .then((response) => {
