@@ -8,6 +8,10 @@ import {name as appName} from './app.json';
 
 import {decode, encode} from 'base-64';
 
+import React from 'react';
+import { Provider } from 'react-redux';
+import store from './redux/store';
+
 if (!global.btoa) {
   global.btoa = encode;
 }
@@ -20,4 +24,10 @@ import carparkData from './DataManager';
 // here so that it only runs once when app is started instead of when App.js is rendered
 carparkData.retrieveCarparkStaticData();
 
-AppRegistry.registerComponent(appName, () => App);
+const AppWithRedux = () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+)
+
+AppRegistry.registerComponent(appName, () => AppWithRedux);

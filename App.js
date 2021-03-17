@@ -17,6 +17,10 @@ import BottomDisplay from './BottomDisplay';
 import carparkData from './DataManager';
 import {getDistanceFromLatLonInM} from './screens/Carpark';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { setCarparks } from './redux/carparksSlice';
+import { setRegion } from './redux/regionSlice';
+
 const MAX_CARPARKS_TO_DISPLAY = 15;
 
 const styles = StyleSheet.create({
@@ -75,7 +79,7 @@ function getCarparks({region, callback}) {
   let topRightLat = region.latitude + region.latitudeDelta / 2;
   let topRightLongitude = region.longitude + region.longitudeDelta / 2;
 
-  // ToastAndroid.show('Updating carpark markers...', ToastAndroid.SHORT);
+  ToastAndroid.show('Updating carpark markers...', ToastAndroid.SHORT);
   carparkData.retrieveInLongLat(
     bottomLeftLongitude,
     bottomLeftLat,
@@ -120,7 +124,6 @@ function filterCarparksJSON(carparkList) {
  */
 function sortCarparks(
   carparks,
-  setCarparks,
   sortingCriteria,
   pointOfReference,
 ) {
@@ -151,20 +154,18 @@ function sortCarparks(
   } else {
     throw 'Invalid sorting criteria specified.';
   }
-  setCarparks(carparks);
-  console.log('after sorting:');
-  console.log(carparks);
-  ToastAndroid.show('Carpark markers updated', ToastAndroid.SHORT);
+  return carparks;
 }
 
 export default function App() {
   // declare latitude and logitude as state. default values point to NTU
-  const [region, setRegion] = useState({
-    latitude: 1.3483099,
-    longitude: 103.680946,
-    latitudeDelta: 0.015,
-    longitudeDelta: 0.0121,
-  });
+  // const [region, setRegion] = useState({
+  //   latitude: 1.3483099,
+  //   longitude: 103.680946,
+  //   latitudeDelta: 0.015,
+  //   longitudeDelta: 0.0121,
+  // });
+  const region = useSelector(state => state.region);
 
   //--------------------------------------------------------------------------------------------------
   //Functions to CRUD local storage of favourites
@@ -221,18 +222,22 @@ export default function App() {
     loadAllFavourites();
   }, []);
 
-  const [carparks, setCarparks] = useState([]);
+  // const [carparks, setCarparks] = useState([]);
+  const carparks = useSelector(state => state.carparks.carparksData);
+  const specificLocation = useSelector(state => state.specificLocation);
+
+  const dispatch = useDispatch();
 
   // used for marking user's searched location. set active to false when user is using GPS
   // Can we use this to pin current location also? (Jun Jie)
-  const [specificLocation, setSpecificLocation] = useState({
-    latlng: {
-      latitude: 1.3483099,
-      longitude: 103.680946,
-    },
-    title: 'Nanyang Technological University',
-    active: true,
-  });
+  // const [specificLocation, setSpecificLocation] = useState({
+  //   latlng: {
+  //     latitude: 1.3483099,
+  //     longitude: 103.680946,
+  //   },
+  //   title: 'Nanyang Technological University',
+  //   active: true,
+  // });
 
   // carparkData.retrieveInCoords(103.74847572537429, 1.3609900957056642, 103.75131886701433, 1.3638109818660649,  function(resultArray) {
   //   console.log(resultArray);
@@ -267,7 +272,9 @@ export default function App() {
   function carparksRetrieved(carparkList) {
     let carparkObjs = filterCarparksJSON(carparkList);
     //sortCarparks(carparkObjs, setCarparks, "distance", region);
-    sortCarparks(carparkObjs, setCarparks, 'availability');
+    let sorted = sortCarparks(carparkObjs, 'distance', region);
+    dispatch(setCarparks(sorted))
+    ToastAndroid.show('Carpark markers updated', ToastAndroid.SHORT);
   }
 
   return (
@@ -278,8 +285,8 @@ export default function App() {
         style={styles.map}
         region={region}
         onRegionChangeComplete={(region) => {
-          setRegion(region);
-          getCarparks({region, callback: carparksRetrieved});
+          dispatch(setRegion(region));
+          //getCarparks({region, callback: carparksRetrieved});
           console.log('onRegionChangeComplete completed');
         }}>
         {carparks.map((marker, index) => {
@@ -289,7 +296,9 @@ export default function App() {
                 key={index}
                 coordinate={marker.latlng}
                 title={marker.title}
-                onCalloutPress={() => alert('pressed ' + marker.title)}>
+                onCalloutPress={() => alert('pressed ' + marker.title)}
+                //onPress={() => dispatch(setLatlng(marker.latlng))}
+                >
                 <ImageBackground
                   source={require('./images/marker.png')}
                   style={{
@@ -333,13 +342,13 @@ export default function App() {
       <View style={styles.menu}>
         {/* pass update state functions to child components so they can update on behalf of this component */}
         <BottomDisplay
-          setRegion={setRegion}
-          setSpecificLocation={setSpecificLocation}
-          carparks={carparks}
+          //setRegion={setRegion}
+          //setSpecificLocation={setSpecificLocation}
+          //carparks={carparks}
           removeFavourite={removeFavourite}
           addFavourite={addFavourite}
           favourites={favourites}
-          currentRegion={region}
+          //currentRegion={region}
         />
       </View>
     </View>

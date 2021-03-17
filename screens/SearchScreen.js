@@ -2,6 +2,9 @@ import React from 'react';
 import {View, Text, StyleSheet, TextInput, FlatList} from 'react-native';
 import axios from 'axios';
 import Carpark from './Carpark';
+import { useSelector, useDispatch } from 'react-redux';
+import { setLatlng } from '../redux/regionSlice';
+import { setSpecificLocation } from '../redux/specificLocationSlice';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,6 +29,10 @@ const styles = StyleSheet.create({
 
 export default function SearchScreen(props) {
   const [searchValue, setSearchValue] = React.useState('');
+
+  const carparks = useSelector(state => state.carparks.carparksData)
+  const region = useSelector(state => state.region);
+  const dispatch = useDispatch();
 
   async function getLocation(queryTerm) {
     var tomtomBaseUrl = 'https://api.tomtom.com/search/2/search/';
@@ -55,19 +62,32 @@ export default function SearchScreen(props) {
       console.log(location.position);
       console.log(location.address);
       // update map view
-      props.setRegion((prevState) => ({
-        ...prevState,
+      dispatch(setLatlng({
         latitude: location.position.lat,
         longitude: location.position.lon,
       }));
-      props.setSpecificLocation({
+      dispatch(setSpecificLocation({
         latlng: {
           latitude: location.position.lat,
           longitude: location.position.lon,
         },
         active: true,
         title: searchValue,
-      });
+      }));
+
+      // props.setRegion((prevState) => ({
+      //   ...prevState,
+      //   latitude: location.position.lat,
+      //   longitude: location.position.lon,
+      // }));
+      // props.setSpecificLocation({
+      //   latlng: {
+      //     latitude: location.position.lat,
+      //     longitude: location.position.lon,
+      //   },
+      //   active: true,
+      //   title: searchValue,
+      // });
     });
   }
 
@@ -84,10 +104,10 @@ export default function SearchScreen(props) {
       </View>
       <FlatList
         style={{width: '100%'}}
-        data={props.carparks}
+        data={carparks}
         keyExtractor={(item, index) => item.key}
         renderItem={({item}) => {
-          return <Carpark carpark={item} currentRegion={props.currentRegion} />;
+          return <Carpark carpark={item} currentRegion={region} />;
         }}
       />
     </View>

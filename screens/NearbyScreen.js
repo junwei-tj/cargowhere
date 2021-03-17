@@ -11,6 +11,9 @@ import {Picker} from '@react-native-picker/picker';
 import Carpark from './Carpark';
 import DetailedView from './DetailedView';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { setLatlng } from '../redux/regionSlice';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -59,6 +62,11 @@ export default function NearbyScreen(props) {
   const transformXValue = React.useRef(new Animated.Value(0)).current;
   const [selectedCarpark, setSelectedCarpark] = useState({});
 
+  const carparks = useSelector(state => state.carparks.carparksData);
+  const region = useSelector(state => state.region);
+
+  const dispatch = useDispatch();
+
   const goToDetailedView = (carpark) => () => {
     setSelectedCarpark(carpark);
     // changing the value to make sliding left animation
@@ -68,11 +76,15 @@ export default function NearbyScreen(props) {
       useNativeDriver: true,
     }).start();
     // on click, move map to center that carpark
-    props.setRegion((prev) => ({
-      ...prev,
+    dispatch(setLatlng({
       latitude: carpark.latlng.latitude,
       longitude: carpark.latlng.longitude,
-    }));
+    }))
+    // props.setRegion((prev) => ({
+    //   ...prev,
+    //   latitude: carpark.latlng.latitude,
+    //   longitude: carpark.latlng.longitude,
+    // }));
   };
 
   function backFromDetailedView() {
@@ -108,13 +120,13 @@ export default function NearbyScreen(props) {
         </View>
         {/* <FlatList data={Array(9).fill(0)} renderItem={() => <Carpark />} /> */}
         <FlatList
-          data={props.carparks}
+          data={carparks}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => {
             return (
               <Carpark
                 carpark={item}
-                currentRegion={props.currentRegion}
+                currentRegion={region}
                 press={goToDetailedView}
               />
             );

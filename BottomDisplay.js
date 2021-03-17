@@ -7,8 +7,6 @@ import {
   AboutScreen,
 } from './screens';
 
-const tabNames = ['navigation', 'favourites', 'search', 'about'];
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -128,9 +126,9 @@ export default function NavigationBar(props) {
       {/* Switching of tab screen is done here */}
       {activeTabs.navigation && (
         <NearbyScreen
-          setRegion={props.setRegion}
-          carparks={props.carparks}
-          currentRegion={props.currentRegion}
+          //setRegion={props.setRegion}
+          //carparks={props.carparks}
+          //currentRegion={props.currentRegion}
         />
       )}
       {activeTabs.favourites && (
@@ -142,10 +140,10 @@ export default function NavigationBar(props) {
       )}
       {activeTabs.search && (
         <SearchScreen
-          setRegion={props.setRegion}
-          setSpecificLocation={props.setSpecificLocation}
-          carparks={props.carparks}
-          currentRegion={props.currentRegion}
+          //setRegion={props.setRegion}
+          //setSpecificLocation={props.setSpecificLocation}
+          //carparks={props.carparks}
+          //currentRegion={props.currentRegion}
         />
       )}
       {activeTabs.about && <AboutScreen />}
