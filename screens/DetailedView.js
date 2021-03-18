@@ -65,10 +65,12 @@ export default function DetailedView(props) {
 
   // to get full carpark info
   useEffect(() => {
-    var temp = carparkData._carparksData.filter((val) => {
-      return val.name.trim() === props.selectedCarpark.title.trim();
-    });
-    setCp(temp[0]);
+    if (props.selectedCarpark) {
+      var temp = carparkData._carparksData.filter((val) => {
+        return val.name.trim() === props.selectedCarpark.title.trim();
+      });
+      setCp(temp[0]);
+    }
   }, [props.selectedCarpark]);
 
   return (

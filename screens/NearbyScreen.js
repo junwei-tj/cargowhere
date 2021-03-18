@@ -60,7 +60,7 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 export default function NearbyScreen(props) {
   const [value, setValue] = useState('key0');
   const transformXValue = React.useRef(new Animated.Value(0)).current;
-  const [selectedCarpark, setSelectedCarpark] = useState({});
+  const [selectedCarpark, setSelectedCarpark] = useState(null);
 
   const carparks = useSelector(state => state.carparks.carparksData);
   const region = useSelector(state => state.region);
