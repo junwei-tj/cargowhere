@@ -16,13 +16,12 @@ import StatusBar from './StatusBar';
 import BottomDisplay from './BottomDisplay';
 import carparkData from './DataManager';
 import {getDistanceFromLatLonInM} from './screens/Carpark';
+import { MAX_CARPARKS_TO_DISPLAY } from './constants/carparkConstants';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setCarparks } from './redux/carparksSlice';
 import { setRegion } from './redux/regionSlice';
 import { SORT_BY_AVAILABILITY, SORT_BY_DISTANCE } from './constants/sortCriteriaConstants';
-
-const MAX_CARPARKS_TO_DISPLAY = 15;
 
 const styles = StyleSheet.create({
   container: {
@@ -72,6 +71,20 @@ const styles = StyleSheet.create({
     height: '80%',
     tintColor: 'grey',
   },
+  marker: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  carparkNumber: {
+    paddingBottom: 10, 
+    color: 'white'
+  },
+  pin: {
+    width: 44, 
+    height: 44
+  }
 });
 
 function getCarparks({region, callback}) {
@@ -161,13 +174,8 @@ const CarparkMarker = (props) => (
     >
     <ImageBackground
       source={require('./images/marker.png')}
-      style={{
-        width: 44,
-        height: 44,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <Text style={{paddingBottom: 10, color: 'white'}}>
+      style={styles.marker}>
+      <Text style={styles.carparkNumber}>
         {props.index + 1}
       </Text>
     </ImageBackground>
@@ -248,7 +256,7 @@ export default function App() {
             title={specificLocation.title}>
             <Image
               source={require('./images/pin.png')}
-              style={{width: 44, height: 44}}
+              style={styles.pin}
             />
           </Marker>
         )}

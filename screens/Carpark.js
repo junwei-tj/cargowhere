@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Pressable,
+  ImageBackground,
 } from 'react-native';
 /**
  * Renders a Carpark Component based on the info available
@@ -51,10 +52,14 @@ export default function Carpark(props) {
     <Pressable onPress={props.press(props.carpark)}>
       <View style={styles.container}>
         <View style={styles.markerContainer}>
-          <Image
+          <ImageBackground
             style={styles.marker}
             source={require('../images/marker.png')}
-          />
+          >
+            <Text style={styles.carparkNumber}>
+              {props.index + 1}
+            </Text>
+          </ImageBackground>
           <Text style={styles.distance}>
             {Math.round(distanceBetween) + 'm'}
           </Text>
@@ -89,17 +94,18 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   marker: {
-    width: 20,
-    height: 20,
+    width: 30,
+    height: 30,
     marginTop: 5,
     marginBottom: 3,
-    borderWidth: 1,
+    //borderWidth: 1,
   },
   distance: {
     color: '#6a94ff',
     fontSize: 11,
     marginBottom: 3,
     width: 40,
+    textAlign: 'center',
   },
   infoContainer: {
     flexDirection: 'column',
@@ -115,4 +121,10 @@ const styles = StyleSheet.create({
     color: '#777777',
     fontSize: 12,
   },
+  carparkNumber: {
+    color: 'white', 
+    textAlign: 'center', 
+    paddingTop: 3, 
+    fontSize: 12
+  }
 });

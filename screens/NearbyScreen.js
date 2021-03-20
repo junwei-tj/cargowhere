@@ -10,6 +10,7 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import Carpark from './Carpark';
 import DetailedView from './DetailedView';
+import { MAX_CARPARKS_TO_DISPLAY } from '../constants/carparkConstants';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setSortCriteria } from '../redux/sortCriteriaSlice';
@@ -127,12 +128,13 @@ export default function NearbyScreen(props) {
         </View>
         {/* <FlatList data={Array(9).fill(0)} renderItem={() => <Carpark />} /> */}
         <FlatList
-          data={carparks}
+          data={carparks.slice(0, MAX_CARPARKS_TO_DISPLAY)}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => {
+          renderItem={({item, index}) => {
             return (
               <Carpark
                 carpark={item}
+                index={index}
                 currentRegion={region}
                 press={goToDetailedView}
               />
