@@ -132,11 +132,7 @@ export default function NavigationBar(props) {
         />
       )}
       {activeTabs.favourites && (
-        <FavouritesScreen
-          favourites={props.favourites}
-          removeFavourite={props.removeFavourite}
-          addFavourite={props.addFavourite}
-        />
+        <FavouritesScreen/>
       )}
       {activeTabs.search && (
         <SearchScreen
