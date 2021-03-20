@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+//import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import StatusBar from './StatusBar';
 import BottomDisplay from './BottomDisplay';
@@ -175,61 +175,6 @@ const CarparkMarker = (props) => (
 )
 
 export default function App() {
-  //--------------------------------------------------------------------------------------------------
-  //Functions to CRUD local storage of favourites
-  //TODO: Shift out to seperate .js file if possible and use real carpark data
-
-  //Used to add a favourite to local storage, will be
-  //passed down to FavouritesScreen to be executed
-  const addFavourite = async (key, value) => {
-    try {
-      const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem(key, jsonValue);
-    } catch (err) {
-      alert(err);
-    }
-  };
-
-  //Used to load all favourites from local storage, called at
-  //startup of app using useEffect()
-  const loadAllFavourites = async () => {
-    let keys = [];
-    let jsonValues = [];
-    try {
-      keys = await AsyncStorage.getAllKeys();
-      jsonValues = await AsyncStorage.multiGet(keys);
-      console.log(jsonValues);
-      setFavourites(jsonValues);
-      //finalAns.push(JSON.parse(value));
-    } catch (err) {
-      alert(err);
-    }
-  };
-
-  //Used to remove a favourite from local storage, will be
-  //passed down to FavouritesScreen to be executed
-  const removeFavourite = async (key) => {
-    try {
-      await AsyncStorage.removeItem(key);
-      console.log('Removed success');
-    } catch (err) {
-      alert(err);
-    }
-  };
-  //--------------------------------------------------------------------------------------------------
-
-  const [favourites, setFavourites] = useState();
-
-  //Can use the below for testing if you want, to initialise values on startup
-  //by uncommenting the lines you want to run
-  useEffect(() => {
-    //addFavourite("Favourites_Key0", "carpark0 details");
-    //addFavourite("Favourites_Key1", "carpark1 details");
-    //removeFavourite("Favourites_Key1");
-    //removeFavourite("Favourites_Key0");
-    loadAllFavourites();
-  }, []);
-
   const region = useSelector(state => state.region);
   const carparks = useSelector(state => state.carparks.carparksData);
   const specificLocation = useSelector(state => state.specificLocation);
@@ -327,9 +272,6 @@ export default function App() {
           //setRegion={setRegion}
           //setSpecificLocation={setSpecificLocation}
           //carparks={carparks}
-          removeFavourite={removeFavourite}
-          addFavourite={addFavourite}
-          favourites={favourites}
           //currentRegion={region}
           pickerCallback={sortCriteriaChanged}
         />

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Button, FlatList, StyleSheet} from 'react-native';
-import Carpark from './Carpark';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Favourite from './Favourite';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,22 +22,66 @@ const styles = StyleSheet.create({
 });
 
 export default function FavouritesScreen(props) {
-  //Calls removeFavourite() passed down from App.js
-  function removeFavourite(key) {
-    props.removeFavourite(key);
-    console.log('Executed removeFavourite!');
-    refreshFavourites();
+
+  //Used to load all favourites from local storage, called whenever 
+  //favourites are changed or when Favourites tab is clicked
+  async function loadAllFavourites() {
+    let keys = [];
+    let jsonValues = [];
+    try {
+      keys = await AsyncStorage.getAllKeys();
+      jsonValues = await AsyncStorage.multiGet(keys);
+      console.log(jsonValues);
+      setFavourites(jsonValues);
+      //finalAns.push(JSON.parse(value));
+    } catch (err) {
+      alert(err);
+    }
   }
 
-  //Calls addFavourite() passed down from App.js
-  function addFavourite(key, value) {
-    props.addFavourite(key, value);
+  //Used to add a favourite from local storage
+  async function addFavourite(key, value) {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem(key, jsonValue);
+    } catch (err) {
+      alert(err);
+    }
     console.log('Executed addFavourite!');
-    refreshFavourites();
+    loadAllFavourites();
+  }
+  
+  //Used to remove a favourite from local storage
+  async function removeFavourite(key) {
+    try {
+      await AsyncStorage.removeItem(key);
+      console.log('Removed success');
+    } catch (err) {
+      alert(err);
+    }
+    console.log('Executed removeFavourite!');
+    loadAllFavourites();
   }
 
-  //TODO: so that list can be updated real-time
-  function refreshFavourites() {}
+  const [favourites, setFavourites] = useState();
+
+  useEffect(() => {
+    //Test adding ======================================================
+    addFavourite('Favourites_Key0', 'press above button to remove this!');
+    addFavourite("Favourites_Key1", "Tekong");
+    addFavourite("Favourites_Key2", "Nanyang Technological University");
+    addFavourite("Favourites_Key3", "Plaza Singapura");
+    addFavourite("Favourites_Key4", "Sentosa");
+    //removeFavourite("Favourites_Key1");
+    //==================================================================
+    console.log("running useffect");
+    loadAllFavourites();
+ }, []);
+
+  //TODO
+  const manageFavourite = (favourite) => () => {
+
+  };
 
   return (
     <View style={styles.container}>
@@ -48,12 +93,21 @@ export default function FavouritesScreen(props) {
       <Button
         title="Press to remove/add"
         onPress={() => {
-          addFavourite('add', 'addresult');
+          removeFavourite('Favourites_Key0');
         }}
       />
-      <Text style={styles.headerText}>{props.favourites}</Text>
-      {/* Put here for now just to see how the list will look  */}
-      {/* <FlatList data={Array(9).fill(0)} renderItem={() => <Carpark />} />  */}
+      <FlatList
+        style={{width: '100%'}}
+        data={favourites}
+        keyExtractor={(item, index) => item.key}
+        renderItem={({ item }) => (
+          <Favourite
+                favourite={item}
+                //currentRegion={region}
+                press={manageFavourite}
+              />
+        )}
+      />
     </View>
   );
 }
