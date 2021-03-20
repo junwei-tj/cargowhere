@@ -129,6 +129,7 @@ export default function NavigationBar(props) {
           //setRegion={props.setRegion}
           //carparks={props.carparks}
           //currentRegion={props.currentRegion}
+          pickerCallback={props.pickerCallback}
         />
       )}
       {activeTabs.favourites && (

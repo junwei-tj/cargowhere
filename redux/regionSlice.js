@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// initial state points to NTU
+// initial state points to pioneer MRT
 initialState = {
-  latitude: 1.3483099,
-  longitude: 103.680946,
+  latitude: 1.3378270431723034,
+  longitude: 103.69738744021137,
   latitudeDelta: 0.015,
   longitudeDelta: 0.0121,
 }

@@ -20,6 +20,7 @@ import {getDistanceFromLatLonInM} from './screens/Carpark';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCarparks } from './redux/carparksSlice';
 import { setRegion } from './redux/regionSlice';
+import { SORT_BY_AVAILABILITY, SORT_BY_DISTANCE } from './constants/sortCriteriaConstants';
 
 const MAX_CARPARKS_TO_DISPLAY = 15;
 
@@ -93,9 +94,13 @@ function getCarparks({region, callback}) {
  * Function to filter the retrieved carparks to only include the desired fields.
  * Current fields kept are: latitude and longitude (combined to latlng), title, availableLots_H, availableLots_L, availableLots_car, availableLots_motorcycle
  * @param {Array} carparkList
+ * @param {region} pointOfReference coordinates (in latitude and longitude) of the point distance is to be calculated from
  */
-function filterCarparksJSON(carparkList) {
+function filterCarparksJSON(carparkList, pointOfReference) {
   let carparkObjs = [];
+  if (pointOfReference === undefined) {
+    throw 'Unable to sort by distance when pointOfReference is not provided';
+  }
   carparkList.forEach((obj) => {
     let carpark = {
       latlng: {
@@ -103,10 +108,16 @@ function filterCarparksJSON(carparkList) {
         longitude: obj.longitude,
       },
       title: obj.name,
-      availableLots_H: obj.availableLots_H,
-      availableLots_L: obj.availableLots_L,
       availableLots_car: obj.availableLots_car,
-      availableLots_motorcycle: obj.availableLots_motorcycle,
+      distance: getDistanceFromLatLonInM(
+        pointOfReference.latitude,
+        pointOfReference.longitude,
+        obj.latitude,
+        obj.longitude,
+      ),
+      // availableLots_H: obj.availableLots_H,
+      // availableLots_L: obj.availableLots_L,
+      // availableLots_motorcycle: obj.availableLots_motorcycle,
     };
     if (!carparkObjs.some((item) => item.title == carpark.title))
       // filter out duplicates
@@ -119,54 +130,51 @@ function filterCarparksJSON(carparkList) {
 /**
  * Function to handle sorting of carparks. Sorting can only be done based on distance and availability
  * @param {Array} carparks
- * @param {string} sortingCriteria accepts "distance" or "availability"
- * @param {region} pointOfReference optional - coordinates (in latitude and longitude) of the point distance is to be calculated from
+ * @param {string} sortCriteria accepts constants from ./constants/sortCriteriaConstants
  */
 function sortCarparks(
   carparks,
-  sortingCriteria,
-  pointOfReference,
+  sortCriteria,
 ) {
-  if (sortingCriteria === 'distance' && pointOfReference === undefined) {
-    throw 'Unable to sort by distance when pointOfReference is not provided';
-  }
-
-  if (sortingCriteria === 'distance') {
-    // get each carpark's distance
-    carparks.forEach((carpark) => {
-      let distance = getDistanceFromLatLonInM(
-        pointOfReference.latitude,
-        pointOfReference.longitude,
-        carpark.latlng.latitude,
-        carpark.latlng.longitude,
-      );
-      carpark['distance'] = distance;
-    });
-    // sort carparks by distance, in ascending order
-    carparks.sort((a, b) => {
-      return a.distance - b.distance;
-    });
-  } else if (sortingCriteria === 'availability') {
-    // sort by availability (CURRENTLY ONLY CARS)
-    carparks.sort((a, b) => {
-      return b.availableLots_car - a.availableLots_car;
-    });
-  } else {
-    throw 'Invalid sorting criteria specified.';
+  switch (sortCriteria) {
+    case SORT_BY_AVAILABILITY:
+      // sort by availability
+      carparks.sort((a, b) => {
+        return b.availableLots_car - a.availableLots_car;
+      });
+      break;
+    default: // sort by distance
+      // sort carparks by distance, in ascending order
+      carparks.sort((a, b) => {
+        return a.distance - b.distance;
+      });
   }
   return carparks;
 }
 
-export default function App() {
-  // declare latitude and logitude as state. default values point to NTU
-  // const [region, setRegion] = useState({
-  //   latitude: 1.3483099,
-  //   longitude: 103.680946,
-  //   latitudeDelta: 0.015,
-  //   longitudeDelta: 0.0121,
-  // });
-  const region = useSelector(state => state.region);
+const CarparkMarker = (props) => (
+  <Marker
+    key={props.index}
+    coordinate={props.carpark.latlng}
+    title={props.carpark.title}
+    onCalloutPress={() => alert('pressed ' + props.carpark.title)}
+    >
+    <ImageBackground
+      source={require('./images/marker.png')}
+      style={{
+        width: 44,
+        height: 44,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <Text style={{paddingBottom: 10, color: 'white'}}>
+        {props.index + 1}
+      </Text>
+    </ImageBackground>
+  </Marker>
+)
 
+export default function App() {
   //--------------------------------------------------------------------------------------------------
   //Functions to CRUD local storage of favourites
   //TODO: Shift out to seperate .js file if possible and use real carpark data
@@ -222,26 +230,12 @@ export default function App() {
     loadAllFavourites();
   }, []);
 
-  // const [carparks, setCarparks] = useState([]);
+  const region = useSelector(state => state.region);
   const carparks = useSelector(state => state.carparks.carparksData);
   const specificLocation = useSelector(state => state.specificLocation);
+  const sortCriteria = useSelector(state => state.sortCriteria.criteria)
 
   const dispatch = useDispatch();
-
-  // used for marking user's searched location. set active to false when user is using GPS
-  // Can we use this to pin current location also? (Jun Jie)
-  // const [specificLocation, setSpecificLocation] = useState({
-  //   latlng: {
-  //     latitude: 1.3483099,
-  //     longitude: 103.680946,
-  //   },
-  //   title: 'Nanyang Technological University',
-  //   active: true,
-  // });
-
-  // carparkData.retrieveInCoords(103.74847572537429, 1.3609900957056642, 103.75131886701433, 1.3638109818660649,  function(resultArray) {
-  //   console.log(resultArray);
-  // });
 
   // code for geolocation for reference
   function currentLocation() {
@@ -270,11 +264,15 @@ export default function App() {
   // }, []);
 
   function carparksRetrieved(carparkList) {
-    let carparkObjs = filterCarparksJSON(carparkList);
-    //sortCarparks(carparkObjs, setCarparks, "distance", region);
-    let sorted = sortCarparks(carparkObjs, 'distance', region);
-    dispatch(setCarparks(sorted))
+    let carparkObjs = filterCarparksJSON(carparkList, region);
+    let sorted = sortCarparks(carparkObjs, sortCriteria);
+    dispatch(setCarparks(sorted));
     ToastAndroid.show('Carpark markers updated', ToastAndroid.SHORT);
+  }
+
+  const sortCriteriaChanged = (newSortCriteria) => {
+    let sorted = sortCarparks([...carparks], newSortCriteria);
+    dispatch(setCarparks(sorted));
   }
 
   return (
@@ -289,29 +287,13 @@ export default function App() {
           //getCarparks({region, callback: carparksRetrieved});
           console.log('onRegionChangeComplete completed');
         }}>
-        {carparks.map((marker, index) => {
+        {carparks.map((carpark, index) => {
           if (index < MAX_CARPARKS_TO_DISPLAY) {
             return (
-              <Marker
-                key={index}
-                coordinate={marker.latlng}
-                title={marker.title}
-                onCalloutPress={() => alert('pressed ' + marker.title)}
-                //onPress={() => dispatch(setLatlng(marker.latlng))}
-                >
-                <ImageBackground
-                  source={require('./images/marker.png')}
-                  style={{
-                    width: 44,
-                    height: 44,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Text style={{paddingBottom: 10, color: 'white'}}>
-                    {index + 1}
-                  </Text>
-                </ImageBackground>
-              </Marker>
+              <CarparkMarker
+                carpark={carpark}
+                index={index}
+              />
             );
           }
         })}
@@ -349,6 +331,7 @@ export default function App() {
           addFavourite={addFavourite}
           favourites={favourites}
           //currentRegion={region}
+          pickerCallback={sortCriteriaChanged}
         />
       </View>
     </View>
