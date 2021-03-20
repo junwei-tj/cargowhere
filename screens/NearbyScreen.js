@@ -63,6 +63,7 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 export default function NearbyScreen(props) {
   //const [value, setValue] = useState('key0');
   const sortCriteria = useSelector(state => state.sortCriteria.criteria);
+  const specificLocation = useSelector(state => state.specificLocation);
 
   const transformXValue = React.useRef(new Animated.Value(0)).current;
   const [selectedCarpark, setSelectedCarpark] = useState(null);
@@ -135,7 +136,7 @@ export default function NearbyScreen(props) {
               <Carpark
                 carpark={item}
                 index={index}
-                currentRegion={region}
+                currentRegion={specificLocation.latlng}
                 press={goToDetailedView}
               />
             );
