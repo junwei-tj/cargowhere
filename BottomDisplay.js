@@ -3,7 +3,6 @@ import {StyleSheet, View, Image, Pressable} from 'react-native';
 import {
   NearbyScreen,
   FavouritesScreen,
-  SearchScreen,
   AboutScreen,
 } from './screens';
 
@@ -88,22 +87,22 @@ export default function NavigationBar(props) {
           />
         </Pressable>
 
-        <Pressable
-          style={activeTabs.search ? activeTabStyle : inactiveTabStyle}
-          onPress={() =>
-            setActiveTabs({
-              navigation: false,
-              favourites: false,
-              search: true,
-              about: false,
-            })
-          }
-          android_ripple={{color: 'lightgrey'}}>
-          <Image
-            style={activeTabs.search ? activeIconStyle : inactiveIconStyle}
-            source={require('./images/search.png')}
-          />
-        </Pressable>
+        {/*<Pressable*/}
+        {/*  style={activeTabs.search ? activeTabStyle : inactiveTabStyle}*/}
+        {/*  onPress={() =>*/}
+        {/*    setActiveTabs({*/}
+        {/*      navigation: false,*/}
+        {/*      favourites: false,*/}
+        {/*      search: true,*/}
+        {/*      about: false,*/}
+        {/*    })*/}
+        {/*  }*/}
+        {/*  android_ripple={{color: 'lightgrey'}}>*/}
+        {/*  <Image*/}
+        {/*    style={activeTabs.search ? activeIconStyle : inactiveIconStyle}*/}
+        {/*    source={require('./images/search.png')}*/}
+        {/*  />*/}
+        {/*</Pressable>*/}
 
         <Pressable
           style={activeTabs.about ? activeTabStyle : inactiveTabStyle}
@@ -135,14 +134,14 @@ export default function NavigationBar(props) {
       {activeTabs.favourites && (
         <FavouritesScreen/>
       )}
-      {activeTabs.search && (
-        <SearchScreen
-          //setRegion={props.setRegion}
-          //setSpecificLocation={props.setSpecificLocation}
-          //carparks={props.carparks}
-          //currentRegion={props.currentRegion}
-        />
-      )}
+      {/*{activeTabs.search && (*/}
+      {/*  <SearchScreen*/}
+      {/*    //setRegion={props.setRegion}*/}
+      {/*    //setSpecificLocation={props.setSpecificLocation}*/}
+      {/*    //carparks={props.carparks}*/}
+      {/*    //currentRegion={props.currentRegion}*/}
+      {/*  />*/}
+      {/*)}*/}
       {activeTabs.about && <AboutScreen />}
     </View>
   );

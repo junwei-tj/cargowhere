@@ -22,6 +22,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setCarparks } from './redux/carparksSlice';
 import { setRegion } from './redux/regionSlice';
 import { SORT_BY_AVAILABILITY, SORT_BY_DISTANCE } from './constants/sortCriteriaConstants';
+import SearchScreen from "./screens/SearchScreen";
 
 const styles = StyleSheet.create({
   container: {
@@ -46,12 +47,21 @@ const styles = StyleSheet.create({
     borderColor: 'lightgrey',
     overflow: 'hidden',
   },
+  searchContainer: {
+    top: 10,
+    left: 10,
+    position: 'absolute',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    height: '12%',
+    width: '80%',
+  },
   refreshButtonContainer: {
     width: 36,
     height: 36,
     position: 'absolute',
-    top: 10,
-    right: 10,
+    top: 28,
+    right: 15,
     backgroundColor: 'white',
     borderRadius: 18,
     borderColor: 'grey',
@@ -78,11 +88,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   carparkNumber: {
-    paddingBottom: 10, 
+    paddingBottom: 10,
     color: 'white'
   },
   pin: {
-    width: 44, 
+    width: 44,
     height: 44
   }
 });
@@ -261,6 +271,10 @@ export default function App() {
           </Marker>
         )}
       </MapView>
+
+      <View style={styles.searchContainer}>
+        <SearchScreen/>
+      </View>
 
       <View style={styles.refreshButtonContainer}>
         <Pressable

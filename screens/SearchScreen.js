@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
     borderColor: 'lightgrey',
+    backgroundColor: 'white',
     margin: 10,
   },
 });
@@ -102,14 +103,14 @@ export default function SearchScreen(props) {
           onSubmitEditing={onSubmitSearch}
         />
       </View>
-      <FlatList
-        style={{width: '100%'}}
-        data={carparks}
-        keyExtractor={(item, index) => item.key}
-        renderItem={({item}) => {
-          return <Carpark carpark={item} currentRegion={region} />;
-        }}
-      />
+      {/*<FlatList*/}
+      {/*  style={{width: '100%'}}*/}
+      {/*  data={carparks}*/}
+      {/*  keyExtractor={(item, index) => item.key}*/}
+      {/*  renderItem={({item}) => {*/}
+      {/*    return <Carpark carpark={item} currentRegion={region} />;*/}
+      {/*  }}*/}
+      {/*/>*/}
     </View>
   );
 }
