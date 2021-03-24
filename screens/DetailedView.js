@@ -7,6 +7,8 @@ import {
   Pressable,
   Image,
   Button,
+  Linking,
+  Platform,
 } from 'react-native';
 import carparkData from '../DataManager';
 
@@ -72,6 +74,22 @@ export default function DetailedView(props) {
       setCp(temp[0]);
     }
   }, [props.selectedCarpark]);
+
+
+  function openMap() {
+    const scheme = Platform.select({
+        ios: 'maps:0,0?q=',
+        android: 'geo:0,0?q='
+    })
+    const latlng = `${cp.latitude},${cp.longitude}`;
+      console.log(`Open map with lat: ${latlng}.`);
+      const url = Platform.select({
+          ios: `${scheme}@${latlng}`,
+          android: `${scheme}@${latlng}`,
+      })
+      Linking.openURL(url);
+
+  }
 
   return (
     <>
@@ -165,7 +183,7 @@ export default function DetailedView(props) {
             <Button
               style={styles.button}
               title="GO"
-              onPress={() => console.log('go')}
+              onPress={openMap}
             />
           </View>
         </>
