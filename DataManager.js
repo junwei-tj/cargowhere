@@ -13,7 +13,7 @@ const carparkData = {
    * Retrieves carpark data from backend
    * Intended to be used once on app startup
    */
-  retrieveCarparkStaticData: function () {
+  retrieveCarparkStaticData: function (callback = () => {}) {
     axios
       .get('http://demonicmushy.com:7020/carparks', {
         auth: {username: 'cargowhere', password: 'cargowhere'},
@@ -22,6 +22,7 @@ const carparkData = {
         const carparks = response.data.carparks;
         this._carparksData = carparks;
         console.log('Static carpark data retrieved and stored.');
+        callback(carparks);
       })
       .catch((err) => {
         console.log('Error occured at retrieving static carpark data:', err);
@@ -88,23 +89,24 @@ const carparkData = {
       if (cp.identifier === name) {
         resultArray.push(cp);
       }
-      callback(resultArray);
     });
+    callback(resultArray);
   },
 
   /**
    * Retrieve availability data for all carparks
    * @param callback Not sure yet
    */
-  retrieveAvailabilityData: function (callback) {
+  retrieveAvailabilityData: function (callback = () => {}) {
     axios
       .get('http://demonicmushy.com:7020/availability', {
         auth: {username: 'cargowhere', password: 'cargowhere'},
       })
       .then((response) => {
         const availabilityData = response.data.data;
-        console.log(availabilityData);
+        // console.log(availabilityData);
         console.log('Availability data retrieved.');
+        callback(availabilityData);
       })
       .catch((err) => {
         console.log('Error occured at retrieving availability data:', err);
