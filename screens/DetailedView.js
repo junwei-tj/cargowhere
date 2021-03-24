@@ -8,7 +8,7 @@ import {
   Image,
   Button,
 } from 'react-native';
-import carparkData from '../DataManager';
+import DataManager from '../DataManager';
 
 const styles = StyleSheet.create({
   header: {
@@ -62,11 +62,35 @@ const styles = StyleSheet.create({
 
 export default function DetailedView(props) {
   const [cp, setCp] = useState(null);
+  const [availableNum, setAvailableNum] = React.useState('--');
+
+  // get carpark available lots
+  React.useEffect(() => {
+    var carparksAvailablity = Object.keys(DataManager._availabilityData);
+    if (
+      carparksAvailablity.find((v) => v === props.selectedCarpark.identifier)
+    ) {
+      try {
+        if (
+          parseInt(
+            DataManager._availabilityData[props.selectedCarpark.identifier]
+              .availableLots_car,
+            10,
+          ) >= 0
+        ) {
+          setAvailableNum(
+            DataManager._availabilityData[props.selectedCarpark.identifier]
+              .availableLots_car,
+          );
+        }
+      } catch (e) {}
+    }
+  }, [props.selectedCarpark]);
 
   // to get full carpark info
   useEffect(() => {
     if (props.selectedCarpark) {
-      var temp = carparkData._carparksData.filter((val) => {
+      var temp = DataManager._carparksData.filter((val) => {
         return val.name.trim() === props.selectedCarpark.title.trim();
       });
       setCp(temp[0]);
@@ -93,7 +117,7 @@ export default function DetailedView(props) {
           <ScrollView contentContainerStyle={styles.bodyView}>
             <View style={styles.bodyTextFirstLine}>
               <Text>Agency: {cp.agency}</Text>
-              <Text>Car Available Lots: {cp.availableLots_car}</Text>
+              <Text>Car Available Lots: {availableNum}</Text>
             </View>
             {/* for hdb carpark */}
             {cp.agency === 'HDB' && (
