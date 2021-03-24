@@ -8,6 +8,7 @@ import {
   Pressable,
   ImageBackground,
 } from 'react-native';
+import DataManager from '../DataManager';
 /**
  * Renders a Carpark Component based on the info available
  * @param {*} props
@@ -37,6 +38,7 @@ function deg2rad(deg) {
 
 // Still needs images for the button to see more details
 export default function Carpark(props) {
+  const [availableNum, setAvailableNum] = React.useState('--');
   // Get both destination lat/lon and the carpark lat/lon
   const destinationLongitude = props.currentRegion.longitude;
   const destinationLatitude = props.currentRegion.latitude;
@@ -48,17 +50,34 @@ export default function Carpark(props) {
     carparkLatitude,
     carparkLongitude,
   );
+  React.useEffect(() => {
+    var carparksAvailablity = Object.keys(DataManager._availabilityData);
+
+    if (carparksAvailablity.find((v) => v === props.carpark.identifier)) {
+      try {
+        if (
+          parseInt(
+            DataManager._availabilityData[props.carpark.identifier]
+              .availableLots_car,
+            10,
+          ) >= 0
+        ) {
+          setAvailableNum(
+            DataManager._availabilityData[props.carpark.identifier]
+              .availableLots_car,
+          );
+        }
+      } catch (e) {}
+    }
+  }, [props.carpark.identifier]);
   return (
     <Pressable onPress={props.press(props.carpark)}>
       <View style={styles.container}>
         <View style={styles.markerContainer}>
           <ImageBackground
             style={styles.marker}
-            source={require('../images/marker.png')}
-          >
-            <Text style={styles.carparkNumber}>
-              {props.index + 1}
-            </Text>
+            source={require('../images/marker.png')}>
+            <Text style={styles.carparkNumber}>{props.index + 1}</Text>
           </ImageBackground>
           <Text style={styles.distance}>
             {Math.round(distanceBetween) + 'm'}
@@ -67,7 +86,7 @@ export default function Carpark(props) {
         <View style={styles.infoContainer}>
           <Text style={styles.name}>{props.carpark.title}</Text>
           {/*should be `${props.carparkName} (${carparkCode})*/}
-          <Text style={styles.lots}>Lots available: 20</Text>
+          <Text style={styles.lots}>Lots available: {availableNum}</Text>
           {/*`Lots available ${props.availableLots}`*/}
         </View>
         <TouchableOpacity style={styles.button}>
@@ -122,9 +141,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   carparkNumber: {
-    color: 'white', 
-    textAlign: 'center', 
-    paddingTop: 3, 
-    fontSize: 12
-  }
+    color: 'white',
+    textAlign: 'center',
+    paddingTop: 3,
+    fontSize: 12,
+  },
 });

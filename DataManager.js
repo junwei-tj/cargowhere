@@ -7,13 +7,14 @@ import axios from 'axios';
  * which will contain an array of objects
  **/
 const carparkData = {
-  // static carpark data to be stored in memory
+  // static data to be stored in memory
   _carparksData: [],
+  _availabilityData: {},
   /**
    * Retrieves carpark data from backend
    * Intended to be used once on app startup
    */
-  retrieveCarparkStaticData: function (callback = () => {}) {
+  updateCarparkStaticData: function (callback = () => {}) {
     axios
       .get('http://demonicmushy.com:7020/carparks', {
         auth: {username: 'cargowhere', password: 'cargowhere'},
@@ -97,7 +98,7 @@ const carparkData = {
    * Retrieve availability data for all carparks
    * @param callback Not sure yet
    */
-  retrieveAvailabilityData: function (callback = () => {}) {
+  updateAvailabilityData: function (callback = () => {}) {
     axios
       .get('http://demonicmushy.com:7020/availability', {
         auth: {username: 'cargowhere', password: 'cargowhere'},
@@ -106,7 +107,7 @@ const carparkData = {
         const availabilityData = response.data.data;
         // console.log(availabilityData);
         console.log('Availability data retrieved.');
-        callback(availabilityData);
+        this._availabilityData = availabilityData;
       })
       .catch((err) => {
         console.log('Error occured at retrieving availability data:', err);

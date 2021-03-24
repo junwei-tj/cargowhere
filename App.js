@@ -104,6 +104,7 @@ function getCarparks({region, callback}) {
   let topRightLongitude = region.longitude + region.longitudeDelta / 2;
 
   ToastAndroid.show('Updating carpark markers...', ToastAndroid.SHORT);
+  carparkData.updateAvailabilityData();
   carparkData.retrieveInLongLat(
     bottomLeftLongitude,
     bottomLeftLat,
@@ -126,6 +127,7 @@ function filterCarparksJSON(carparkList, pointOfReference) {
   }
   carparkList.forEach((obj) => {
     let carpark = {
+      identifier: obj.identifier,
       latlng: {
         latitude: obj.latitude,
         longitude: obj.longitude,
