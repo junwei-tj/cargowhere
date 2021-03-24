@@ -1,0 +1,276 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BottomDisplay renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "borderBottomWidth": 1,
+        "borderColor": "lightgrey",
+        "flexDirection": "row",
+        "height": "12%",
+        "justifyContent": "space-evenly",
+      }
+    }
+  >
+    <View
+      accessible={true}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "flex": 1,
+            "justifyContent": "center",
+          },
+          Object {
+            "borderBottomColor": "#2f60f4",
+            "borderBottomWidth": 1,
+          },
+        ]
+      }
+    >
+      <Image
+        source={
+          Object {
+            "testUri": "../../../images/navigation_arrow.png",
+          }
+        }
+        style={
+          Array [
+            Object {
+              "height": 20,
+              "tintColor": "grey",
+              "width": 20,
+            },
+            Object {
+              "tintColor": "#2f60f4",
+            },
+          ]
+        }
+      />
+    </View>
+    <View
+      accessible={true}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Image
+        source={
+          Object {
+            "testUri": "../../../images/heart.png",
+          }
+        }
+        style={
+          Object {
+            "height": 20,
+            "tintColor": "grey",
+            "width": 20,
+          }
+        }
+      />
+    </View>
+    <View
+      accessible={true}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Image
+        source={
+          Object {
+            "testUri": "../../../images/information.png",
+          }
+        }
+        style={
+          Object {
+            "height": 20,
+            "tintColor": "grey",
+            "width": 20,
+          }
+        }
+      />
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "height": "100%",
+          "left": "0%",
+          "transform": Array [
+            Object {
+              "translateX": 0,
+            },
+          ],
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "backgroundColor": "#eee",
+            "borderBottomColor": "#eee",
+            "borderBottomWidth": 1,
+            "flexDirection": "row",
+          }
+        }
+      >
+        <Text
+          style={
+            Object {
+              "fontSize": 20,
+              "paddingLeft": 20,
+              "paddingTop": 10,
+              "textDecorationLine": "underline",
+            }
+          }
+        >
+          Nearby
+        </Text>
+        <Text
+          style={
+            Object {
+              "flex": 1,
+              "fontSize": 20,
+              "paddingTop": 10,
+              "textAlign": "right",
+            }
+          }
+        >
+          Sort By:
+        </Text>
+        <View
+          style={
+            Object {
+              "color": "black",
+              "width": "43%",
+            }
+          }
+        >
+          <RNCPicker
+            items={
+              Array [
+                Object {
+                  "label": "Distance",
+                  "testID": undefined,
+                  "textColor": undefined,
+                  "value": "distance",
+                },
+                Object {
+                  "label": "Availability",
+                  "testID": undefined,
+                  "textColor": undefined,
+                  "value": "availability",
+                },
+              ]
+            }
+            onChange={[Function]}
+            selectedIndex={0}
+            style={
+              Array [
+                Object {
+                  "height": 216,
+                },
+                undefined,
+              ]
+            }
+          />
+        </View>
+      </View>
+      <RCTScrollView
+        data={Array []}
+        disableVirtualization={false}
+        getItem={[Function]}
+        getItemCount={[Function]}
+        horizontal={false}
+        initialNumToRender={10}
+        keyExtractor={[Function]}
+        maxToRenderPerBatch={10}
+        onContentSizeChange={[Function]}
+        onEndReachedThreshold={2}
+        onLayout={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        removeClippedSubviews={false}
+        renderItem={[Function]}
+        scrollEventThrottle={50}
+        stickyHeaderIndices={Array []}
+        updateCellsBatchingPeriod={50}
+        viewabilityConfigCallbackPairs={Array []}
+        windowSize={21}
+      >
+        <View />
+      </RCTScrollView>
+    </View>
+    <View
+      style={
+        Object {
+          "bottom": 0,
+          "height": "100%",
+          "left": "100%",
+          "position": "absolute",
+          "transform": Array [
+            Object {
+              "translateX": 0,
+            },
+          ],
+          "width": "100%",
+        }
+      }
+    />
+  </View>
+</View>
+`;
