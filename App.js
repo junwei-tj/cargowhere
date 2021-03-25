@@ -234,7 +234,7 @@ export default function App() {
       {
           setIsLoading(false);
           console.log("Unmounting loading screen..");
-        }, 6500);
+        }, 2500);
   },[])
 
   function carparksRetrieved(carparkList) {
