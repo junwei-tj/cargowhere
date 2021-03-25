@@ -23,11 +23,11 @@ import { setCarparks } from './redux/carparksSlice';
 import { setRegion } from './redux/regionSlice';
 import { SORT_BY_AVAILABILITY, SORT_BY_DISTANCE } from './constants/sortCriteriaConstants';
 import SearchScreen from "./screens/SearchScreen";
+import LoadingScreen from "./screens/LoadingScreen";
 
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
@@ -199,7 +199,7 @@ export default function App() {
   const carparks = useSelector(state => state.carparks.carparksData);
   const specificLocation = useSelector(state => state.specificLocation);
   const sortCriteria = useSelector(state => state.sortCriteria.criteria)
-
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
   // code for geolocation for reference
@@ -228,6 +228,15 @@ export default function App() {
   //   currentLocation();
   // }, []);
 
+  useEffect(() => {
+      carparkData.updateCarparkStaticData();
+      setTimeout(() => 
+      {
+          setIsLoading(false);
+          console.log("Unmounting loading screen..");
+        }, 6500);
+  },[])
+
   function carparksRetrieved(carparkList) {
     let carparkObjs = filterCarparksJSON(carparkList, region);
     let sorted = sortCarparks(carparkObjs, sortCriteria);
@@ -241,6 +250,8 @@ export default function App() {
   }
 
   return (
+  <>
+    {isLoading ? <LoadingScreen/>:     
     <View style={styles.container}>
       <StatusBar backgroundColor="#2EBD6B" barStyle="default" />
       <MapView
@@ -302,5 +313,7 @@ export default function App() {
         />
       </View>
     </View>
+    }
+    </>
   );
 }
