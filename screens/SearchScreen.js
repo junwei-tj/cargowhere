@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, TextInput, FlatList} from 'react-native';
 import axios from 'axios';
-import Carpark from './Carpark';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLatlng } from '../redux/regionSlice';
 import { setSpecificLocation } from '../redux/specificLocationSlice';

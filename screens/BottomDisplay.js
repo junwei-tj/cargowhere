@@ -4,7 +4,7 @@ import {
   NearbyScreen,
   FavouritesScreen,
   AboutScreen,
-} from './screens';
+} from '../screens';
 
 const styles = StyleSheet.create({
   container: {
@@ -66,7 +66,7 @@ export default function NavigationBar(props) {
           android_ripple={{color: 'lightgrey'}}>
           <Image
             style={activeTabs.navigation ? activeIconStyle : inactiveIconStyle}
-            source={require('./images/navigation_arrow.png')}
+            source={require('../images/navigation_arrow.png')}
           />
         </Pressable>
 
@@ -83,7 +83,7 @@ export default function NavigationBar(props) {
           android_ripple={{color: 'lightgrey'}}>
           <Image
             style={activeTabs.favourites ? activeIconStyle : inactiveIconStyle}
-            source={require('./images/heart.png')}
+            source={require('../images/heart.png')}
           />
         </Pressable>
 
@@ -117,7 +117,7 @@ export default function NavigationBar(props) {
           android_ripple={{color: 'lightgrey'}}>
           <Image
             style={activeTabs.about ? activeIconStyle : inactiveIconStyle}
-            source={require('./images/information.png')}
+            source={require('../images/information.png')}
           />
         </Pressable>
       </View>

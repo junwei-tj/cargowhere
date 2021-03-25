@@ -8,7 +8,7 @@ import {
   Pressable,
   ImageBackground,
 } from 'react-native';
-import DataManager from '../DataManager';
+import DataManager from '../data_manager/DataManager';
 /**
  * Renders a Carpark Component based on the info available
  * @param {*} props

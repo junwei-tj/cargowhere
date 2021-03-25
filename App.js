@@ -12,10 +12,10 @@ import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 //import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import StatusBar from './StatusBar';
-import BottomDisplay from './BottomDisplay';
-import carparkData from './DataManager';
-import {getDistanceFromLatLonInM} from './screens/Carpark';
+import StatusBar from './components/StatusBar';
+import BottomDisplay from './screens/BottomDisplay';
+import carparkData from './data_manager/DataManager';
+import {getDistanceFromLatLonInM} from './components/Carpark';
 import { MAX_CARPARKS_TO_DISPLAY } from './constants/carparkConstants';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -258,6 +258,7 @@ export default function App() {
               <CarparkMarker
                 carpark={carpark}
                 index={index}
+                key={index}
               />
             );
           }

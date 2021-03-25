@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, Button, FlatList, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Favourite from './Favourite';
+import Favourite from '../components/Favourite';
 
 const styles = StyleSheet.create({
   container: {

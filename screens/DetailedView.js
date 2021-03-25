@@ -10,7 +10,7 @@ import {
   Linking,
   Platform,
 } from 'react-native';
-import DataManager from '../DataManager';
+import DataManager from '../data_manager/DataManager';
 
 const styles = StyleSheet.create({
   header: {

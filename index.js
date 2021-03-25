@@ -20,7 +20,7 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-import carparkData from './DataManager';
+import carparkData from './data_manager/DataManager';
 // here so that it only runs once when app is started instead of when App.js is rendered
 carparkData.updateCarparkStaticData();
 

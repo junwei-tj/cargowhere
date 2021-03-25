@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import Carpark from './Carpark';
+import Carpark from '../components/Carpark';
 import DetailedView from './DetailedView';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -122,10 +122,11 @@ export default function NearbyScreen(props) {
         <FlatList
           data={carparks}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => {
+          renderItem={({item, index}) => {
             return (
               <Carpark
                 carpark={item}
+                index={index}
                 currentRegion={region}
                 press={goToDetailedView}
               />
