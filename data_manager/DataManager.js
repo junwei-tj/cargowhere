@@ -23,6 +23,7 @@ const carparkData = {
         const carparks = response.data.carparks;
         this._carparksData = carparks;
         console.log('Static carpark data retrieved and stored.');
+        console.log("this._carparksData = " + this._carparksData);
         callback(carparks);
       })
       .catch((err) => {

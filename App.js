@@ -24,6 +24,9 @@ import { setRegion } from './redux/regionSlice';
 import { SORT_BY_AVAILABILITY, SORT_BY_DISTANCE } from './constants/sortCriteriaConstants';
 import SearchScreen from "./screens/SearchScreen";
 import LoadingScreen from "./screens/LoadingScreen";
+import {setSpecificLocation} from './redux/specificLocationSlice';
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -54,17 +57,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     height: '12%',
-    width: '80%',
+    width: '70%',
   },
   refreshButtonContainer: {
     width: 36,
     height: 36,
     position: 'absolute',
     top: 28,
-    right: 15,
+    right: 10,
     backgroundColor: 'white',
     borderRadius: 18,
-    borderColor: 'grey',
+    borderColor: 'lightgrey',
+    borderWidth: 1,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  orientateButtonContainer: {
+    width: 36,
+    height: 36,
+    position: 'absolute',
+    top: 28,
+    right: 52,
+    backgroundColor: 'white',
+    borderRadius: 18,
+    borderColor: 'lightgrey',
     borderWidth: 1,
     overflow: 'hidden',
     justifyContent: 'center',
@@ -96,6 +113,8 @@ const styles = StyleSheet.create({
     height: 44
   }
 });
+
+
 
 function getCarparks({region, callback}) {
   let bottomLeftLat = region.latitude - region.latitudeDelta / 2;
@@ -213,20 +232,28 @@ export default function App() {
       console.log(info);
       // setLatitude(info.coords.latitude);
       // setLongitude(info.coords.longitude);
-      setSpecificLocation({
+      currentRegion = {
+        latitude: info.coords.latitude,
+        longitude: info.coords.longitude,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.0121,
+      }
+      let currentLocationMarker = {
         latlng: {
           latitude: info.coords.latitude,
           longitude: info.coords.longitude,
         },
         title: 'Current Location',
         active: true,
-      });
+      }
+      dispatch(setRegion(currentRegion));
+      dispatch(setSpecificLocation(currentLocationMarker));
     });
   }
 
-  // useEffect(() => {
-  //   currentLocation();
-  // }, []);
+  useEffect(() => {
+    currentLocation();
+  }, []);
 
   useEffect(() => {
       carparkData.updateCarparkStaticData();
@@ -284,8 +311,7 @@ export default function App() {
             />
           </Marker>
         )}
-      </MapView>
-
+        </MapView>
       <View style={styles.searchContainer}>
         <SearchScreen/>
       </View>
@@ -300,6 +326,21 @@ export default function App() {
             style={styles.refreshButton}
           />
         </Pressable>
+        
+      </View>
+
+      <View style={styles.orientateButtonContainer}>
+        <Pressable
+          android_ripple={{color: 'lightgrey'}}
+          style={styles.refreshPressable}
+          onPress={() =>{currentLocation()}}
+          >
+          <Image
+            source={require('./images/mylocationAndroid.png')}
+            style={styles.refreshButton}
+          />
+        </Pressable>
+        
       </View>
 
       <View style={styles.menu}>
