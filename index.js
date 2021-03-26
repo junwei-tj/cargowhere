@@ -22,7 +22,7 @@ if (!global.atob) {
 
 import carparkData from './data_manager/DataManager';
 // here so that it only runs once when app is started instead of when App.js is rendered
-carparkData.updateCarparkStaticData();
+// carparkData.updateCarparkStaticData();
 
 const AppWithRedux = () => (
   <Provider store={store}>
