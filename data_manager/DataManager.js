@@ -23,7 +23,7 @@ const carparkData = {
         const carparks = response.data.carparks;
         this._carparksData = carparks;
         console.log('Static carpark data retrieved and stored.');
-        console.log("this._carparksData = " + this._carparksData);
+        //console.log("this._carparksData = " + this._carparksData);
         callback(carparks);
       })
       .catch((err) => {
@@ -109,6 +109,7 @@ const carparkData = {
         // console.log(availabilityData);
         console.log('Availability data retrieved.');
         this._availabilityData = availabilityData;
+        //console.log(this._availabilityData)
       })
       .catch((err) => {
         console.log('Error occured at retrieving availability data:', err);
