@@ -17,6 +17,7 @@ import BottomDisplay from './screens/BottomDisplay';
 import carparkData from './data_manager/DataManager';
 import {getDistanceFromLatLonInM} from './components/Carpark';
 import { MAX_CARPARKS_TO_DISPLAY } from './constants/carparkConstants';
+import CarparkMarker from './components/CarparkMarker'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setCarparks } from './redux/carparksSlice';
@@ -25,8 +26,6 @@ import { SORT_BY_AVAILABILITY, SORT_BY_DISTANCE } from './constants/sortCriteria
 import SearchScreen from "./screens/SearchScreen";
 import LoadingScreen from "./screens/LoadingScreen";
 import {setSpecificLocation} from './redux/specificLocationSlice';
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -98,23 +97,11 @@ const styles = StyleSheet.create({
     height: '80%',
     tintColor: 'grey',
   },
-  marker: {
-    width: 44,
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  carparkNumber: {
-    paddingBottom: 10,
-    color: 'white'
-  },
   pin: {
     width: 44,
     height: 44
   }
 });
-
-
 
 function getCarparks({region, callback}) {
   let bottomLeftLat = region.latitude - region.latitudeDelta / 2;
@@ -135,7 +122,7 @@ function getCarparks({region, callback}) {
 
 /**
  * Function to filter the retrieved carparks to only include the desired fields.
- * Current fields kept are: latitude and longitude (combined to latlng), title, availableLots_H, availableLots_L, availableLots_car, availableLots_motorcycle
+ * Current fields kept are: latitude and longitude (combined to latlng), title, availableLots_car
  * @param {Array} carparkList
  * @param {region} pointOfReference coordinates (in latitude and longitude) of the point distance is to be calculated from
  */
@@ -193,25 +180,9 @@ function sortCarparks(
         return a.distance - b.distance;
       });
   }
+  //console.log(carparks)
   return carparks;
 }
-
-const CarparkMarker = (props) => (
-  <Marker
-    key={props.index}
-    coordinate={props.carpark.latlng}
-    title={props.carpark.title}
-    onCalloutPress={() => alert('pressed ' + props.carpark.title)}
-    >
-    <ImageBackground
-      source={require('./images/marker.png')}
-      style={styles.marker}>
-      <Text style={styles.carparkNumber}>
-        {props.index + 1}
-      </Text>
-    </ImageBackground>
-  </Marker>
-)
 
 export default function App() {
   const region = useSelector(state => state.region);
@@ -264,8 +235,8 @@ export default function App() {
         }, 2500);
   },[])
 
-  function carparksRetrieved(carparkList) {
-    let carparkObjs = filterCarparksJSON(carparkList, region);
+  const carparksRetrieved = (carparkList) => {
+    let carparkObjs = filterCarparksJSON(carparkList, specificLocation.latlng);
     let sorted = sortCarparks(carparkObjs, sortCriteria);
     dispatch(setCarparks(sorted));
     ToastAndroid.show('Carpark markers updated', ToastAndroid.SHORT);
@@ -287,7 +258,6 @@ export default function App() {
         region={region}
         onRegionChangeComplete={(region) => {
           dispatch(setRegion(region));
-          //getCarparks({region, callback: carparksRetrieved});
           console.log('onRegionChangeComplete completed');
         }}>
         {carparks.map((carpark, index) => {
