@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, Image, Text, StyleSheet, TextInput, FlatList, Pressable} from 'react-native';
+import {
+  View,
+  Image,
+  StyleSheet,
+  TextInput,
+  Pressable,
+  Keyboard
+} from 'react-native';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLatlng } from '../redux/regionSlice';
@@ -110,34 +117,28 @@ export default function SearchScreen(props) {
   }
 
   return (
-      <View style={styles.searchField}>
-        <TextInput
-          editable
-          styles={styles.inputStyle}
-          placeholder={'Search...'}
-          value={searchValue}
-          onChangeText={(text) => setSearchValue(text)}
-          onSubmitEditing={onSubmitSearch}
-        />
-        <Pressable
-            style={styles.headerIcon}
-            onPress={() => {
-              setSearchValue('');
-            }}>
-          <Image
-              style={styles.icon}
-              source={require('../images/cross.png')}
-          />
-        </Pressable>
 
-      {/*<FlatList*/}
-      {/*  style={{width: '100%'}}*/}
-      {/*  data={carparks}*/}
-      {/*  keyExtractor={(item, index) => item.key}*/}
-      {/*  renderItem={({item}) => {*/}
-      {/*    return <Carpark carpark={item} currentRegion={region} />;*/}
-      {/*  }}*/}
-      {/*/>*/}
-      </View>
+      <View style={styles.searchField}>
+          <TextInput
+            editable
+            styles={styles.inputStyle}
+            placeholder={'Search...'}
+            value={searchValue}
+            onChangeText={(text) => setSearchValue(text)}
+            onSubmitEditing={onSubmitSearch}
+            returnKeyType = {"search"}
+          />
+          <Pressable
+              style={styles.headerIcon}
+              onPress={() => {
+                setSearchValue('');
+                Keyboard.dismiss();
+              }}>
+            <Image
+                style={styles.icon}
+                source={require('../images/cross.png')}
+            />
+          </Pressable>
+        </View>
   )
 }

@@ -6,7 +6,7 @@ import {
   Image,
   ImageBackground,
   ToastAndroid,
-  Pressable,
+  Pressable, Keyboard, TouchableWithoutFeedback,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -250,7 +250,8 @@ export default function App() {
 
   return (
   <>
-    {isLoading ? <LoadingScreen/>:     
+    {isLoading ? <LoadingScreen/>:
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <View style={styles.container}>
       <StatusBar backgroundColor="#2EBD6B" barStyle="default" />
       <MapView
@@ -325,6 +326,7 @@ export default function App() {
         />
       </View>
     </View>
+    </TouchableWithoutFeedback>
     }
     </>
   );
