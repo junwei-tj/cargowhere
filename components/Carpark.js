@@ -8,7 +8,7 @@ import {
   Pressable,
   ImageBackground,
 } from 'react-native';
-import DataManager from '../data_manager/DataManager';
+import {useSelector} from 'react-redux';
 /**
  * Renders a Carpark Component based on the info available
  * @param {*} props
@@ -38,6 +38,9 @@ function deg2rad(deg) {
 
 // Still needs images for the button to see more details
 export default function Carpark(props) {
+  const availability = useSelector(
+    (state) => state.availability.availabilityData,
+  );
   const [availableNum, setAvailableNum] = React.useState('--');
   // Get both destination lat/lon and the carpark lat/lon
   const destinationLongitude = props.currentRegion.longitude;
@@ -51,25 +54,12 @@ export default function Carpark(props) {
     carparkLongitude,
   );
   React.useEffect(() => {
-    var carparksAvailablity = Object.keys(DataManager._availabilityData);
-
-    if (carparksAvailablity.find((v) => v === props.carpark.identifier)) {
-      try {
-        if (
-          parseInt(
-            DataManager._availabilityData[props.carpark.identifier]
-              .availableLots_car,
-            10,
-          ) >= 0
-        ) {
-          setAvailableNum(
-            DataManager._availabilityData[props.carpark.identifier]
-              .availableLots_car,
-          );
-        }
-      } catch (e) {}
+    if (availability[props.carpark.identifier]) {
+      setAvailableNum(availability[props.carpark.identifier].availableLots_car);
+    } else {
+      setAvailableNum('--');
     }
-  }, [props.carpark.identifier]);
+  }, [availability, props.carpark.identifier]);
   return (
     <Pressable onPress={props.press(props.carpark)}>
       <View style={styles.container}>

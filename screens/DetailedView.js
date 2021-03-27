@@ -11,6 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import DataManager from '../data_manager/DataManager';
+import {useSelector} from 'react-redux';
 
 const styles = StyleSheet.create({
   header: {
@@ -38,17 +39,31 @@ const styles = StyleSheet.create({
   bodyView: {
     paddingLeft: 10,
     paddingRight: 10,
-    paddingVertical: 5,
+    paddingTop: 10,
+    paddingBottom: 40,
   },
-  bodyTextFirstLine: {
+  bodyGridTop: {
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  bodyGridRow: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    borderColor: 'grey',
+    padding: 5,
+    borderWidth: 1,
+    margin: -0.5,
   },
   bodyTitle: {
-    marginTop: 2,
-    textDecorationLine: 'underline',
+    width: '35%',
+    // textDecorationLine: 'underline',
   },
-  bodyNormal: {},
+  bodyNormal: {
+    width: '65%',
+  },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -63,31 +78,24 @@ const styles = StyleSheet.create({
 });
 
 export default function DetailedView(props) {
+  const availability = useSelector(
+    (state) => state.availability.availabilityData,
+  );
   const [cp, setCp] = useState(null);
   const [availableNum, setAvailableNum] = React.useState('--');
 
-  // get carpark available lots
   React.useEffect(() => {
-    var carparksAvailablity = Object.keys(DataManager._availabilityData);
     if (
-      carparksAvailablity.find((v) => v === props.selectedCarpark.identifier)
+      props.selectedCarpark &&
+      availability[props.selectedCarpark.identifier]
     ) {
-      try {
-        if (
-          parseInt(
-            DataManager._availabilityData[props.selectedCarpark.identifier]
-              .availableLots_car,
-            10,
-          ) >= 0
-        ) {
-          setAvailableNum(
-            DataManager._availabilityData[props.selectedCarpark.identifier]
-              .availableLots_car,
-          );
-        }
-      } catch (e) {}
+      setAvailableNum(
+        availability[props.selectedCarpark.identifier].availableLots_car,
+      );
+    } else {
+      setAvailableNum('--');
     }
-  }, [props.selectedCarpark]);
+  }, [availability, props.selectedCarpark]);
 
   // to get full carpark info
   useEffect(() => {
@@ -99,20 +107,18 @@ export default function DetailedView(props) {
     }
   }, [props.selectedCarpark]);
 
-
   function openMap() {
     const scheme = Platform.select({
-        ios: 'maps:0,0?q=',
-        android: 'geo:0,0?q='
-    })
+      ios: 'maps:0,0?q=',
+      android: 'geo:0,0?q=',
+    });
     const latlng = `${cp.latitude},${cp.longitude}`;
-      console.log(`Open map with lat: ${latlng}.`);
-      const url = Platform.select({
-          ios: `${scheme}@${latlng}`,
-          android: `${scheme}@${latlng}`,
-      })
-      Linking.openURL(url);
-
+    console.log(`Open map with lat: ${latlng}.`);
+    const url = Platform.select({
+      ios: `${scheme}@${latlng}`,
+      android: `${scheme}@${latlng}`,
+    });
+    Linking.openURL(url);
   }
 
   return (
@@ -133,82 +139,120 @@ export default function DetailedView(props) {
             </Pressable>
           </View>
           <ScrollView contentContainerStyle={styles.bodyView}>
-            <View style={styles.bodyTextFirstLine}>
-              <Text>Agency: {cp.agency}</Text>
-              <Text>Car Available Lots: {availableNum}</Text>
+            <View style={styles.bodyGridTop}>
+              <View>
+                <Text>Distance:</Text>
+                <Text>{props.selectedCarpark.distance.toFixed(0)}m away</Text>
+              </View>
+              <View>
+                <Text>Agency:</Text>
+                <Text>{cp.agency}</Text>
+              </View>
+              <View>
+                <Text>Car Available Lots: </Text>
+                <Text>{availableNum}</Text>
+              </View>
             </View>
+            <Text>Details:</Text>
             {/* for hdb carpark */}
             {cp.agency === 'HDB' && (
               <>
-                <Text style={styles.bodyTitle}>Type: </Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.hdbFields.car_park_type}
-                </Text>
-                <Text style={styles.bodyTitle}>Short Term Parking: </Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.hdbFields.short_term_parking}
-                </Text>
-                <Text style={styles.bodyTitle}>Free Parking: </Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.hdbFields.free_parking}
-                </Text>
-                <Text style={styles.bodyTitle}>Night Parking: </Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.hdbFields.night_parking}
-                </Text>
-                <Text style={styles.bodyTitle}>System: </Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.hdbFields.type_of_parking_system}
-                </Text>
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>Short Term Parking</Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.hdbFields.short_term_parking}
+                  </Text>
+                </View>
+
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>Free Parking</Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.hdbFields.free_parking}
+                  </Text>
+                </View>
+
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>Night Parking</Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.hdbFields.night_parking}
+                  </Text>
+                </View>
+
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>Type</Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.hdbFields.car_park_type}
+                  </Text>
+                </View>
+
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>System</Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.hdbFields.type_of_parking_system}
+                  </Text>
+                </View>
               </>
             )}
             {/* for ura carpark */}
             {cp.agency === 'URA' && (
               <>
-                <Text style={styles.bodyTitle}>Weekday Rate:</Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.uraFields.weekdayRate}/{cp.uraFields.weekdayMin}
-                </Text>
-                <Text style={styles.bodyTitle}>Saturday Rate:</Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.uraFields.satdayRate}/{cp.uraFields.satdayMin}
-                </Text>
-                <Text style={styles.bodyTitle}>
-                  Sunday/Public Holiday Rate:
-                </Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.uraFields.sunPHRate}/{cp.uraFields.sunPHMin}
-                </Text>
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>Weekday Rate</Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.uraFields.weekdayRate}/{cp.uraFields.weekdayMin}
+                  </Text>
+                </View>
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>Saturday Rate</Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.uraFields.satdayRate}/{cp.uraFields.satdayMin}
+                  </Text>
+                </View>
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>
+                    Sunday/Public Holiday Rate
+                  </Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.uraFields.sunPHRate}/{cp.uraFields.sunPHMin}
+                  </Text>
+                </View>
               </>
             )}
             {/* for lta carpark */}
             {cp.agency === 'LTA' && (
               <>
-                <Text style={styles.bodyTitle}>Weekday Rate 1: </Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.ltaFields.weekdays_rate_1}
-                </Text>
-                <Text style={styles.bodyTitle}>Weekday Rate 2: </Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.ltaFields.weekdays_rate_2}
-                </Text>
-                <Text style={styles.bodyTitle}>Saturday: </Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.ltaFields.saturday_rate}
-                </Text>
-                <Text style={styles.bodyTitle}>Sunday: </Text>
-                <Text style={styles.bodyNormal}>
-                  {cp.ltaFields.sunday_publicholiday_rate}
-                </Text>
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>Weekday Rate 1</Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.ltaFields.weekdays_rate_1}
+                  </Text>
+                </View>
+
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>Weekday Rate 2</Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.ltaFields.weekdays_rate_2}
+                  </Text>
+                </View>
+
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>Saturday</Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.ltaFields.saturday_rate}
+                  </Text>
+                </View>
+
+                <View style={styles.bodyGridRow}>
+                  <Text style={styles.bodyTitle}>Sunday</Text>
+                  <Text style={styles.bodyNormal}>
+                    {cp.ltaFields.sunday_publicholiday_rate}
+                  </Text>
+                </View>
               </>
             )}
           </ScrollView>
           <View style={styles.footer}>
-            <Button
-              style={styles.button}
-              title="GO"
-              onPress={openMap}
-            />
+            <Button style={styles.button} title="GO" onPress={openMap} />
           </View>
         </>
       )}

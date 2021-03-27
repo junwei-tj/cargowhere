@@ -10,9 +10,13 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import Carpark from '../components/Carpark';
 import DetailedView from './DetailedView';
+import {
+  SORT_BY_AVAILABILITY,
+  SORT_BY_DISTANCE,
+} from '../constants/sortCriteriaConstants';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { setLatlng } from '../redux/regionSlice';
+import {useSelector, useDispatch} from 'react-redux';
+import {setLatlng} from '../redux/regionSlice';
 
 const styles = StyleSheet.create({
   container: {
@@ -58,12 +62,12 @@ const styles = StyleSheet.create({
 const screenWidth = Math.round(Dimensions.get('window').width);
 
 export default function NearbyScreen(props) {
-  const [value, setValue] = useState('key0');
+  const [value, setValue] = useState(SORT_BY_DISTANCE);
   const transformXValue = React.useRef(new Animated.Value(0)).current;
   const [selectedCarpark, setSelectedCarpark] = useState(null);
 
-  const carparks = useSelector(state => state.carparks.carparksData);
-  const region = useSelector(state => state.region);
+  const carparks = useSelector((state) => state.carparks.carparksData);
+  const region = useSelector((state) => state.region);
 
   const dispatch = useDispatch();
 
@@ -76,15 +80,12 @@ export default function NearbyScreen(props) {
       useNativeDriver: true,
     }).start();
     // on click, move map to center that carpark
-    dispatch(setLatlng({
-      latitude: carpark.latlng.latitude,
-      longitude: carpark.latlng.longitude,
-    }))
-    // props.setRegion((prev) => ({
-    //   ...prev,
-    //   latitude: carpark.latlng.latitude,
-    //   longitude: carpark.latlng.longitude,
-    // }));
+    dispatch(
+      setLatlng({
+        latitude: carpark.latlng.latitude,
+        longitude: carpark.latlng.longitude,
+      }),
+    );
   };
 
   function backFromDetailedView() {
@@ -113,9 +114,12 @@ export default function NearbyScreen(props) {
           <Picker
             style={styles.picker}
             selectedValue={value}
-            onValueChange={(itemValue, itemIndex) => setValue(itemValue)}>
-            <Picker.Item label="Distance" value="key0" />
-            <Picker.Item label="Availability" value="key1" />
+            onValueChange={(itemValue, itemIndex) => {
+              setValue(itemValue);
+              props.pickerCallback(itemValue);
+            }}>
+            <Picker.Item label="Distance" value={SORT_BY_DISTANCE} />
+            <Picker.Item label="Availability" value={SORT_BY_AVAILABILITY} />
           </Picker>
         </View>
         {/* <FlatList data={Array(9).fill(0)} renderItem={() => <Carpark />} /> */}

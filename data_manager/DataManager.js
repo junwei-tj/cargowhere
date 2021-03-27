@@ -23,7 +23,7 @@ const carparkData = {
         const carparks = response.data.carparks;
         this._carparksData = carparks;
         console.log('Static carpark data retrieved and stored.');
-        console.log("this._carparksData = " + this._carparksData);
+        // console.log('this._carparksData = ' + this._carparksData);
         callback(carparks);
       })
       .catch((err) => {
@@ -99,20 +99,23 @@ const carparkData = {
    * Retrieve availability data for all carparks
    * @param callback Not sure yet
    */
-  updateAvailabilityData: function (callback = () => {}) {
-    axios
-      .get('http://demonicmushy.com:7020/availability', {
-        auth: {username: 'cargowhere', password: 'cargowhere'},
-      })
-      .then((response) => {
-        const availabilityData = response.data.data;
-        // console.log(availabilityData);
-        console.log('Availability data retrieved.');
-        this._availabilityData = availabilityData;
-      })
-      .catch((err) => {
-        console.log('Error occured at retrieving availability data:', err);
-      });
+  updateAvailabilityData: function () {
+    return new Promise((resolve, reject) => {
+      axios
+        .get('http://demonicmushy.com:7020/availability', {
+          auth: {username: 'cargowhere', password: 'cargowhere'},
+        })
+        .then((response) => {
+          const availabilityData = response.data.data;
+          // console.log(availabilityData);
+          console.log('Availability data retrieved.');
+          this._availabilityData = availabilityData;
+          resolve(availabilityData);
+        })
+        .catch((err) => {
+          console.log('Error occured at retrieving availability data:', err);
+        });
+    });
   },
 
   // updateCarparkData: function (json, callback) {
