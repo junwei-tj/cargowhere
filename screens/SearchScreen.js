@@ -1,19 +1,23 @@
 import React from 'react';
-import {View, Text, StyleSheet, TextInput, FlatList} from 'react-native';
+import {
+  View,
+  Image,
+  StyleSheet,
+  TextInput,
+  Pressable,
+  Keyboard
+} from 'react-native';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLatlng } from '../redux/regionSlice';
 import { setSpecificLocation } from '../redux/specificLocationSlice';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
+  searchField: {
+    width: '100%',
+    flexDirection:'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-  },
-  searchField: {
-    width: '94%',
     height: 50,
     padding: 3,
     paddingLeft: 20,
@@ -24,6 +28,27 @@ const styles = StyleSheet.create({
     borderColor: 'lightgrey',
     backgroundColor: 'white',
     margin: 10,
+  },
+  inputStyle: {
+    flexWrap: 'wrap',
+    alignItems:'flex-start',
+  },
+  headerIcon: {
+    position: 'absolute',
+    right: 5,
+    width: 25,
+    height: 25,
+    padding: 10,
+    paddingBottom: 25,
+    paddingLeft: 20,
+    resizeMode: 'stretch',
+    alignItems: 'flex-end',
+    backgroundColor: '#fff',
+  },
+  icon: {
+    width: 15,
+    height: 15,
+    tintColor: 'grey',
   },
 });
 
@@ -92,24 +117,28 @@ export default function SearchScreen(props) {
   }
 
   return (
-    <View style={styles.container}>
+
       <View style={styles.searchField}>
-        <TextInput
-          editable
-          placeholder={'Search...'}
-          value={searchValue}
-          onChangeText={(text) => setSearchValue(text)}
-          onSubmitEditing={onSubmitSearch}
-        />
-      </View>
-      {/*<FlatList*/}
-      {/*  style={{width: '100%'}}*/}
-      {/*  data={carparks}*/}
-      {/*  keyExtractor={(item, index) => item.key}*/}
-      {/*  renderItem={({item}) => {*/}
-      {/*    return <Carpark carpark={item} currentRegion={region} />;*/}
-      {/*  }}*/}
-      {/*/>*/}
-    </View>
-  );
+          <TextInput
+            editable
+            styles={styles.inputStyle}
+            placeholder={'Search...'}
+            value={searchValue}
+            onChangeText={(text) => setSearchValue(text)}
+            onSubmitEditing={onSubmitSearch}
+            returnKeyType = {"search"}
+          />
+          <Pressable
+              style={styles.headerIcon}
+              onPress={() => {
+                setSearchValue('');
+                Keyboard.dismiss();
+              }}>
+            <Image
+                style={styles.icon}
+                source={require('../images/cross.png')}
+            />
+          </Pressable>
+        </View>
+  )
 }

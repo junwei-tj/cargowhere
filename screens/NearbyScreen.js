@@ -10,12 +10,14 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import Carpark from '../components/Carpark';
 import DetailedView from './DetailedView';
-import {
-  SORT_BY_AVAILABILITY,
-  SORT_BY_DISTANCE,
-} from '../constants/sortCriteriaConstants';
+import {MAX_CARPARKS_TO_DISPLAY} from '../constants/carparkConstants';
 
 import {useSelector, useDispatch} from 'react-redux';
+import {setSortCriteria} from '../redux/sortCriteriaSlice';
+import {
+  SORT_BY_DISTANCE,
+  SORT_BY_AVAILABILITY,
+} from '../constants/sortCriteriaConstants';
 import {setLatlng} from '../redux/regionSlice';
 
 const styles = StyleSheet.create({
@@ -62,12 +64,14 @@ const styles = StyleSheet.create({
 const screenWidth = Math.round(Dimensions.get('window').width);
 
 export default function NearbyScreen(props) {
-  const [value, setValue] = useState(SORT_BY_DISTANCE);
+  // const [value, setValue] = useState('key0');
   const transformXValue = React.useRef(new Animated.Value(0)).current;
   const [selectedCarpark, setSelectedCarpark] = useState(null);
 
   const carparks = useSelector((state) => state.carparks.carparksData);
   const region = useSelector((state) => state.region);
+  const sortCriteria = useSelector((state) => state.sortCriteria.criteria);
+  const specificLocation = useSelector((state) => state.specificLocation);
 
   const dispatch = useDispatch();
 
@@ -113,9 +117,9 @@ export default function NearbyScreen(props) {
           <Text style={styles.sortBy}>Sort By:</Text>
           <Picker
             style={styles.picker}
-            selectedValue={value}
-            onValueChange={(itemValue, itemIndex) => {
-              setValue(itemValue);
+            selectedValue={sortCriteria}
+            onValueChange={(itemValue) => {
+              dispatch(setSortCriteria(itemValue));
               props.pickerCallback(itemValue);
             }}>
             <Picker.Item label="Distance" value={SORT_BY_DISTANCE} />
@@ -124,14 +128,14 @@ export default function NearbyScreen(props) {
         </View>
         {/* <FlatList data={Array(9).fill(0)} renderItem={() => <Carpark />} /> */}
         <FlatList
-          data={carparks}
+          data={carparks.slice(0, MAX_CARPARKS_TO_DISPLAY)}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             return (
               <Carpark
                 carpark={item}
                 index={index}
-                currentRegion={region}
+                currentRegion={specificLocation.latlng}
                 press={goToDetailedView}
               />
             );

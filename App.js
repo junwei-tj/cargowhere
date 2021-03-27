@@ -7,6 +7,8 @@ import {
   ImageBackground,
   ToastAndroid,
   Pressable,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -16,18 +18,20 @@ import StatusBar from './components/StatusBar';
 import BottomDisplay from './screens/BottomDisplay';
 import carparkData from './data_manager/DataManager';
 import {getDistanceFromLatLonInM} from './components/Carpark';
-import { MAX_CARPARKS_TO_DISPLAY } from './constants/carparkConstants';
+import {MAX_CARPARKS_TO_DISPLAY} from './constants/carparkConstants';
+import CarparkMarker from './components/CarparkMarker';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { setCarparks } from './redux/carparksSlice';
+import {useSelector, useDispatch} from 'react-redux';
+import {setCarparks} from './redux/carparksSlice';
 import {setAvailability} from './redux/availabilitySlice';
-import { setRegion } from './redux/regionSlice';
-import { SORT_BY_AVAILABILITY, SORT_BY_DISTANCE } from './constants/sortCriteriaConstants';
-import SearchScreen from "./screens/SearchScreen";
-import LoadingScreen from "./screens/LoadingScreen";
+import {setRegion} from './redux/regionSlice';
+import {
+  SORT_BY_AVAILABILITY,
+  SORT_BY_DISTANCE,
+} from './constants/sortCriteriaConstants';
+import SearchScreen from './screens/SearchScreen';
+import LoadingScreen from './screens/LoadingScreen';
 import {setSpecificLocation} from './redux/specificLocationSlice';
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -99,23 +103,11 @@ const styles = StyleSheet.create({
     height: '80%',
     tintColor: 'grey',
   },
-  marker: {
-    width: 44,
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  carparkNumber: {
-    paddingBottom: 10,
-    color: 'white'
-  },
   pin: {
     width: 44,
-    height: 44
-  }
+    height: 44,
+  },
 });
-
-
 
 function getCarparks({region, callback}) {
   let bottomLeftLat = region.latitude - region.latitudeDelta / 2;
@@ -135,7 +127,7 @@ function getCarparks({region, callback}) {
 
 /**
  * Function to filter the retrieved carparks to only include the desired fields.
- * Current fields kept are: latitude and longitude (combined to latlng), title, availableLots_H, availableLots_L, availableLots_car, availableLots_motorcycle
+ * Current fields kept are: latitude and longitude (combined to latlng), title, availableLots_car
  * @param {Array} carparkList
  * @param {region} pointOfReference coordinates (in latitude and longitude) of the point distance is to be calculated from
  */
@@ -145,27 +137,28 @@ function filterCarparksJSON(carparkList, pointOfReference) {
     throw 'Unable to sort by distance when pointOfReference is not provided';
   }
   carparkList.forEach((obj) => {
-    let carpark = {
-      identifier: obj.identifier,
-      latlng: {
-        latitude: obj.latitude,
-        longitude: obj.longitude,
-      },
-      title: obj.name,
-      availableLots_car: obj.availableLots_car,
-      distance: getDistanceFromLatLonInM(
-        pointOfReference.latitude,
-        pointOfReference.longitude,
-        obj.latitude,
-        obj.longitude,
-      ),
-      // availableLots_H: obj.availableLots_H,
-      // availableLots_L: obj.availableLots_L,
-      // availableLots_motorcycle: obj.availableLots_motorcycle,
-    };
-    if (!carparkObjs.some((item) => item.title == carpark.title))
+    if (!carparkObjs.some((item) => item.title == obj.title)) {
       // filter out duplicates
+      let carpark = {
+        identifier: obj.identifier,
+        latlng: {
+          latitude: obj.latitude,
+          longitude: obj.longitude,
+        },
+        title: obj.name,
+        availableLots_car: obj.availableLots_car,
+        distance: getDistanceFromLatLonInM(
+          pointOfReference.latitude,
+          pointOfReference.longitude,
+          obj.latitude,
+          obj.longitude,
+        ),
+        // availableLots_H: obj.availableLots_H,
+        // availableLots_L: obj.availableLots_L,
+        // availableLots_motorcycle: obj.availableLots_motorcycle,
+      };
       carparkObjs.push(carpark);
+    }
   });
 
   return carparkObjs;
@@ -201,26 +194,9 @@ function sortCarparks(carparks, availability, sortCriteria) {
         return a.distance - b.distance;
       });
   }
+  //console.log(carparks)
   return carparks;
 }
-
-const CarparkMarker = (props) => (
-  <Marker
-    tracksViewChanges={false}
-    key={props.carpark.identifier}
-    coordinate={props.carpark.latlng}
-    title={props.carpark.title}
-    onCalloutPress={() => alert('pressed ' + props.carpark.title)}
-    >
-    <ImageBackground
-      source={require('./images/marker.png')}
-      style={styles.marker}>
-      <Text style={styles.carparkNumber}>
-        {props.index + 1}
-      </Text>
-    </ImageBackground>
-  </Marker>
-)
 
 export default function App() {
   const region = useSelector((state) => state.region);
@@ -257,7 +233,7 @@ export default function App() {
         },
         title: 'Current Location',
         active: true,
-      }
+      };
       dispatch(setRegion(currentRegion));
       dispatch(setSpecificLocation(currentLocationMarker));
     });
@@ -268,13 +244,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-      carparkData.updateCarparkStaticData();
-      setTimeout(() => 
-      {
-          setIsLoading(false);
-          console.log("Unmounting loading screen..");
-        }, 2500);
-  },[])
+    carparkData.updateCarparkStaticData();
+    setTimeout(() => {
+      setIsLoading(false);
+      console.log('Unmounting loading screen..');
+    }, 2500);
+  }, []);
 
   useEffect(() => {
     carparkData
@@ -284,7 +259,7 @@ export default function App() {
   }, [carparks]);
 
   function carparksRetrieved(carparkList) {
-    let carparkObjs = filterCarparksJSON(carparkList, region);
+    let carparkObjs = filterCarparksJSON(carparkList, specificLocation.latlng);
     let sorted = sortCarparks(carparkObjs, sortCriteria);
     dispatch(setCarparks(sorted));
     ToastAndroid.show('Carpark markers updated', ToastAndroid.SHORT);
@@ -296,86 +271,91 @@ export default function App() {
   };
 
   return (
-  <>
-    {isLoading ? <LoadingScreen/>:     
-    <View style={styles.container}>
-      <StatusBar backgroundColor="#2EBD6B" barStyle="default" />
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        region={region}
-        onRegionChangeComplete={(region) => {
-          dispatch(setRegion(region));
-          // getCarparks({region, callback: carparksRetrieved});
-          console.log('onRegionChangeComplete completed');
-        }}>
-        {carparks.map((carpark, index) => {
-          if (index < MAX_CARPARKS_TO_DISPLAY) {
-            return (
-              <CarparkMarker
-                carpark={carpark}
-                index={index}
-                key={index}
+    <>
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.container}>
+            <StatusBar backgroundColor="#2EBD6B" barStyle="default" />
+            <MapView
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              region={region}
+              onRegionChangeComplete={(region) => {
+                dispatch(setRegion(region));
+                // getCarparks({region, callback: carparksRetrieved});
+                console.log('onRegionChangeComplete completed');
+              }}>
+              {carparks.map((carpark, index) => {
+                if (index < MAX_CARPARKS_TO_DISPLAY) {
+                  return (
+                    <CarparkMarker
+                      carpark={carpark}
+                      index={index}
+                      key={index}
+                    />
+                  );
+                }
+              })}
+              {specificLocation && (
+                <Marker
+                  tracksViewChanges={false}
+                  key={specificLocation.title}
+                  coordinate={specificLocation.latlng}
+                  title={specificLocation.title}>
+                  <Image
+                    source={require('./images/pin.png')}
+                    style={styles.pin}
+                  />
+                </Marker>
+              )}
+            </MapView>
+            <View style={styles.searchContainer}>
+              <SearchScreen />
+            </View>
+
+            <View style={styles.refreshButtonContainer}>
+              <Pressable
+                android_ripple={{color: 'lightgrey'}}
+                style={styles.refreshPressable}
+                onPress={() =>
+                  getCarparks({region, callback: carparksRetrieved})
+                }>
+                <Image
+                  source={require('./images/refresh.png')}
+                  style={styles.refreshButton}
+                />
+              </Pressable>
+            </View>
+
+            <View style={styles.orientateButtonContainer}>
+              <Pressable
+                android_ripple={{color: 'lightgrey'}}
+                style={styles.refreshPressable}
+                onPress={() => {
+                  currentLocation();
+                }}>
+                <Image
+                  source={require('./images/mylocationAndroid.png')}
+                  style={styles.refreshButton}
+                />
+              </Pressable>
+            </View>
+
+            <View style={styles.menu}>
+              {/* pass update state functions to child components so they can update on behalf of this component */}
+              <BottomDisplay
+                //setRegion={setRegion}
+                //setSpecificLocation={setSpecificLocation}
+                //carparks={carparks}
+                //currentRegion={region}
+                pickerCallback={sortCriteriaChanged}
               />
-            );
-          }
-        })}
-        {specificLocation && (
-          <Marker
-            tracksViewChanges={false}
-            key={specificLocation.title}
-            coordinate={specificLocation.latlng}
-            title={specificLocation.title}>
-            <Image
-              source={require('./images/pin.png')}
-              style={styles.pin}
-            />
-          </Marker>
-        )}
-        </MapView>
-      <View style={styles.searchContainer}>
-        <SearchScreen/>
-      </View>
-
-      <View style={styles.refreshButtonContainer}>
-        <Pressable
-          android_ripple={{color: 'lightgrey'}}
-          style={styles.refreshPressable}
-          onPress={() => getCarparks({region, callback: carparksRetrieved})}>
-          <Image
-            source={require('./images/refresh.png')}
-            style={styles.refreshButton}
-          />
-        </Pressable>
-        
-      </View>
-
-      <View style={styles.orientateButtonContainer}>
-        <Pressable
-          android_ripple={{color: 'lightgrey'}}
-          style={styles.refreshPressable}
-          onPress={() =>{currentLocation()}}
-          >
-          <Image
-            source={require('./images/mylocationAndroid.png')}
-            style={styles.refreshButton}
-          />
-        </Pressable>
-        
-      </View>
-
-      <View style={styles.menu}>
-        {/* pass update state functions to child components so they can update on behalf of this component */}
-        <BottomDisplay
-          //setRegion={setRegion}
-          //setSpecificLocation={setSpecificLocation}
-          //carparks={carparks}
-          //currentRegion={region}
-          pickerCallback={sortCriteriaChanged}
-        />
-      </View>
-    </View>
-    }
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      )}
     </>
   );
 }
