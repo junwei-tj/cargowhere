@@ -109,7 +109,7 @@ const carparkData = {
         // console.log(availabilityData);
         console.log('Availability data retrieved.');
         this._availabilityData = availabilityData;
-        console.log(this._availabilityData)
+        //console.log(this._availabilityData)
       })
       .catch((err) => {
         console.log('Error occured at retrieving availability data:', err);

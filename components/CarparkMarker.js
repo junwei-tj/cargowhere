@@ -23,7 +23,7 @@ export default function CarparkMarker(props) {
     <Marker
       key={props.index}
       coordinate={props.carpark.latlng}
-      title={props.carpark.title}
+      //title={props.carpark.title}
       onCalloutPress={() => alert('pressed ' + props.carpark.title)}
       >
       <ImageBackground

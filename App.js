@@ -132,27 +132,28 @@ function filterCarparksJSON(carparkList, pointOfReference) {
     throw 'Unable to sort by distance when pointOfReference is not provided';
   }
   carparkList.forEach((obj) => {
-    let carpark = {
-      identifier: obj.identifier,
-      latlng: {
-        latitude: obj.latitude,
-        longitude: obj.longitude,
-      },
-      title: obj.name,
-      availableLots_car: obj.availableLots_car,
-      distance: getDistanceFromLatLonInM(
-        pointOfReference.latitude,
-        pointOfReference.longitude,
-        obj.latitude,
-        obj.longitude,
-      ),
-      // availableLots_H: obj.availableLots_H,
-      // availableLots_L: obj.availableLots_L,
-      // availableLots_motorcycle: obj.availableLots_motorcycle,
-    };
-    if (!carparkObjs.some((item) => item.title == carpark.title))
+    if (!carparkObjs.some((item) => item.title == obj.title)) {
       // filter out duplicates
+      let carpark = {
+        identifier: obj.identifier,
+        latlng: {
+          latitude: obj.latitude,
+          longitude: obj.longitude,
+        },
+        title: obj.name,
+        availableLots_car: obj.availableLots_car,
+        distance: getDistanceFromLatLonInM(
+          pointOfReference.latitude,
+          pointOfReference.longitude,
+          obj.latitude,
+          obj.longitude,
+        ),
+        // availableLots_H: obj.availableLots_H,
+        // availableLots_L: obj.availableLots_L,
+        // availableLots_motorcycle: obj.availableLots_motorcycle,
+      };
       carparkObjs.push(carpark);
+    }
   });
 
   return carparkObjs;
