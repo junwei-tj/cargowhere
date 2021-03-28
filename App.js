@@ -232,7 +232,6 @@ export default function App() {
           longitude: info.coords.longitude,
         },
         title: 'Current Location',
-        active: true,
       };
       dispatch(setRegion(currentRegion));
       dispatch(setSpecificLocation(currentLocationMarker));
@@ -260,7 +259,7 @@ export default function App() {
 
   function carparksRetrieved(carparkList) {
     let carparkObjs = filterCarparksJSON(carparkList, specificLocation.latlng);
-    let sorted = sortCarparks(carparkObjs, sortCriteria);
+    let sorted = sortCarparks(carparkObjs, availability, sortCriteria);
     dispatch(setCarparks(sorted));
     ToastAndroid.show('Carpark markers updated', ToastAndroid.SHORT);
   }

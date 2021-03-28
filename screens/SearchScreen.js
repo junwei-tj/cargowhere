@@ -96,7 +96,6 @@ export default function SearchScreen(props) {
           latitude: location.position.lat,
           longitude: location.position.lon,
         },
-        active: true,
         title: searchValue,
       }));
 

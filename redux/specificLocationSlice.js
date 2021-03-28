@@ -7,7 +7,6 @@ initialState = {
     longitude: 103.69738744021137,
   },
   title: 'Nanyang Technological University',
-  active: true,
 }
 
 const specificLocationSlice = createSlice({
@@ -18,7 +17,6 @@ const specificLocationSlice = createSlice({
       state.latlng.latitude = action.payload.latlng.latitude;
       state.latlng.longitude = action.payload.latlng.longitude;
       state.title = action.payload.title;
-      state.active = action.payload.active;
     }
   }
 })
