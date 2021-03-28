@@ -18,7 +18,6 @@ import StatusBar from './components/StatusBar';
 import BottomDisplay from './screens/BottomDisplay';
 import carparkData from './data_manager/DataManager';
 import {getDistanceFromLatLonInM} from './components/Carpark';
-import {MAX_CARPARKS_TO_DISPLAY} from './constants/carparkConstants';
 import CarparkMarker from './components/CarparkMarker';
 
 import {useSelector, useDispatch} from 'react-redux';
@@ -32,6 +31,7 @@ import {
 import SearchScreen from './screens/SearchScreen';
 import LoadingScreen from './screens/LoadingScreen';
 import {setSpecificLocation} from './redux/specificLocationSlice';
+import {setMaxCarparks} from './redux/maxCarparksSlice';
 
 const styles = StyleSheet.create({
   container: {
@@ -207,6 +207,7 @@ export default function App() {
     (state) => state.availability.availabilityData,
   );
   const [isLoading, setIsLoading] = useState(true);
+  const maxCarparks = useSelector((state) => state.maxCarparks.limit)
   const dispatch = useDispatch();
 
   // code for geolocation for reference
@@ -287,7 +288,7 @@ export default function App() {
                 console.log('onRegionChangeComplete completed');
               }}>
               {carparks.map((carpark, index) => {
-                if (index < MAX_CARPARKS_TO_DISPLAY) {
+                if (index < maxCarparks) {
                   return (
                     <CarparkMarker
                       carpark={carpark}

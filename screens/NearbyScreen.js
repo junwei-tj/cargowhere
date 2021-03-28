@@ -19,6 +19,7 @@ import {
   SORT_BY_AVAILABILITY,
 } from '../constants/sortCriteriaConstants';
 import {setLatlng} from '../redux/regionSlice';
+import { setMaxCarparks } from '../redux/maxCarparksSlice';
 
 const styles = StyleSheet.create({
   container: {
@@ -32,20 +33,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#eee',
   },
-  sortBy: {
-    fontSize: 20,
-    paddingTop: 10,
-    textAlign: 'right',
-    flex: 1,
-  },
+  // sortBy: {
+  //   fontSize: 20,
+  //   paddingTop: 10,
+  //   textAlign: 'right',
+  //   flex: 1,
+  // },
   headerText: {
-    fontSize: 20,
-    paddingTop: 10,
+    fontSize: 15,
+    paddingTop: 14,
     paddingLeft: 20,
-    textDecorationLine: 'underline',
+    fontWeight: 'bold'
   },
-  picker: {
-    width: '43%',
+  limitPicker: {
+    width: '25%',
+    color: 'black',
+  },
+  sortByPicker: {
+    width: '40%',
     color: 'black',
   },
   normalView: {
@@ -62,6 +67,7 @@ const styles = StyleSheet.create({
 });
 
 const screenWidth = Math.round(Dimensions.get('window').width);
+const MAX_ALLOWED_CARPARKS = 20;
 
 export default function NearbyScreen(props) {
   // const [value, setValue] = useState('key0');
@@ -69,7 +75,7 @@ export default function NearbyScreen(props) {
   const [selectedCarpark, setSelectedCarpark] = useState(null);
 
   const carparks = useSelector((state) => state.carparks.carparksData);
-  const region = useSelector((state) => state.region);
+  const maxCarparks = useSelector((state) => state.maxCarparks.limit);
   const sortCriteria = useSelector((state) => state.sortCriteria.criteria);
   const specificLocation = useSelector((state) => state.specificLocation);
 
@@ -113,14 +119,25 @@ export default function NearbyScreen(props) {
           {transform: [{translateX: transformXValue}]},
         ]}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>Nearby</Text>
-          <Text style={styles.sortBy}>Sort By:</Text>
+          <Text style={styles.headerText}>Limit:</Text>
           <Picker
-            style={styles.picker}
+            style={styles.limitPicker}
+            selectedValue={maxCarparks}
+            onValueChange={(itemValue) => {
+              console.log(itemValue)
+              dispatch(setMaxCarparks(itemValue))
+            }}>
+            {new Array(MAX_ALLOWED_CARPARKS).fill(0).map((element, index) => {
+              return (
+              <Picker.Item label={""+(index+1)} value={index+1} />
+            )})}
+          </Picker>
+          <Text style={styles.headerText}>Sort By:</Text>
+          <Picker
+            style={styles.sortByPicker}
             selectedValue={sortCriteria}
             onValueChange={(itemValue) => {
               dispatch(setSortCriteria(itemValue));
-              props.pickerCallback(itemValue);
             }}>
             <Picker.Item label="Distance" value={SORT_BY_DISTANCE} />
             <Picker.Item label="Availability" value={SORT_BY_AVAILABILITY} />
@@ -128,7 +145,7 @@ export default function NearbyScreen(props) {
         </View>
         {/* <FlatList data={Array(9).fill(0)} renderItem={() => <Carpark />} /> */}
         <FlatList
-          data={carparks.slice(0, MAX_CARPARKS_TO_DISPLAY)}
+          data={carparks.slice(0, maxCarparks)}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             return (

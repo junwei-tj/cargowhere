@@ -5,6 +5,7 @@ import regionReducer from './regionSlice';
 import specificLocationReducer from './specificLocationSlice';
 import sortCriteriaReducer from './sortCriteriaSlice';
 import availabilityReducer from './availabilitySlice';
+import maxCarparksReducer from './maxCarparksSlice';
 
 // our store will have the states carparks and region, and all updates to these states will be done with their reducers
 export default configureStore({
@@ -14,6 +15,7 @@ export default configureStore({
     specificLocation: specificLocationReducer,
     sortCriteria: sortCriteriaReducer,
     availability: availabilityReducer,
+    maxCarparks: maxCarparksReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
