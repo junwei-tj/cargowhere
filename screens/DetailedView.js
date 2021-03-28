@@ -14,6 +14,9 @@ import DataManager from '../data_manager/DataManager';
 import {useSelector} from 'react-redux';
 
 const styles = StyleSheet.create({
+  rootView: {
+    flex: 1,
+  },
   header: {
     borderBottomColor: '#eee',
     flexDirection: 'row',
@@ -124,7 +127,7 @@ export default function DetailedView(props) {
   return (
     <>
       {cp && (
-        <>
+        <View style={styles.rootView} onStartShouldSetResponder={() => true}>
           <View style={styles.header}>
             <Text style={styles.headerText}>
               {props.selectedCarpark.title} {cp.code ? `(${cp.code})` : ''}
@@ -254,7 +257,7 @@ export default function DetailedView(props) {
           <View style={styles.footer}>
             <Button style={styles.button} title="GO" onPress={openMap} />
           </View>
-        </>
+        </View>
       )}
     </>
   );
