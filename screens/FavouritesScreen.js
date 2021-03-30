@@ -15,14 +15,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     paddingVertical: 10,
     justifyContent: "space-between",
+    paddingHorizontal: 20,
   },
   headerText: {
     fontSize: 20,
-    paddingLeft: 20,
-    textDecorationLine: 'underline',
+    fontWeight: "bold",
   },
   favourite: {
 
+  },
+  image:{
+    width: 20,
+    height: 20,
+    marginTop: 5,
+    marginBottom: 3,
+    borderWidth: 1,
   }
 });
 
@@ -83,12 +90,8 @@ export default function FavouritesScreen(props) {
 
   useEffect(() => {
     //Test adding ======================================================
-    addFavourite('Favourites_Key0', 'press above button to remove this!');
-    addFavourite("Favourites_Key1", "Tekong");
-    addFavourite("Favourites_Key2", "Nanyang Technological University");
-    addFavourite("Favourites_Key3", "Plaza Singapura");
-    addFavourite("Favourites_Key4", "Sentosa");
-    //removeFavourite("Favourites_Key1");
+    //removeFavourite("NTU");
+    //addFavourite("Tekong", [1,2]);
     //==================================================================
     console.log("running useffect");
     loadAllFavourites();
@@ -108,7 +111,10 @@ export default function FavouritesScreen(props) {
             onPress = {() => changeModalVisible(true)}
             style = {styles.touchableOpacity}
           >
-            <Text style = {styles.headerText}>Add To Favourites</Text>
+              <Image
+                  style={styles.image}
+                  source={require('../images/heart.png')}
+              />
           </TouchableOpacity>
       </View>
       <Modal
@@ -119,15 +125,9 @@ export default function FavouritesScreen(props) {
       >
         <SimpleModal
           changeModalVisible={changeModalVisible}
-          setData = {setData}></SimpleModal>
+          //setData = {setData}
+          addFavourite = {addFavourite}></SimpleModal>
       </Modal>
-      {/* Temp button here to test if data can be edited */}
-      <Button
-        title="Press to remove/add"
-        onPress={() => {
-          removeFavourite('Favourites_Key0');
-        }}
-      />
       <FlatList
         style={{width: '100%'}}
         data={favourites}
@@ -139,8 +139,8 @@ export default function FavouritesScreen(props) {
           >
             <Favourite
               favourite={item}
-              //currentRegion={region}
               press={manageFavourite}
+              removeFavourite = {removeFavourite}
             />
           </TouchableOpacity>
         )}

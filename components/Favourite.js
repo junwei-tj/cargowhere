@@ -11,7 +11,8 @@ import {
 export default function Favourite(props) {
     
   return (
-    <Pressable onPress={props.press(props.favourite)}>
+    <Pressable onPress={props.press(props.favourite)}> 
+      {/* //Might not need this Pressable */}
       <View style={styles.container}>
         <View style={styles.markerContainer}>
           <Image
@@ -20,9 +21,10 @@ export default function Favourite(props) {
           />
         </View>
         <View style={styles.infoContainer}>
-          <Text style={styles.name}>{props.favourite[1]}</Text>
+          <Text style={styles.name}>{props.favourite[0]}</Text>
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button}
+        onPress={() => {props.removeFavourite(props.favourite[0])}}>
             <Image
                 style={styles.marker}
                 source={require('../images/chevron.png')}
@@ -42,13 +44,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
   },
   markerContainer: {
     paddingTop: 5,
     flexDirection: 'column',
     alignSelf: 'flex-start',
     alignItems: 'center',
-    marginLeft: 10,
   },
   marker: {
     width: 20,

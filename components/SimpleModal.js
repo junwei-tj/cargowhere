@@ -15,11 +15,16 @@ import {
 
 export default function SimpleModal(props) {
     
+  //Closing the modal calls the addFavourite in FavouriteScreen.js
+  //Uses the name entered by the user as the key
   const closeModal = (bool, data) => {
-    props.changeModalVisible(bool);
-    props.setData(data);
+    props.changeModalVisible(bool); //TODO: Figure out how to check for empty input
+    //props.setData(data);
+    console.log(name);
+    props.addFavourite(name, [15,15]) //To replace the 15,15 with the actual coordinates from search bar
   }
 
+  //The name to be saved for the location
   const [name, setName] = useState();
 
   return (
