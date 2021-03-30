@@ -70,14 +70,30 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     paddingVertical: 5,
     paddingHorizontal: 30,
     borderTopWidth: 1,
   },
   button: {
-    width: 100,
+    width: '20%',
   },
+  favouritesButton: {
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  heart: {
+    width: 20,
+    height: 20,
+    tintColor: "gray"
+  },
+  heartPressed: {
+    width: 20,
+    height: 20,
+    tintColor: 'red',
+  }
 });
 
 export default function DetailedView(props) {
@@ -255,7 +271,19 @@ export default function DetailedView(props) {
             )}
           </ScrollView>
           <View style={styles.footer}>
-            <Button style={styles.button} title="GO" onPress={openMap} />
+            <Pressable 
+              onPress={()=>console.log("pressed")} 
+              android_ripple={{color: 'lightgrey'}}
+              children={({pressed}) => (
+                <View style={styles.favouritesButton}>
+                  <Image source={require("../images/heart.png")} style={pressed ? styles.heartPressed : styles.heart}/>
+                </View>
+              )}
+            >
+            </Pressable>
+            <View style={styles.button}>
+              <Button color="#00B3A6" title="GO" onPress={openMap} />
+            </View>
           </View>
         </View>
       )}
