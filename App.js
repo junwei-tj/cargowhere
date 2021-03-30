@@ -350,7 +350,7 @@ export default function App() {
                 //setSpecificLocation={setSpecificLocation}
                 //carparks={carparks}
                 //currentRegion={region}
-                pickerCallback={sortCriteriaChanged}
+                sortCriteriaChanged={sortCriteriaChanged}
               />
             </View>
           </View>

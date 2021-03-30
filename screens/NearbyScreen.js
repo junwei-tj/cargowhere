@@ -124,12 +124,11 @@ export default function NearbyScreen(props) {
             style={styles.limitPicker}
             selectedValue={maxCarparks}
             onValueChange={(itemValue) => {
-              console.log(itemValue)
               dispatch(setMaxCarparks(itemValue))
             }}>
             {new Array(MAX_ALLOWED_CARPARKS).fill(0).map((element, index) => {
               return (
-              <Picker.Item label={""+(index+1)} value={index+1} />
+              <Picker.Item label={""+(index+1)} value={index+1} key={index}/>
             )})}
           </Picker>
           <Text style={styles.headerText}>Sort By:</Text>
@@ -138,6 +137,7 @@ export default function NearbyScreen(props) {
             selectedValue={sortCriteria}
             onValueChange={(itemValue) => {
               dispatch(setSortCriteria(itemValue));
+              props.sortCriteriaChanged(itemValue)
             }}>
             <Picker.Item label="Distance" value={SORT_BY_DISTANCE} />
             <Picker.Item label="Availability" value={SORT_BY_AVAILABILITY} />
