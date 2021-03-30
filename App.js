@@ -137,7 +137,7 @@ function filterCarparksJSON(carparkList, pointOfReference) {
     throw 'Unable to sort by distance when pointOfReference is not provided';
   }
   carparkList.forEach((obj) => {
-    if (!carparkObjs.some((item) => item.title == obj.title)) {
+    if (!carparkObjs.some((item) => item.title == obj.name)) {
       // filter out duplicates
       let carpark = {
         identifier: obj.identifier,

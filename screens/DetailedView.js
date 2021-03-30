@@ -83,16 +83,6 @@ const styles = StyleSheet.create({
     height: 30,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  heart: {
-    width: 20,
-    height: 20,
-    tintColor: "gray"
-  },
-  heartPressed: {
-    width: 20,
-    height: 20,
-    tintColor: 'red',
   }
 });
 
@@ -271,16 +261,6 @@ export default function DetailedView(props) {
             )}
           </ScrollView>
           <View style={styles.footer}>
-            <Pressable 
-              onPress={()=>console.log("pressed")} 
-              android_ripple={{color: 'lightgrey'}}
-              children={({pressed}) => (
-                <View style={styles.favouritesButton}>
-                  <Image source={require("../images/heart.png")} style={pressed ? styles.heartPressed : styles.heart}/>
-                </View>
-              )}
-            >
-            </Pressable>
             <View style={styles.button}>
               <Button color="#00B3A6" title="GO" onPress={openMap} />
             </View>
