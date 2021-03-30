@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Button, FlatList, StyleSheet} from 'react-native';
+import {View, Image, Text, Button, FlatList, StyleSheet, Modal, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Favourite from '../components/Favourite';
+import SimpleModal from '../components/SimpleModal';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,15 +14,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#eee',
     paddingVertical: 10,
+    justifyContent: "space-between",
   },
   headerText: {
     fontSize: 20,
     paddingLeft: 20,
     textDecorationLine: 'underline',
   },
+  favourite: {
+
+  }
 });
 
 export default function FavouritesScreen(props) {
+
+  const [isModalVisible, setIsModalVisible] = useState(initialState)
+  const [chooseData, setChooseData] = useState();
+
+  const changeModalVisible = (bool) =>{
+    setIsModalVisible(bool);
+  }
+
+  const setData = (data) => {
+    setChooseData(data);
+  }
 
   //Used to load all favourites from local storage, called whenever 
   //favourites are changed or when Favourites tab is clicked
@@ -88,7 +104,23 @@ export default function FavouritesScreen(props) {
       {/* To add CRUD functionality  */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Favourites</Text>
+        <TouchableOpacity style = {styles.favourite}
+            onPress = {() => changeModalVisible(true)}
+            style = {styles.touchableOpacity}
+          >
+            <Text style = {styles.headerText}>Add To Favourites</Text>
+          </TouchableOpacity>
       </View>
+      <Modal
+      transparent = {true}
+      animationType = 'fade'
+      visible = {isModalVisible}
+      onRequestClose = {() => changeModalVisible(false)}
+      >
+        <SimpleModal
+          changeModalVisible={changeModalVisible}
+          setData = {setData}></SimpleModal>
+      </Modal>
       {/* Temp button here to test if data can be edited */}
       <Button
         title="Press to remove/add"
@@ -101,11 +133,16 @@ export default function FavouritesScreen(props) {
         data={favourites}
         keyExtractor={(item, index) => item.key}
         renderItem={({ item }) => (
-          <Favourite
-                favourite={item}
-                //currentRegion={region}
-                press={manageFavourite}
-              />
+          <TouchableOpacity
+            onPress = {() => changeModalVisible(true)}
+            style = {styles.touchableOpacity}
+          >
+            <Favourite
+              favourite={item}
+              //currentRegion={region}
+              press={manageFavourite}
+            />
+          </TouchableOpacity>
         )}
       />
     </View>
