@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     color: '#231213',
   },
   inputStyle: {
-    flexWrap: 'wrap',
+    width: '90%',
     alignItems:'flex-start',
   },
   headerIcon: {
@@ -198,7 +198,7 @@ export default function SearchScreen(props) {
           <View style={styles.searchField}>
               <TextInput
                 editable
-                styles={styles.inputStyle}
+                style={styles.inputStyle}
                 placeholder={'Search...'}
                 value={searchValue}
                 onChangeText={(text) => setSearchValue(text)}
