@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     paddingVertical: 5,
     paddingHorizontal: 30,
     borderTopWidth: 1,
