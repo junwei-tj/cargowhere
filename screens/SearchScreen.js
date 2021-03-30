@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     borderColor: 'lightgrey',
     borderWidth: 3,
     borderStyle: 'solid',
+    overflow: 'hidden',
   },
   searchContainer: {
     flex: 1,
@@ -89,6 +90,7 @@ const styles = StyleSheet.create({
   searchOverlay: {
     paddingTop: 20,
     paddingBottom:20,
+    marginBottom: 10,
   },
   header: {
     borderBottomWidth: 1,
