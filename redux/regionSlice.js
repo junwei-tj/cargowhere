@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// initial state points to pioneer MRT
+// initial state points to Orchard
 initialState = {
-  latitude: 1.3378270431723034,
-  longitude: 103.69738744021137,
+  latitude: 1.3050899559220615, 
+  longitude: 103.83203936914883,
   latitudeDelta: 0.015,
   longitudeDelta: 0.0121,
 }

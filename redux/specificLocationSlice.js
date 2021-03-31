@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// initial state points to pioneer MRT
+// initial state points to some unknown place to "hide it"
 initialState = {
   latlng: {
-    latitude: 1.3378270431723034,
-    longitude: 103.69738744021137,
+    latitude: 1.3050899559220615, 
+    longitude: 103.83203936914883,
   },
-  title: 'Nanyang Technological University',
+  title: 'Orchard',
 }
 
 const specificLocationSlice = createSlice({
