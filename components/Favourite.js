@@ -66,8 +66,6 @@ export default function Favourite(props) {
   );
 }
 
-
-//TODO: Make further changes, adapted from NearbyScreen haha
 const styles = StyleSheet.create({
   container: {
     borderBottomWidth: 1,

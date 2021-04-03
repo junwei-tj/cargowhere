@@ -21,6 +21,9 @@ export default function SimpleModal(props) {
   const specificLocation = useSelector((state) => state.specificLocation);
   const selectedFavourite = useSelector((state) => state.selectedFavourite);
   const dispatch = useDispatch();
+
+  //The name to be saved for the location
+  const [name, setName] = useState();
   
   const leftCloseModal = (bool, data) => {
     console.log(props.newlyCreated);
@@ -30,15 +33,10 @@ export default function SimpleModal(props) {
     props.changeModalVisible(bool); //TODO: Figure out how to check for empty input
   }
 
-  //Closing the modal calls the addFavourite in FavouriteScreen.js
-  //Uses the name entered by the user as the key
   const rightCloseModal = (bool, data) => {
     props.changeModalVisible(bool); //TODO: Figure out how to check for empty input
     props.addFavourite(name, [region.latitude, region.longitude])
   }
-
-  //The name to be saved for the location
-  const [name, setName] = useState();
 
   return (
     <TouchableOpacity
