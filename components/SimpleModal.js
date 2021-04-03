@@ -12,7 +12,6 @@ import {
   HEIGHT_MODAL,
 } from '../constants/screenConstants';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSpecificLocation } from '../redux/specificLocationSlice';
 
 
 export default function SimpleModal(props) {
@@ -28,13 +27,13 @@ export default function SimpleModal(props) {
   const leftCloseModal = (bool, data) => {
     console.log(props.newlyCreated);
     console.log(selectedFavourite.selected[0]);
-    props.newlyCreated === true ? null: props.removeFavourite(selectedFavourite.selected[0]);
-
-    props.changeModalVisible(bool); //TODO: Figure out how to check for empty input
+    props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
+    props.changeModalVisible(bool);
   }
 
   const rightCloseModal = (bool, data) => {
     props.changeModalVisible(bool); //TODO: Figure out how to check for empty input
+    props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
     props.addFavourite(name, [region.latitude, region.longitude])
   }
 
@@ -46,7 +45,7 @@ export default function SimpleModal(props) {
       <View style = {styles.modal}>
         <View style={styles.textView}>
           {props.newlyCreated === true ?
-          <Text style = {styles.text}>Save name for {specificLocation.title}</Text>:
+          <Text style = {styles.text}>Save name for {specificLocation.title}:</Text> :
           <Text style = {styles.text}>Edit or Delete {specificLocation.title}:</Text> }
           {props.newlyCreated === true ?
             <TextInput
