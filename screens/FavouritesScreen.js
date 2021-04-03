@@ -4,8 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Favourite from '../components/Favourite';
 import SimpleModal from '../components/SimpleModal';
 import { useSelector, useDispatch } from 'react-redux';
-import { setLatlng } from '../redux/regionSlice';
-import { setSpecificLocation } from '../redux/specificLocationSlice';
 
 const styles = StyleSheet.create({
   container: {
@@ -39,14 +37,23 @@ const styles = StyleSheet.create({
 export default function FavouritesScreen(props) {
 
   const [isModalVisible, setIsModalVisible] = useState(initialState)
-  const [chooseData, setChooseData] = useState();
+  //const [chooseData, setChooseData] = useState();
+
+  const selectedFavourite = useSelector((state) => state.selectedFavourite);
+  const dispatch = useDispatch();
 
   const changeModalVisible = (bool) =>{
     setIsModalVisible(bool);
   }
 
-  const setData = (data) => {
-    setChooseData(data);
+ // const setData = (data) => {
+    //setChooseData(data);
+  //}
+
+  const [newlyCreated, setNewlyCreated] = useState(false);
+
+  const changeIfNew = (bool) => {
+      setNewlyCreated(bool);
   }
 
   //Used to load all favourites from local storage, called whenever 
@@ -95,15 +102,11 @@ export default function FavouritesScreen(props) {
     //Test adding ======================================================
     //removeFavourite("NTU");
     //addFavourite("Tekong", [1,2]);
+    //removeFavourite("Home");
     //==================================================================
     console.log("running useffect");
     loadAllFavourites();
  }, []);
-
-  //TODO
-  const manageFavourite = (favourite) => () => {
-
-  };
 
   return (
     <View style={styles.container}>
@@ -111,7 +114,9 @@ export default function FavouritesScreen(props) {
       <View style={styles.header}>
         <Text style={styles.headerText}>Favourites</Text>
         <TouchableOpacity style = {styles.favourite}
-            onPress = {() => changeModalVisible(true)}
+            onPress = {() => {
+              changeIfNew(true)
+              changeModalVisible(true)}}
           >
               <Image
                   style={styles.image}
@@ -129,6 +134,8 @@ export default function FavouritesScreen(props) {
         <SimpleModal
           changeModalVisible={changeModalVisible}
           //setData = {setData}
+          newlyCreated = {newlyCreated}          
+          removeFavourite = {removeFavourite}
           addFavourite = {addFavourite}></SimpleModal>
       </Modal>
       <FlatList
@@ -136,13 +143,12 @@ export default function FavouritesScreen(props) {
         data={favourites}
         keyExtractor={(item, index) => item.key}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            //onPress = {() => changeModalVisible(true)}
-            style = {styles.touchableOpacity}
-          >
+          <TouchableOpacity>
             <Favourite
               favourite={item}
-              press={manageFavourite}
+              //press={manageFavourite}
+              changeIfNew={changeIfNew}
+              changeModalVisible = {changeModalVisible}
               removeFavourite = {removeFavourite}
             />
           </TouchableOpacity>

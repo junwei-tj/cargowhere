@@ -7,13 +7,16 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { setLatlng } from '../redux/regionSlice';
 import { setSpecificLocation } from '../redux/specificLocationSlice';
+import { setSelectedFavourite } from '../redux/selectedFavouriteSlice';
 
 export default function Favourite(props) {
   
   const region = useSelector(state => state.region);
+  const selectedFavourite = useSelector((state) => state.selectedFavourite);
   const dispatch = useDispatch();
 
   function onSelectFavourite(){
@@ -28,7 +31,8 @@ export default function Favourite(props) {
       },
       title: props.favourite[0],
     }));
-
+    dispatch(setSelectedFavourite(props.favourite)); 
+    props.changeIfNew(false);
 }
 
   return (
@@ -48,10 +52,13 @@ export default function Favourite(props) {
           </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}
-          onPress={() => {props.removeFavourite(props.favourite[0])}}>
+          onPress={() => {
+            onSelectFavourite();
+            props.changeModalVisible();
+          }}>
               <Image
                   style={styles.marker}
-                  source={require('../images/chevron.png')}
+                  source={require('../images/edit.png')}
               />
         </TouchableOpacity>
       </View>

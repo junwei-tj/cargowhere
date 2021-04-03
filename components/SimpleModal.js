@@ -12,15 +12,27 @@ import {
   HEIGHT_MODAL,
 } from '../constants/screenConstants';
 import { useSelector, useDispatch } from 'react-redux';
+import { setSpecificLocation } from '../redux/specificLocationSlice';
+
 
 export default function SimpleModal(props) {
     
   const region = useSelector(state => state.region);
+  const specificLocation = useSelector((state) => state.specificLocation);
+  const selectedFavourite = useSelector((state) => state.selectedFavourite);
   const dispatch = useDispatch();
+  
+  const leftCloseModal = (bool, data) => {
+    console.log(props.newlyCreated);
+    console.log(selectedFavourite.selected[0]);
+    props.newlyCreated === true ? null: props.removeFavourite(selectedFavourite.selected[0]);
+
+    props.changeModalVisible(bool); //TODO: Figure out how to check for empty input
+  }
 
   //Closing the modal calls the addFavourite in FavouriteScreen.js
   //Uses the name entered by the user as the key
-  const closeModal = (bool, data) => {
+  const rightCloseModal = (bool, data) => {
     props.changeModalVisible(bool); //TODO: Figure out how to check for empty input
     props.addFavourite(name, [region.latitude, region.longitude])
   }
@@ -35,22 +47,30 @@ export default function SimpleModal(props) {
   >
       <View style = {styles.modal}>
         <View style={styles.textView}>
-          <Text style = {styles.text}>Enter the name you would to save:</Text>
-          <TextInput
-            style = {styles.input}
-            placeholder = "Enter name of location"
-            onChangeText = {(val) => setName(val)}/>
+          {props.newlyCreated === true ?
+          <Text style = {styles.text}>Save name for {specificLocation.title}</Text>:
+          <Text style = {styles.text}>Edit or Delete {specificLocation.title}:</Text> }
+          {props.newlyCreated === true ?
+            <TextInput
+              style = {styles.input}
+              placeholder = "Enter name of location"
+              onChangeText = {(val) => setName(val)}/> :
+            <TextInput
+              style = {styles.input}
+              defaultValue = {specificLocation.title}
+              onChangeText = {(val) => setName(val)}/>}
           <View style ={styles.buttonsView}>
             <TouchableOpacity 
               style = {styles.touchableOpacity}
-              onPress={() => closeModal(false,"Cancel")}
+              onPress={() => leftCloseModal(false,"Cancel")}
             >
-              <Text style = {[styles.text, {color: "blue"}]}>Cancel</Text>
+              {props.newlyCreated === true ?<Text style = {[styles.text, {color: "blue"}]}>Cancel</Text> :
+            <Text style = {[styles.text, {color: "red"}]}>Delete</Text> }
             </TouchableOpacity>
             <TouchableOpacity 
               style = {styles.touchableOpacity}
-              onPress = {() => closeModal(false,"Ok")}>
-              <Text style = {[styles.text, {color: "blue"}]}>Okay</Text>
+              onPress = {() => rightCloseModal(false,"Ok")}>
+              <Text style = {[styles.text, {color: "blue"}]}>Save</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -59,7 +79,6 @@ export default function SimpleModal(props) {
   )
 }
 
-//TODO: Make further changes, adapted from NearbyScreen haha
 const styles = StyleSheet.create({
   container: {
     flex: 1,
