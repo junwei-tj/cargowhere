@@ -3,6 +3,9 @@ import {View, Image, Text, Button, FlatList, StyleSheet, Modal, TouchableOpacity
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Favourite from '../components/Favourite';
 import SimpleModal from '../components/SimpleModal';
+import { useSelector, useDispatch } from 'react-redux';
+import { setLatlng } from '../redux/regionSlice';
+import { setSpecificLocation } from '../redux/specificLocationSlice';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,7 +25,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   favourite: {
-
+    flexDirection: 'row',
   },
   image:{
     width: 20,
@@ -109,12 +112,12 @@ export default function FavouritesScreen(props) {
         <Text style={styles.headerText}>Favourites</Text>
         <TouchableOpacity style = {styles.favourite}
             onPress = {() => changeModalVisible(true)}
-            style = {styles.touchableOpacity}
           >
               <Image
                   style={styles.image}
                   source={require('../images/heart.png')}
               />
+              <Text style = {styles.headerText}> Save!</Text>
           </TouchableOpacity>
       </View>
       <Modal
@@ -134,7 +137,7 @@ export default function FavouritesScreen(props) {
         keyExtractor={(item, index) => item.key}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress = {() => changeModalVisible(true)}
+            //onPress = {() => changeModalVisible(true)}
             style = {styles.touchableOpacity}
           >
             <Favourite

@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 20,
-    textDecorationLine: 'underline',
+    fontWeight: "bold",
   },
   overlay:{
     //flex:1

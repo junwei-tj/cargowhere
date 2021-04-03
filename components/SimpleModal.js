@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Image,
@@ -6,22 +6,23 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Pressable,
 } from 'react-native';
 import {
   WIDTH,
   HEIGHT_MODAL,
 } from '../constants/screenConstants';
+import { useSelector, useDispatch } from 'react-redux';
 
 export default function SimpleModal(props) {
     
+  const region = useSelector(state => state.region);
+  const dispatch = useDispatch();
+
   //Closing the modal calls the addFavourite in FavouriteScreen.js
   //Uses the name entered by the user as the key
   const closeModal = (bool, data) => {
     props.changeModalVisible(bool); //TODO: Figure out how to check for empty input
-    //props.setData(data);
-    console.log(name);
-    props.addFavourite(name, [15,15]) //To replace the 15,15 with the actual coordinates from search bar
+    props.addFavourite(name, [region.latitude, region.longitude])
   }
 
   //The name to be saved for the location
