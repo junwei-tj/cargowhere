@@ -21,12 +21,13 @@ export default function SimpleModal(props) {
   const selectedFavourite = useSelector((state) => state.selectedFavourite);
   const dispatch = useDispatch();
 
-  //The name to be saved for the location
+  //The name to be saved for the location, updated when input text is changed
+  //The problem is here, if I dont change the prefilled data, it doesnt call the setName 
+  //and thus cannot add back the favourite in rightCloseModal
   const [name, setName] = useState();
   
   const leftCloseModal = (bool, data) => {
     console.log(props.newlyCreated);
-    console.log(selectedFavourite.selected[0]);
     props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
     props.changeModalVisible(bool);
   }
@@ -58,15 +59,21 @@ export default function SimpleModal(props) {
               onChangeText = {(val) => setName(val)}/>}
           <View style ={styles.buttonsView}>
             <TouchableOpacity 
-              style = {styles.touchableOpacity}
+              style = {styles.activeButton}
               onPress={() => leftCloseModal(false,"Cancel")}
             >
               {props.newlyCreated === true ?<Text style = {[styles.text, {color: "blue"}]}>Cancel</Text> :
             <Text style = {[styles.text, {color: "red"}]}>Delete</Text> }
             </TouchableOpacity>
             <TouchableOpacity 
-              style = {styles.touchableOpacity}
-              onPress = {() => rightCloseModal(false,"Ok")}>
+              style = {!Boolean(name) ? styles.inactiveButton : styles.activeButton}
+              onPress = {() => rightCloseModal(false,"Ok")}
+              //disabled = {!Boolean(name)}>
+              //Similiarly for the disabled component, at the start the onChangeText hasnt been called so 
+              //setName is not cdalled and thus the boolean will cause the button to go to disabled state
+              //even though there is a pre-filled data inside alr (the defaultValue component)
+              >
+                
               <Text style = {[styles.text, {color: "blue"}]}>Save</Text>
             </TouchableOpacity>
           </View>
@@ -102,10 +109,16 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row"
   },
-  touchableOpacity: {
+  activeButton: {
     flex: 1,
     paddingVertical: 10,
     alignItems: "center"
+  },
+  inactiveButton: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: "center",
+    opacity: 0.2,
   },
   input: {
     borderWidth: 1,

@@ -54,7 +54,7 @@ export default function Favourite(props) {
           <TouchableOpacity style={styles.button}
           onPress={() => {
             onSelectFavourite();
-            props.changeModalVisible();
+            props.changeModalVisible(true);
           }}>
               <Image
                   style={styles.marker}
