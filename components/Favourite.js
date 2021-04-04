@@ -5,20 +5,19 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Pressable,
 } from 'react-native';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setLatlng } from '../redux/regionSlice';
 import { setSpecificLocation } from '../redux/specificLocationSlice';
 import { setSelectedFavourite } from '../redux/selectedFavouriteSlice';
 
 export default function Favourite(props) {
   
-  const region = useSelector(state => state.region);
-  const selectedFavourite = useSelector((state) => state.selectedFavourite);
   const dispatch = useDispatch();
 
+  //Updates the map view based on the location of the favourite
+  //Also sets the indicator that an existing location has been selected
   function onSelectFavourite(){
     dispatch(setLatlng({
       latitude: JSON.parse(props.favourite[1])[0],
@@ -36,8 +35,6 @@ export default function Favourite(props) {
 }
 
   return (
-    <Pressable> 
-      {/* //Might not need this Pressable */}
       <View style={styles.container}>
         <TouchableOpacity style = {styles.touchable}
         onPress = {onSelectFavourite}>
@@ -53,6 +50,7 @@ export default function Favourite(props) {
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}
           onPress={() => {
+            //Update map view and show modal 
             onSelectFavourite();
             props.changeModalVisible(true);
           }}>
@@ -62,7 +60,6 @@ export default function Favourite(props) {
               />
         </TouchableOpacity>
       </View>
-    </Pressable>
   );
 }
 

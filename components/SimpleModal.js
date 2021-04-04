@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {
   View,
-  Image,
   Text,
   TextInput,
   StyleSheet,
@@ -19,11 +18,8 @@ export default function SimpleModal(props) {
   const region = useSelector(state => state.region);
   const specificLocation = useSelector((state) => state.specificLocation);
   const selectedFavourite = useSelector((state) => state.selectedFavourite);
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
 
-  //The name to be saved for the location, updated when input text is changed
-  //The problem is here, if I dont change the prefilled data, it doesnt call the setName 
-  //and thus cannot add back the favourite in rightCloseModal
   const [name, setName] = useState();
   
   const leftCloseModal = (bool, data) => {
@@ -33,7 +29,7 @@ export default function SimpleModal(props) {
   }
 
   const rightCloseModal = (bool, data) => {
-    props.changeModalVisible(bool); //TODO: Figure out how to check for empty input
+    props.changeModalVisible(bool); 
     props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
     props.addFavourite(name, [region.latitude, region.longitude])
   }
@@ -55,7 +51,7 @@ export default function SimpleModal(props) {
               onChangeText = {(val) => setName(val)}/> :
             <TextInput
               style = {styles.input}
-              defaultValue = {specificLocation.title}
+              placeholder = "Enter new name of location"
               onChangeText = {(val) => setName(val)}/>}
           <View style ={styles.buttonsView}>
             <TouchableOpacity 
@@ -68,12 +64,7 @@ export default function SimpleModal(props) {
             <TouchableOpacity 
               style = {!Boolean(name) ? styles.inactiveButton : styles.activeButton}
               onPress = {() => rightCloseModal(false,"Ok")}
-              //disabled = {!Boolean(name)}>
-              //Similiarly for the disabled component, at the start the onChangeText hasnt been called so 
-              //setName is not cdalled and thus the boolean will cause the button to go to disabled state
-              //even though there is a pre-filled data inside alr (the defaultValue component)
-              >
-                
+              disabled = {!Boolean(name)}>
               <Text style = {[styles.text, {color: "blue"}]}>Save</Text>
             </TouchableOpacity>
           </View>
