@@ -9,6 +9,7 @@ import {
   Pressable,
   Keyboard,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -30,6 +31,7 @@ import {setCarparks} from './redux/carparksSlice';
 import {setAvailability} from './redux/availabilitySlice';
 import {setRegion} from './redux/regionSlice';
 import {setSpecificLocation} from './redux/specificLocationSlice';
+import LocationEnabler from "react-native-location-enabler";
 
 const styles = StyleSheet.create({
   container: {
@@ -120,17 +122,32 @@ export default function App() {
   const maxCarparks = useSelector((state) => state.maxCarparks.limit)
   const dispatch = useDispatch();
 
-  // code for geolocation for reference
+  // Code to retrieve current location
   function currentLocation() {
-    /* // added for testing retrieval of data
-    carparkData.retrieveInCoords(44990.0,41380.0, 44996.0, 41389.0, function(resultArray) {
-      console.log(resultArray);
-    });
-    */
-    Geolocation.getCurrentPosition((info) => {
+
+    // settings for LocationEnabler
+    const {
+      PRIORITIES: { HIGH_ACCURACY },
+      checkSettings,
+      requestResolutionSettings,
+    } = LocationEnabler
+    
+    // Define configuration for GPS settings
+    const config = {
+      priority: HIGH_ACCURACY, // default BALANCED_POWER_ACCURACY
+      alwaysShow: true, // default false
+      needBle: false, // default false
+    };
+    
+    // Check if location is enabled or not
+    checkSettings(config);
+    
+    // If location is disabled, prompt the user to turn on device location
+    requestResolutionSettings(config);
+
+    // Get coordinates of user's current position
+    Geolocation.getCurrentPosition(info => {
       console.log(info);
-      // setLatitude(info.coords.latitude);
-      // setLongitude(info.coords.longitude);
       let currentRegion = {
         latitude: info.coords.latitude,
         longitude: info.coords.longitude,
@@ -144,9 +161,13 @@ export default function App() {
         },
         title: 'Current Location',
       };
+      // Update coordinates for current location and for the marker
       dispatch(setRegion(currentRegion));
       dispatch(setSpecificLocation(currentLocationMarker));
-    });
+      },
+      error => console.log('Error: ' + JSON.stringify(error)), // error message
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}, // options for retrieval of current location
+      );
   }
 
   useEffect(() => {
@@ -219,7 +240,7 @@ export default function App() {
               {/* display a pin for specificLocation, if it is set */}
               {specificLocation && (
                 <Marker
-                  tracksViewChanges={false}
+                  tracksViewChanges={true}
                   key={specificLocation.title}
                   coordinate={specificLocation.latlng}
                   title={specificLocation.title}>
