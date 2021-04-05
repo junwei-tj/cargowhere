@@ -166,7 +166,6 @@ export default function App() {
       dispatch(setSpecificLocation(currentLocationMarker));
       },
       error => console.log('Error: ' + JSON.stringify(error)), // error message
-      //{enableHighAccuracy: true, timeout: 5000, maximumAge: 1000}, // options for retrieval of current location
       );
   }
 
