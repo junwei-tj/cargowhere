@@ -85,13 +85,11 @@ function sortCarparks(carparks, availability, sortCriteria) {
       });
       break;
     default:
-      // sort by distance
       // sort carparks by distance, in ascending order
       carparks.sort((a, b) => {
         return a.distance - b.distance;
       });
   }
-  //console.log(carparks)
   return carparks;
 }
 

@@ -12,19 +12,23 @@ import {
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
+
+// import components
+import CarparkMarker from './components/CarparkMarker';
+import StatusBar from './components/StatusBar';
+
+// import screens
+import { BottomDisplay, SearchScreen, LoadingScreen } from './screens' 
+
+// import managers
+import carparkData from './managers/DataManager';
 import { getCarparks, filterCarparksJSON, sortCarparks } from './managers/CarparksManager';
 
-import StatusBar from './components/StatusBar';
-import BottomDisplay from './screens/BottomDisplay';
-import carparkData from './managers/DataManager';
-import CarparkMarker from './components/CarparkMarker';
-
+// import redux stuff
 import {useSelector, useDispatch} from 'react-redux';
 import {setCarparks} from './redux/carparksSlice';
 import {setAvailability} from './redux/availabilitySlice';
 import {setRegion} from './redux/regionSlice';
-import SearchScreen from './screens/SearchScreen';
-import LoadingScreen from './screens/LoadingScreen';
 import {setSpecificLocation} from './redux/specificLocationSlice';
 
 const styles = StyleSheet.create({
@@ -104,6 +108,7 @@ const styles = StyleSheet.create({
 });
 
 export default function App() {
+  // initialise states
   const region = useSelector((state) => state.region);
   const carparks = useSelector((state) => state.carparks.carparksData);
   const specificLocation = useSelector((state) => state.specificLocation);
@@ -163,7 +168,10 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carparks]);
 
-  function refreshCarparks() {
+  /**
+   * Function to handle the what carparks are to be displayed on the map
+   */
+  const refreshCarparks = () => {
     ToastAndroid.show('Updating carpark markers...', ToastAndroid.SHORT);
     let carparkList = getCarparks(region);
     let carparkObjs = filterCarparksJSON(carparkList, specificLocation.latlng);
@@ -172,6 +180,10 @@ export default function App() {
     ToastAndroid.show('Carpark markers updated', ToastAndroid.SHORT);
   }
 
+  /**
+   * Callback function when sorting criteria is changed by the user
+   * @param {sortCriteria} newSortCriteria 
+   */
   const sortCriteriaChanged = (newSortCriteria) => {
     let sorted = sortCarparks([...carparks], availability, newSortCriteria);
     dispatch(setCarparks(sorted));
@@ -190,10 +202,9 @@ export default function App() {
               style={styles.map}
               region={region}
               onRegionChangeComplete={(region) => {
-                dispatch(setRegion(region));
-                // getCarparks({region, callback: carparksRetrieved});
-                console.log('onRegionChangeComplete completed');
-              }}>
+                dispatch(setRegion(region)); // update current map region
+              }}>                
+              {/* render carpark markers */}
               {carparks.map((carpark, index) => {
                 if (index < maxCarparks) {
                   return (
@@ -205,6 +216,7 @@ export default function App() {
                   );
                 }
               })}
+              {/* display a pin for specificLocation, if it is set */}
               {specificLocation && (
                 <Marker
                   tracksViewChanges={false}
@@ -218,6 +230,7 @@ export default function App() {
                 </Marker>
               )}
             </MapView>
+
             <View style={styles.searchContainer}>
               <SearchScreen />
             </View>
@@ -249,13 +262,8 @@ export default function App() {
             </View>
 
             <View style={styles.menu}>
-              {/* pass update state functions to child components so they can update on behalf of this component */}
               <BottomDisplay
-                //setRegion={setRegion}
-                //setSpecificLocation={setSpecificLocation}
-                //carparks={carparks}
-                //currentRegion={region}
-                sortCriteriaChanged={sortCriteriaChanged}
+                sortCriteriaChanged={sortCriteriaChanged} // for NearbyScreen
               />
             </View>
           </View>

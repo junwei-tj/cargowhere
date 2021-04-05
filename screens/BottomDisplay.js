@@ -40,7 +40,6 @@ export default function NavigationBar(props) {
   const [activeTabs, setActiveTabs] = useState({
     navigation: true,
     favourites: false,
-    search: false,
     about: false,
   });
 
@@ -52,14 +51,15 @@ export default function NavigationBar(props) {
 
   return (
     <View style={styles.container}>
+      {/* display tab menu bar */}
       <View style={styles.bar}>
+        {/* NearbyScreen tab */}
         <Pressable
           style={activeTabs.navigation ? activeTabStyle : inactiveTabStyle}
           onPress={() =>
             setActiveTabs({
               navigation: true,
               favourites: false,
-              search: false,
               about: false,
             })
           }
@@ -70,13 +70,13 @@ export default function NavigationBar(props) {
           />
         </Pressable>
 
+        {/* Favourites tab */}
         <Pressable
           style={activeTabs.favourites ? activeTabStyle : inactiveTabStyle}
           onPress={() =>
             setActiveTabs({
               navigation: false,
               favourites: true,
-              search: false,
               about: false,
             })
           }
@@ -87,30 +87,13 @@ export default function NavigationBar(props) {
           />
         </Pressable>
 
-        {/*<Pressable*/}
-        {/*  style={activeTabs.search ? activeTabStyle : inactiveTabStyle}*/}
-        {/*  onPress={() =>*/}
-        {/*    setActiveTabs({*/}
-        {/*      navigation: false,*/}
-        {/*      favourites: false,*/}
-        {/*      search: true,*/}
-        {/*      about: false,*/}
-        {/*    })*/}
-        {/*  }*/}
-        {/*  android_ripple={{color: 'lightgrey'}}>*/}
-        {/*  <Image*/}
-        {/*    style={activeTabs.search ? activeIconStyle : inactiveIconStyle}*/}
-        {/*    source={require('./images/search.png')}*/}
-        {/*  />*/}
-        {/*</Pressable>*/}
-
+        {/* About tab */}
         <Pressable
           style={activeTabs.about ? activeTabStyle : inactiveTabStyle}
           onPress={() =>
             setActiveTabs({
               navigation: false,
               favourites: false,
-              search: false,
               about: true,
             })
           }
@@ -125,23 +108,12 @@ export default function NavigationBar(props) {
       {/* Switching of tab screen is done here */}
       {activeTabs.navigation && (
         <NearbyScreen
-          //setRegion={props.setRegion}
-          //carparks={props.carparks}
-          //currentRegion={props.currentRegion}
           sortCriteriaChanged={props.sortCriteriaChanged}
         />
       )}
       {activeTabs.favourites && (
         <FavouritesScreen/>
       )}
-      {/*{activeTabs.search && (*/}
-      {/*  <SearchScreen*/}
-      {/*    //setRegion={props.setRegion}*/}
-      {/*    //setSpecificLocation={props.setSpecificLocation}*/}
-      {/*    //carparks={props.carparks}*/}
-      {/*    //currentRegion={props.currentRegion}*/}
-      {/*  />*/}
-      {/*)}*/}
       {activeTabs.about && <AboutScreen />}
     </View>
   );
