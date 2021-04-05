@@ -75,7 +75,8 @@ const carparkData = {
         resultArray.push(cp);
       }
     });
-    callback(resultArray);
+    //callback(resultArray);
+    return resultArray;
   },
 
   /**

@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// initial state points to some unknown place to "hide it"
 initialState = {
   latlng: {
     latitude: 1.3050899559220615, 
