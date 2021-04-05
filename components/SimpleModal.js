@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {
   View,
-  Image,
   Text,
   TextInput,
   StyleSheet,
@@ -19,20 +18,18 @@ export default function SimpleModal(props) {
   const region = useSelector(state => state.region);
   const specificLocation = useSelector((state) => state.specificLocation);
   const selectedFavourite = useSelector((state) => state.selectedFavourite);
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
 
-  //The name to be saved for the location
   const [name, setName] = useState();
   
   const leftCloseModal = (bool, data) => {
     console.log(props.newlyCreated);
-    console.log(selectedFavourite.selected[0]);
     props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
     props.changeModalVisible(bool);
   }
 
   const rightCloseModal = (bool, data) => {
-    props.changeModalVisible(bool); //TODO: Figure out how to check for empty input
+    props.changeModalVisible(bool); 
     props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
     props.addFavourite(name, [region.latitude, region.longitude])
   }
@@ -54,19 +51,20 @@ export default function SimpleModal(props) {
               onChangeText = {(val) => setName(val)}/> :
             <TextInput
               style = {styles.input}
-              defaultValue = {specificLocation.title}
+              placeholder = "Enter new name of location"
               onChangeText = {(val) => setName(val)}/>}
           <View style ={styles.buttonsView}>
             <TouchableOpacity 
-              style = {styles.touchableOpacity}
+              style = {styles.activeButton}
               onPress={() => leftCloseModal(false,"Cancel")}
             >
               {props.newlyCreated === true ?<Text style = {[styles.text, {color: "blue"}]}>Cancel</Text> :
             <Text style = {[styles.text, {color: "red"}]}>Delete</Text> }
             </TouchableOpacity>
             <TouchableOpacity 
-              style = {styles.touchableOpacity}
-              onPress = {() => rightCloseModal(false,"Ok")}>
+              style = {!Boolean(name) ? styles.inactiveButton : styles.activeButton}
+              onPress = {() => rightCloseModal(false,"Ok")}
+              disabled = {!Boolean(name)}>
               <Text style = {[styles.text, {color: "blue"}]}>Save</Text>
             </TouchableOpacity>
           </View>
@@ -102,10 +100,16 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row"
   },
-  touchableOpacity: {
+  activeButton: {
     flex: 1,
     paddingVertical: 10,
     alignItems: "center"
+  },
+  inactiveButton: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: "center",
+    opacity: 0.2,
   },
   input: {
     borderWidth: 1,

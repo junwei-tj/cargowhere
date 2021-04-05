@@ -35,12 +35,7 @@ const styles = StyleSheet.create({
 
 export default function FavouritesScreen(props) {
 
-  //const [chooseData, setChooseData] = useState();
-  // const setData = (data) => {
-    //setChooseData(data);
-  //}
-
-  const [isModalVisible, setIsModalVisible] = useState(initialState)
+  const [isModalVisible, setIsModalVisible] = useState(initialState);
   const changeModalVisible = (bool) =>{
     setIsModalVisible(bool);
   }
@@ -93,11 +88,6 @@ export default function FavouritesScreen(props) {
   }
 
   useEffect(() => {
-    //Test adding ======================================================
-    //removeFavourite("NTU");
-    //addFavourite("Tekong", [1,2]);
-    //removeFavourite("Home");
-    //==================================================================
     loadAllFavourites();
  }, []);
 

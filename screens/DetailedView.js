@@ -10,7 +10,7 @@ import {
   Linking,
   Platform,
 } from 'react-native';
-import DataManager from '../data_manager/DataManager';
+import DataManager from '../managers/DataManager';
 import {useSelector} from 'react-redux';
 
 const styles = StyleSheet.create({

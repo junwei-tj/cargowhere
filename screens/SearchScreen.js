@@ -6,18 +6,15 @@ import {
   TextInput,
   Pressable,
   Keyboard,
-  Text, FlatList, Animated, ImageBackground, TouchableOpacity
+  Text,
+  FlatList,
+  Animated
 } from 'react-native';
-import {ListItem, Overlay} from 'react-native-elements';
+import {Overlay} from 'react-native-elements';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLatlng } from '../redux/regionSlice';
 import { setSpecificLocation } from '../redux/specificLocationSlice';
-import {Picker} from "@react-native-picker/picker";
-import {setSortCriteria} from "../redux/sortCriteriaSlice";
-import {SORT_BY_AVAILABILITY, SORT_BY_DISTANCE} from "../constants/sortCriteriaConstants";
-import {MAX_SEARCH_RESULTS} from "../constants/carparkConstants";
-import Carpark from "../components/Carpark";
 
 const styles = StyleSheet.create({
   resultsContainer: {
@@ -115,11 +112,7 @@ const styles = StyleSheet.create({
 export default function SearchScreen(props) {
   const [searchValue, setSearchValue] = React.useState('');
   const [visible, setVisible] = React.useState(false);
-  // const [location, setLocation] = React.useState(null);
   const [results, setResults] = React.useState([]);
-
-  const carparks = useSelector(state => state.carparks.carparksData)
-  const region = useSelector(state => state.region);
   const dispatch = useDispatch();
 
   const toggleOverlay = () => {
@@ -143,36 +136,19 @@ export default function SearchScreen(props) {
 
     var results = response.data.results;
     if (results.length > 0) {
-      var topResult = results[0];
       return results;
     } else {
       return [];
     }
   }
 
-  function selectLocation(){
-    setLocation()
-  }
-
   function onSubmitSearch({nativeEvent, ...rest}) {
     getLocation(nativeEvent.text).then((locations) => {
-      setResults(locations);
-      toggleOverlay();
+      if (locations.length !== 0) {
+        setResults(locations);
+        toggleOverlay();
+      }
     })
-
-      // props.setRegion((prevState) => ({
-      //   ...prevState,
-      //   latitude: location.position.lat,
-      //   longitude: location.position.lon,
-      // }));
-      // props.setSpecificLocation({
-      //   latlng: {
-      //     latitude: location.position.lat,
-      //     longitude: location.position.lon,
-      //   },
-      //   active: true,
-      //   title: searchValue,
-      // });
   }
   function onSelectResult(location){
       console.log(location.position);
@@ -191,9 +167,8 @@ export default function SearchScreen(props) {
       }));
       toggleOverlay();
   }
-
+  let itemNames = [];
   return (
-
       <View style={styles.searchContainer}>
           <View style={styles.searchField}>
               <TextInput
@@ -238,17 +213,20 @@ export default function SearchScreen(props) {
                      renderItem={({item, index}) => {
                        console.log(item);
                        if(item.type === "POI") {
-
-                         return (
-                             <Pressable onPress={() => {
-                               onSelectResult(item);
-                             }}>
-                               <View style={styles.infoContainer}>
-                                 <Text style={styles.name}>{item.poi.name}</Text>
-                                 <Text style={styles.address}>{item.address.freeformAddress}</Text>
-                               </View>
-                             </Pressable>
-                         )
+                         if (itemNames.indexOf(item.poi.name) === -1) {
+                           itemNames.push(item.poi.name);
+                           console.log(itemNames);
+                           return (
+                               <Pressable onPress={() => {
+                                 onSelectResult(item);
+                               }}>
+                                 <View style={styles.infoContainer}>
+                                   <Text style={styles.name}>{item.poi.name}</Text>
+                                   <Text style={styles.address}>{item.address.freeformAddress}</Text>
+                                 </View>
+                               </Pressable>
+                           )
+                         }
                        }
                        else{
                          return (

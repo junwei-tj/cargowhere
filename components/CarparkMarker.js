@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, ImageBackground} from 'react-native';
 import {Marker} from 'react-native-maps';
 
@@ -16,16 +16,20 @@ const styles = {
 };
 
 export default function CarparkMarker(props) {
+  // workaround for some markers not rendering image fast enough
+  const [trackView, setTrackView] = useState(true);
+
   return (
     <Marker
-      tracksViewChanges={false}
+      tracksViewChanges={trackView}
       key={props.carpark.identifier}
       coordinate={props.carpark.latlng}
-      //title={props.carpark.title}
       onCalloutPress={() => alert('pressed ' + props.carpark.title)}>
       <ImageBackground
         source={require('../images/marker.png')}
-        style={styles.marker}>
+        style={styles.marker}
+        // workaround for some markers not rendering image fast enough
+        onLoadEnd={() => setTimeout(() => setTrackView(false), 1000)}>
         <Text style={styles.carparkNumber}>{props.index + 1}</Text>
       </ImageBackground>
     </Marker>

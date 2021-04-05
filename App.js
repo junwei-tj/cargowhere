@@ -13,26 +13,24 @@ import {
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-//import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import StatusBar from './components/StatusBar';
-import BottomDisplay from './screens/BottomDisplay';
-import carparkData from './data_manager/DataManager';
-import {getDistanceFromLatLonInM} from './components/Carpark';
+// import components
 import CarparkMarker from './components/CarparkMarker';
+import StatusBar from './components/StatusBar';
 
+// import screens
+import { BottomDisplay, SearchScreen, LoadingScreen } from './screens' 
+
+// import managers
+import carparkData from './managers/DataManager';
+import { getCarparks, filterCarparksJSON, sortCarparks } from './managers/CarparksManager';
+
+// import redux stuff
 import {useSelector, useDispatch} from 'react-redux';
 import {setCarparks} from './redux/carparksSlice';
 import {setAvailability} from './redux/availabilitySlice';
 import {setRegion} from './redux/regionSlice';
-import {
-  SORT_BY_AVAILABILITY,
-  SORT_BY_DISTANCE,
-} from './constants/sortCriteriaConstants';
-import SearchScreen from './screens/SearchScreen';
-import LoadingScreen from './screens/LoadingScreen';
 import {setSpecificLocation} from './redux/specificLocationSlice';
-import {setMaxCarparks} from './redux/maxCarparksSlice';
 import LocationEnabler from "react-native-location-enabler";
 
 const styles = StyleSheet.create({
@@ -111,96 +109,8 @@ const styles = StyleSheet.create({
   },
 });
 
-function getCarparks({region, callback}) {
-  let bottomLeftLat = region.latitude - region.latitudeDelta / 2;
-  let bottomLeftLongitude = region.longitude - region.longitudeDelta / 2;
-  let topRightLat = region.latitude + region.latitudeDelta / 2;
-  let topRightLongitude = region.longitude + region.longitudeDelta / 2;
-
-  ToastAndroid.show('Updating carpark markers...', ToastAndroid.SHORT);
-  carparkData.retrieveInLongLat(
-    bottomLeftLongitude,
-    bottomLeftLat,
-    topRightLongitude,
-    topRightLat,
-    callback,
-  );
-}
-
-/**
- * Function to filter the retrieved carparks to only include the desired fields.
- * Current fields kept are: latitude and longitude (combined to latlng), title, availableLots_car
- * @param {Array} carparkList
- * @param {region} pointOfReference coordinates (in latitude and longitude) of the point distance is to be calculated from
- */
-function filterCarparksJSON(carparkList, pointOfReference) {
-  let carparkObjs = [];
-  if (pointOfReference === undefined) {
-    throw 'Unable to sort by distance when pointOfReference is not provided';
-  }
-  carparkList.forEach((obj) => {
-    if (!carparkObjs.some((item) => item.title == obj.name)) {
-      // filter out duplicates
-      let carpark = {
-        identifier: obj.identifier,
-        latlng: {
-          latitude: obj.latitude,
-          longitude: obj.longitude,
-        },
-        title: obj.name,
-        availableLots_car: obj.availableLots_car,
-        distance: getDistanceFromLatLonInM(
-          pointOfReference.latitude,
-          pointOfReference.longitude,
-          obj.latitude,
-          obj.longitude,
-        ),
-        // availableLots_H: obj.availableLots_H,
-        // availableLots_L: obj.availableLots_L,
-        // availableLots_motorcycle: obj.availableLots_motorcycle,
-      };
-      carparkObjs.push(carpark);
-    }
-  });
-
-  return carparkObjs;
-}
-
-/**
- * Function to handle sorting of carparks. Sorting can only be done based on distance and availability
- * @param {Array} carparks
- * @param {Array} availability
- * @param {string} sortCriteria accepts constants from ./constants/sortCriteriaConstants
- */
-function sortCarparks(carparks, availability, sortCriteria) {
-  switch (sortCriteria) {
-    case SORT_BY_AVAILABILITY:
-      // sort by availability
-      carparks.sort((a, b) => {
-        if (availability[b.identifier] && availability[a.identifier]) {
-          return (
-            availability[b.identifier].availableLots_car -
-            availability[a.identifier].availableLots_car
-          );
-        } else if (availability[b.identifier]) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      break;
-    default:
-      // sort by distance
-      // sort carparks by distance, in ascending order
-      carparks.sort((a, b) => {
-        return a.distance - b.distance;
-      });
-  }
-  //console.log(carparks)
-  return carparks;
-}
-
 export default function App() {
+  // initialise states
   const region = useSelector((state) => state.region);
   const carparks = useSelector((state) => state.carparks.carparksData);
   const specificLocation = useSelector((state) => state.specificLocation);
@@ -279,13 +189,22 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carparks]);
 
-  function carparksRetrieved(carparkList) {
+  /**
+   * Function to handle the what carparks are to be displayed on the map
+   */
+  const refreshCarparks = () => {
+    ToastAndroid.show('Updating carpark markers...', ToastAndroid.SHORT);
+    let carparkList = getCarparks(region);
     let carparkObjs = filterCarparksJSON(carparkList, specificLocation.latlng);
     let sorted = sortCarparks(carparkObjs, availability, sortCriteria);
     dispatch(setCarparks(sorted));
     ToastAndroid.show('Carpark markers updated', ToastAndroid.SHORT);
   }
 
+  /**
+   * Callback function when sorting criteria is changed by the user
+   * @param {sortCriteria} newSortCriteria 
+   */
   const sortCriteriaChanged = (newSortCriteria) => {
     let sorted = sortCarparks([...carparks], availability, newSortCriteria);
     dispatch(setCarparks(sorted));
@@ -304,10 +223,9 @@ export default function App() {
               style={styles.map}
               region={region}
               onRegionChangeComplete={(region) => {
-                dispatch(setRegion(region));
-                // getCarparks({region, callback: carparksRetrieved});
-                console.log('onRegionChangeComplete completed');
-              }}>
+                dispatch(setRegion(region)); // update current map region
+              }}>                
+              {/* render carpark markers */}
               {carparks.map((carpark, index) => {
                 if (index < maxCarparks) {
                   return (
@@ -319,6 +237,7 @@ export default function App() {
                   );
                 }
               })}
+              {/* display a pin for specificLocation, if it is set */}
               {specificLocation && (
                 <Marker
                   tracksViewChanges={true}
@@ -332,6 +251,7 @@ export default function App() {
                 </Marker>
               )}
             </MapView>
+
             <View style={styles.searchContainer}>
               <SearchScreen />
             </View>
@@ -340,9 +260,7 @@ export default function App() {
               <Pressable
                 android_ripple={{color: 'lightgrey'}}
                 style={styles.refreshPressable}
-                onPress={() =>
-                  getCarparks({region, callback: carparksRetrieved})
-                }>
+                onPress={() => refreshCarparks()}>
                 <Image
                   source={require('./images/refresh.png')}
                   style={styles.refreshButton}
@@ -365,13 +283,8 @@ export default function App() {
             </View>
 
             <View style={styles.menu}>
-              {/* pass update state functions to child components so they can update on behalf of this component */}
               <BottomDisplay
-                //setRegion={setRegion}
-                //setSpecificLocation={setSpecificLocation}
-                //carparks={carparks}
-                //currentRegion={region}
-                sortCriteriaChanged={sortCriteriaChanged}
+                sortCriteriaChanged={sortCriteriaChanged} // for NearbyScreen
               />
             </View>
           </View>

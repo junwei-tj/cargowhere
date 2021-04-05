@@ -37,9 +37,8 @@ const carparkData = {
    * @param y1
    * @param x2
    * @param y2
-   * @param callback Should accept a single result parameter, which contains an array of objects
    */
-  retrieveInCoords: function (x1, y1, x2, y2, callback) {
+  retrieveInCoords: function (x1, y1, x2, y2) {
     const resultArray = [];
     this._carparksData.forEach((cp) => {
       if (
@@ -51,7 +50,7 @@ const carparkData = {
         resultArray.push(cp);
       }
     });
-    callback(resultArray);
+    return resultArray;
   },
 
   /**
@@ -61,9 +60,8 @@ const carparkData = {
    * @param lat1
    * @param long2
    * @param lat2
-   * @param callback Should accept a single result parameter, which contains an array of objects
    */
-  retrieveInLongLat: function (long1, lat1, long2, lat2, callback) {
+  retrieveInLongLat: function (long1, lat1, long2, lat2) {
     const resultArray = [];
     this._carparksData.forEach((cp) => {
       if (
@@ -75,7 +73,7 @@ const carparkData = {
         resultArray.push(cp);
       }
     });
-    callback(resultArray);
+    return resultArray;
   },
 
   /**

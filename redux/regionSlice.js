@@ -8,8 +8,6 @@ initialState = {
   longitudeDelta: 0.0121,
 }
 
-
-
 const regionSlice = createSlice({
   name: "region",
   initialState,
