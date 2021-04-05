@@ -319,7 +319,7 @@ export default function App() {
                   );
                 }
               })}
-              {/*{specificLocation && (*/}
+              {specificLocation && (
                 <Marker
                   tracksViewChanges={true}
                   key={specificLocation.title}
@@ -330,7 +330,7 @@ export default function App() {
                     style={styles.pin}
                   />
                 </Marker>
-              {/*})}*/}
+              )}
             </MapView>
             <View style={styles.searchContainer}>
               <SearchScreen />
