@@ -32,6 +32,8 @@ import {setAvailability} from './redux/availabilitySlice';
 import {setRegion} from './redux/regionSlice';
 import {setSpecificLocation} from './redux/specificLocationSlice';
 import LocationEnabler from "react-native-location-enabler";
+import AwesomeAlert from 'react-native-awesome-alerts';
+import {setAlert, setMessage} from './redux/alertSlice';
 
 const styles = StyleSheet.create({
   container: {
@@ -118,10 +120,11 @@ export default function App() {
   const availability = useSelector(
     (state) => state.availability.availabilityData,
   );
+  const alertState = useSelector((state) => state.alert);
   const [isLoading, setIsLoading] = useState(true);
   const maxCarparks = useSelector((state) => state.maxCarparks.limit)
   const dispatch = useDispatch();
-
+  
   // Code to retrieve current location
   function currentLocation() {
 
@@ -194,6 +197,12 @@ export default function App() {
   const refreshCarparks = () => {
     ToastAndroid.show('Updating carpark markers...', ToastAndroid.SHORT);
     let carparkList = getCarparks(region);
+
+    if (carparkList.length === 0) {
+      dispatch(setAlert(true));
+      dispatch(setMessage("No carparks found in the vicinity!"));
+    }
+    
     let carparkObjs = filterCarparksJSON(carparkList, specificLocation.latlng);
     let sorted = sortCarparks(carparkObjs, availability, sortCriteria);
     dispatch(setCarparks(sorted));
@@ -286,6 +295,19 @@ export default function App() {
                 sortCriteriaChanged={sortCriteriaChanged} // for NearbyScreen
               />
             </View>
+
+            <AwesomeAlert
+              show={alertState.alertData}
+              showProgress={false}
+              message={alertState.alertMessage}
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+              confirmText="Ok :("
+              confirmButtonColor="#0c39ed"
+              onConfirmPressed={() => dispatch(setAlert(false))}
+            />
           </View>
         </TouchableWithoutFeedback>
       )}

@@ -8,13 +8,15 @@ import {
   Keyboard,
   Text,
   FlatList,
-  Animated
+  Animated,
+  Alert
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLatlng } from '../redux/regionSlice';
 import { setSpecificLocation } from '../redux/specificLocationSlice';
+import {setAlert, setMessage} from '../redux/alertSlice';
 
 const styles = StyleSheet.create({
   resultsContainer: {
@@ -147,6 +149,10 @@ export default function SearchScreen(props) {
       if (locations.length !== 0) {
         setResults(locations);
         toggleOverlay();
+      }
+      else {
+        dispatch(setAlert(true));
+        dispatch(setMessage("No results found!"));
       }
     })
   }
