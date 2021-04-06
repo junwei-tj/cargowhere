@@ -1,4 +1,8 @@
+//import { createIconSetFromFontello } from '@expo/vector-icons';
 import axios from 'axios';
+import { Alert, useState } from 'react-native';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import React from 'react';
 
 /**
  * Retrieves carpark data based on various querying options
@@ -6,6 +10,9 @@ import axios from 'axios';
  * all callback functions should accept a single parameter,
  * which will contain an array of objects
  **/
+
+
+
 const carparkData = {
   // static data to be stored in memory
   _carparksData: [],
@@ -14,6 +21,9 @@ const carparkData = {
    * Retrieves carpark data from backend
    * Intended to be used once on app startup
    */
+
+  
+
   updateCarparkStaticData: function (callback = () => {}) {
     axios
       .get('http://demonicmushy.com:7020/carparks', {
@@ -73,6 +83,28 @@ const carparkData = {
         resultArray.push(cp);
       }
     });
+    if (resultArray.length === 0) {
+      //Alert.alert('No carparks found in the vicinity!');
+      /*<AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title="AwesomeAlert"
+          message="I have a message for you!"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="No, cancel"
+          confirmText="Yes, delete it"
+          confirmButtonColor="#DD6B55"
+          onCancelPressed={() => {
+            this.hideAlert();
+          }}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />*/
+    }
     return resultArray;
   },
 
