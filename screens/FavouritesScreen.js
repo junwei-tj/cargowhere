@@ -3,6 +3,8 @@ import {View, Image, Text, FlatList, StyleSheet, Modal, TouchableOpacity} from '
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Favourite from '../components/Favourite';
 import SimpleModal from '../components/SimpleModal';
+import {setLatlng} from '../redux/regionSlice';
+import {useSelector, useDispatch} from 'react-redux';
 
 const styles = StyleSheet.create({
   container: {
@@ -46,6 +48,9 @@ export default function FavouritesScreen(props) {
   }
 
   const [favourites, setFavourites] = useState();
+
+  const specificLocation = useSelector(state => state.specificLocation)
+  const dispatch = useDispatch();
 
   //Used to load all favourites from local storage, called whenever 
   //favourites are changed or when Favourites tab is clicked
@@ -98,7 +103,9 @@ export default function FavouritesScreen(props) {
         <TouchableOpacity style = {styles.favourite}
           onPress = {() => {
           changeIfNew(true)
-          changeModalVisible(true)}}
+          changeModalVisible(true)
+          dispatch(setLatlng(specificLocation.latlng))
+          }}
         >
           <Image
             style={styles.image}

@@ -31,7 +31,7 @@ export default function SimpleModal(props) {
   const rightCloseModal = (bool, data) => {
     props.changeModalVisible(bool); 
     props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
-    props.addFavourite(name, [region.latitude, region.longitude])
+    props.addFavourite(name, [specificLocation.latlng.latitude, specificLocation.latlng.longitude])
   }
 
   return (
@@ -94,7 +94,8 @@ const styles = StyleSheet.create({
   text:{
     margin: 5,
     fontSize: 16,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    textAlign: 'center'
   },
   buttonsView: {
     width: "100%",
