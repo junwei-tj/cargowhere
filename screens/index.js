@@ -6,3 +6,4 @@ export {default as SearchScreen} from './SearchScreen';
 export {default as AboutScreen} from './AboutScreen';
 export {default as BottomDisplay} from './BottomDisplay';
 export {default as LoadingScreen} from './LoadingScreen';
+export {default as NoInternetScreen} from './NoInternetScreen';

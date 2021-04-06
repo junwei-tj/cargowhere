@@ -13,13 +13,14 @@ import {
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
+import NetInfo from "@react-native-community/netinfo";
 
 // import components
 import CarparkMarker from './components/CarparkMarker';
 import StatusBar from './components/StatusBar';
 
 // import screens
-import { BottomDisplay, SearchScreen, LoadingScreen } from './screens' 
+import { BottomDisplay, SearchScreen, LoadingScreen, NoInternetScreen } from './screens' 
 
 // import managers
 import carparkData from './managers/DataManager';
@@ -124,8 +125,22 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const maxCarparks = useSelector((state) => state.maxCarparks.limit)
   const dispatch = useDispatch();
+  const [isConnected, setIsConnected] = useState(false);
+
+  /**
+   * Function to update if the User is connected to the Internet
+   */
+  const checkNetworkConnected = () => {
+    NetInfo.fetch().then(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+      setIsConnected(state.isConnected);
+    });
+  };
   
-  // Code to retrieve current location
+  /**
+   * Function to obtain the User's current location using GPS
+   */
   function currentLocation() {
 
     // settings for LocationEnabler
@@ -173,6 +188,7 @@ export default function App() {
   }
 
   useEffect(() => {
+    checkNetworkConnected();
     currentLocation();
   }, []);
 
@@ -223,6 +239,7 @@ export default function App() {
       {isLoading ? (
         <LoadingScreen />
       ) : (
+        !isConnected ? (<NoInternetScreen />) : (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={styles.container}>
             <StatusBar backgroundColor="#2EBD6B" barStyle="default" />
@@ -310,7 +327,7 @@ export default function App() {
             />
           </View>
         </TouchableWithoutFeedback>
-      )}
+      ))}
     </>
   );
 }
