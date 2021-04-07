@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
   },
   bodyTitle: {
     width: '35%',
-    // textDecorationLine: 'underline',
   },
   bodyNormal: {
     width: '65%',

@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
   Animated,
   Dimensions,
@@ -71,7 +70,6 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 const MAX_ALLOWED_CARPARKS = 20;
 
 export default function NearbyScreen(props) {
-  // const [value, setValue] = useState('key0');
   const transformXValue = React.useRef(new Animated.Value(0)).current;
   const [selectedCarpark, setSelectedCarpark] = useState(null);
 

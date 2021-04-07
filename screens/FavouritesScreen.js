@@ -62,7 +62,6 @@ export default function FavouritesScreen(props) {
       jsonValues = await AsyncStorage.multiGet(keys);
       console.log(jsonValues);
       setFavourites(jsonValues);
-      //finalAns.push(JSON.parse(value));
     } catch (err) {
       alert(err);
     }

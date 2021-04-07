@@ -21,12 +21,14 @@ export default function AboutScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>CarGoWhere</Text>
+      <Text style={styles.body}>Parking Made Easy!</Text>
       <Text />
-      <Text style={styles.body}>Need to know where to park your car?</Text>
+      <Text style={styles.body}>Not sure where nearby carparks are?</Text>
+      <Text style={styles.body}>Need to know the parking rates and availability?</Text>
       <Text />
       <Text style={styles.body}>
-        CarGoWhere provides realtime Carpark Availability data for you to plan
-        your trips.
+        CarGoWhere provides realtime lot availability data, with sorting and
+        saving of favourites for you to plan your trips with ease.
       </Text>
     </View>
   );
