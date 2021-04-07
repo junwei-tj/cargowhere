@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Text, ImageBackground} from 'react-native';
 import {Marker} from 'react-native-maps';
+import { useSelector } from 'react-redux';
 
 const styles = {
   marker: {
@@ -15,7 +16,26 @@ const styles = {
   },
 };
 
-export default function CarparkMarker(props) {
+export default function CarparkMarkerContainer() {
+  const carparks = useSelector(state => state.carparks.carparksData);
+  const maxCarparks = useSelector((state) => state.maxCarparks.limit)
+
+  return (
+    carparks.map((carpark, index) => {
+      if (index < maxCarparks) {
+        return (
+          <CarparkMarker
+            carpark={carpark}
+            index={index}
+            key={index}
+          />
+        );
+      }
+    })
+  )
+}
+
+function CarparkMarker(props) {
   // workaround for some markers not rendering image fast enough
   const [trackView, setTrackView] = useState(true);
 
@@ -23,8 +43,7 @@ export default function CarparkMarker(props) {
     <Marker
       tracksViewChanges={trackView}
       key={props.carpark.identifier}
-      coordinate={props.carpark.latlng}
-      onCalloutPress={() => alert('pressed ' + props.carpark.title)}>
+      coordinate={props.carpark.latlng}>
       <ImageBackground
         source={require('../images/marker.png')}
         style={styles.marker}

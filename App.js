@@ -16,7 +16,7 @@ import Geolocation from '@react-native-community/geolocation';
 import NetInfo from "@react-native-community/netinfo";
 
 // import components
-import CarparkMarker from './components/CarparkMarker';
+import CarparkMarkerContainer from './components/CarparkMarker';
 import StatusBar from './components/StatusBar';
 
 // import screens
@@ -123,7 +123,6 @@ export default function App() {
   );
   const alertState = useSelector((state) => state.alert);
   const [isLoading, setIsLoading] = useState(true);
-  const maxCarparks = useSelector((state) => state.maxCarparks.limit)
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(false);
 
@@ -251,17 +250,7 @@ export default function App() {
                 dispatch(setRegion(region)); // update current map region
               }}>                
               {/* render carpark markers */}
-              {carparks.map((carpark, index) => {
-                if (index < maxCarparks) {
-                  return (
-                    <CarparkMarker
-                      carpark={carpark}
-                      index={index}
-                      key={index}
-                    />
-                  );
-                }
-              })}
+              <CarparkMarkerContainer />
               {/* display a pin for specificLocation, if it is set */}
               {specificLocation && (
                 <Marker
