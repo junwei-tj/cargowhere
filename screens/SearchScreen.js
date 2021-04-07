@@ -116,6 +116,8 @@ export default function SearchScreen(props) {
   const [visible, setVisible] = React.useState(false);
   const [results, setResults] = React.useState([]);
   const dispatch = useDispatch();
+  let itemNames = [];
+  let addresses = [];
 
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -173,7 +175,7 @@ export default function SearchScreen(props) {
       }));
       toggleOverlay();
   }
-  let itemNames = [];
+  
   return (
       <View style={styles.searchContainer}>
           <View style={styles.searchField}>
@@ -219,8 +221,9 @@ export default function SearchScreen(props) {
                      renderItem={({item, index}) => {
                        console.log(item);
                        if(item.type === "POI") {
-                         if (itemNames.indexOf(item.poi.name) === -1) {
+                         if (itemNames.indexOf(item.poi.name) === -1 || addresses.indexOf(item.address.freeformAddress) === -1) {
                            itemNames.push(item.poi.name);
+                           addresses.push(item.address.freeformAddress)
                            console.log(itemNames);
                            return (
                                <Pressable onPress={() => {
