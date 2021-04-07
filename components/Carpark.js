@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Pressable,
   ImageBackground,
+  FlatList
 } from 'react-native';
 import {useSelector} from 'react-redux';
 /**
@@ -36,30 +37,59 @@ function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
 
-// Still needs images for the button to see more details
-export default function Carpark(props) {
+export default function CarparkContainer(props) {
   const availability = useSelector(
     (state) => state.availability.availabilityData,
   );
-  const [availableNum, setAvailableNum] = React.useState('--');
-  // Get both destination lat/lon and the carpark lat/lon
-  const destinationLongitude = props.currentRegion.longitude;
-  const destinationLatitude = props.currentRegion.latitude;
-  const carparkLongitude = props.carpark.latlng.longitude;
-  const carparkLatitude = props.carpark.latlng.latitude;
-  const distanceBetween = getDistanceFromLatLonInM(
-    destinationLatitude,
-    destinationLongitude,
-    carparkLatitude,
-    carparkLongitude,
+  const carparks = useSelector(
+    (state) => state.carparks.carparksData,
   );
-  React.useEffect(() => {
-    if (availability[props.carpark.identifier]) {
-      setAvailableNum(availability[props.carpark.identifier].availableLots_car);
+  const maxCarparks = useSelector(
+    (state) => state.maxCarparks.limit,
+  );
+  const specificLocation = useSelector(
+    (state) => state.specificLocation,
+  );
+
+  const calculateDistance = (latlng) => {
+    let carparkLatitude = latlng.latitude;
+    let carparkLongitude = latlng.longitude;
+    return getDistanceFromLatLonInM(
+      specificLocation.latlng.latitude,
+      specificLocation.latlng.longitude,
+      carparkLatitude,
+      carparkLongitude
+    );
+  }
+
+  const getAvailableNum = (identifier) => {
+    if (availability[identifier]) {
+      return availability[identifier].availableLots_car;
     } else {
-      setAvailableNum('--');
+      return '--';
     }
-  }, [availability, props.carpark.identifier]);
+  };
+  
+  return (
+    <FlatList
+      data={carparks.slice(0, maxCarparks)}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({item, index}) => {
+        return (
+          <Carpark
+            carpark={item}
+            index={index}
+            distanceBetween={calculateDistance(item.latlng)}
+            availableNum={getAvailableNum(item.identifier)}
+            press={props.press}
+          />
+        );
+      }}
+    />
+  );
+}
+
+function Carpark(props) {
   return (
     <Pressable onPress={props.press(props.carpark)}>
       <View style={styles.container}>
@@ -70,21 +100,18 @@ export default function Carpark(props) {
             <Text style={styles.carparkNumber}>{props.index + 1}</Text>
           </ImageBackground>
           <Text style={styles.distance}>
-            {Math.round(distanceBetween) + 'm'}
+            {Math.round(props.distanceBetween) + 'm'}
           </Text>
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.name}>{props.carpark.title}</Text>
-          {/*should be `${props.carparkName} (${carparkCode})*/}
-          <Text style={styles.lots}>Lots available: {availableNum}</Text>
-          {/*`Lots available ${props.availableLots}`*/}
+          <Text style={styles.lots}>Lots available: {props.availableNum}</Text>
         </View>
         <TouchableOpacity style={styles.button}>
-          {/* <Image source={require('images/chevron-left.png')} /> */}
         </TouchableOpacity>
       </View>
     </Pressable>
-  );
+  )
 }
 
 const styles = StyleSheet.create({

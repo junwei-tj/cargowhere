@@ -20,6 +20,7 @@ import {
 } from '../constants/sortCriteriaConstants';
 import {setLatlng} from '../redux/regionSlice';
 import { setMaxCarparks } from '../redux/maxCarparksSlice';
+import CarparkContainer from '../components/Carpark';
 
 const styles = StyleSheet.create({
   container: {
@@ -143,13 +144,15 @@ export default function NearbyScreen(props) {
             <Picker.Item label="Availability" value={SORT_BY_AVAILABILITY} />
           </Picker>
         </View>
-        {/* <FlatList data={Array(9).fill(0)} renderItem={() => <Carpark />} /> */}
-        <FlatList
+        <CarparkContainer
+          press={goToDetailedView}
+        />
+        {/* <FlatList
           data={carparks.slice(0, maxCarparks)}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             return (
-              <Carpark
+              <CarparkContainer
                 carpark={item}
                 index={index}
                 currentRegion={specificLocation.latlng}
@@ -157,7 +160,7 @@ export default function NearbyScreen(props) {
               />
             );
           }}
-        />
+        /> */}
       </Animated.View>
       <Animated.View
         style={[
