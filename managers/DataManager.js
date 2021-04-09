@@ -1,8 +1,5 @@
 //import { createIconSetFromFontello } from '@expo/vector-icons';
-import axios from 'axios';
-import {Alert, useState} from 'react-native';
-import AwesomeAlert from 'react-native-awesome-alerts';
-import React from 'react';
+import axios from 'axios';=
 
 /**
  * @module DataManager
