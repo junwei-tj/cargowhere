@@ -18,7 +18,8 @@ import {useSelector} from 'react-redux';
 
 /**
    *
-   * Calculate distance between two points using longitude and latitude. Used to calculate distance between current/specified location and nearby carparks
+   * Helper function based on the Haversine Formula to calculate distance between two points using longitude and latitude. 
+   * Used to calculate distance between current/specified location and nearby carparks
    * @name getDistanceFromLatLonInM
    * @function
    * @param {Number} lat1 Latitude of the first location
@@ -71,6 +72,14 @@ export default function CarparkContainer(props) {
     (state) => state.specificLocation,
   );
 
+  /**
+   * Calculate distance between the selected carpark and the specified location 
+   * @name calculateDistance 
+   * @function
+   * @param {object} latlng Latitude and longitude of the selected carpark 
+   * @returns {Number} Distance in metres
+   */
+
   const calculateDistance = (latlng) => {
     let carparkLatitude = latlng.latitude;
     let carparkLongitude = latlng.longitude;
@@ -81,6 +90,14 @@ export default function CarparkContainer(props) {
       carparkLongitude
     );
   }
+
+  /**
+   * Retrieve the available number of parking lots of the selected carpark
+   * @name getAvailableNum 
+   * @function
+   * @param {String} identifier unique code for the carpark selected 
+   * @returns {Number} Number of available lots
+   */
 
   const getAvailableNum = (identifier) => {
     if (availability[identifier]) {

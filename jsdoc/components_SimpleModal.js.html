@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/SimpleModal.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/SimpleModal.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import {
+  WIDTH,
+  HEIGHT_MODAL,
+} from '../constants/screenConstants';
+import { useSelector, useDispatch } from 'react-redux';
+
+
+export default function SimpleModal(props) {
+    
+  const region = useSelector(state => state.region);
+  const specificLocation = useSelector((state) => state.specificLocation);
+  const selectedFavourite = useSelector((state) => state.selectedFavourite);
+
+  const [name, setName] = useState();
+  
+  
+  /**
+   * Cancel the addition of a new favourite or delete the currently selected favourite location 
+   * depending on the situation
+   * @name leftCloseModal 
+   * @function
+   * @param {boolean} bool Boolean value to close the modal
+   */
+  const leftCloseModal = (bool, data) => {
+    console.log(props.newlyCreated);
+    props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
+    props.changeModalVisible(bool);
+  }
+
+  /**
+   * Addition of a new favourite or editing the name of the currently selected favourite location 
+   * depending on the situation
+   * @name rightCloseModal 
+   * @function
+   * @param {boolean} bool Boolean value to close the modal
+   */
+  const rightCloseModal = (bool, data) => {
+    props.changeModalVisible(bool); 
+    props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
+    props.addFavourite(name, [specificLocation.latlng.latitude, specificLocation.latlng.longitude])
+  }
+
+  return (
+    &lt;TouchableOpacity
+    disabled = {true}
+    style = {styles.container}
+  >
+      &lt;View style = {styles.modal}>
+        &lt;View style={styles.textView}>
+          {props.newlyCreated === true ?
+          &lt;Text style = {styles.text}>Save name for {specificLocation.title}:&lt;/Text> :
+          &lt;Text style = {styles.text}>Edit or Delete {specificLocation.title}:&lt;/Text> }
+          {props.newlyCreated === true ?
+            &lt;TextInput
+              style = {styles.input}
+              placeholder = "Enter name of location"
+              onChangeText = {(val) => setName(val)}/> :
+            &lt;TextInput
+              style = {styles.input}
+              placeholder = "Enter new name of location"
+              onChangeText = {(val) => setName(val)}/>}
+          &lt;View style ={styles.buttonsView}>
+            &lt;TouchableOpacity 
+              style = {styles.activeButton}
+              onPress={() => leftCloseModal(false,"Cancel")}
+            >
+              {props.newlyCreated === true ?&lt;Text style = {[styles.text, {color: "blue"}]}>Cancel&lt;/Text> :
+            &lt;Text style = {[styles.text, {color: "red"}]}>Delete&lt;/Text> }
+            &lt;/TouchableOpacity>
+            &lt;TouchableOpacity 
+              style = {!Boolean(name) ? styles.inactiveButton : styles.activeButton}
+              onPress = {() => rightCloseModal(false,"Ok")}
+              disabled = {!Boolean(name)}>
+              &lt;Text style = {[styles.text, {color: "blue"}]}>Save&lt;/Text>
+            &lt;/TouchableOpacity>
+          &lt;/View>
+        &lt;/View>
+      &lt;/View>
+  &lt;/TouchableOpacity>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems:'center',
+    justifyContent:'center'
+  },
+  modal:{
+      height: HEIGHT_MODAL,
+      width: WIDTH - 80,
+      paddingTop:10,
+      backgroundColor:"white",
+      borderRadius: 10
+  },
+  textView:{
+    flex: 1,
+    alignItems:'center'
+  },
+  text:{
+    margin: 5,
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: 'center'
+  },
+  buttonsView: {
+    width: "100%",
+    flexDirection: "row"
+  },
+  activeButton: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: "center"
+  },
+  inactiveButton: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: "center",
+    opacity: 0.2,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#777",
+    padding: 8,
+    margin: 10, 
+    width: 200,
+  }
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataManager.html">DataManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addFavourite">addFavourite</a></li><li><a href="global.html#backFromDetailedView">backFromDetailedView</a></li><li><a href="global.html#calculateDistance">calculateDistance</a></li><li><a href="global.html#deg2rad">deg2rad</a></li><li><a href="global.html#filterCarparksJSON">filterCarparksJSON</a></li><li><a href="global.html#getAvailableNum">getAvailableNum</a></li><li><a href="global.html#getCarparks">getCarparks</a></li><li><a href="global.html#getDistanceFromLatLonInM">getDistanceFromLatLonInM</a></li><li><a href="global.html#getLocation">getLocation</a></li><li><a href="global.html#goToDetailedView">goToDetailedView</a></li><li><a href="global.html#leftCloseModal">leftCloseModal</a></li><li><a href="global.html#loadAllFavourites">loadAllFavourites</a></li><li><a href="global.html#onSelectFavourite">onSelectFavourite</a></li><li><a href="global.html#onSelectResult">onSelectResult</a></li><li><a href="global.html#onSubmitSearch">onSubmitSearch</a></li><li><a href="global.html#openMap">openMap</a></li><li><a href="global.html#removeFavourite">removeFavourite</a></li><li><a href="global.html#rightCloseModal">rightCloseModal</a></li><li><a href="global.html#sortCarparks">sortCarparks</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Apr 09 2021 16:36:45 GMT+0800 (Singapore Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

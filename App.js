@@ -157,7 +157,6 @@ export default function App() {
       dispatch(setRegion(currentRegion));
       dispatch(setSpecificLocation(currentLocationMarker));},
       error => console.log('Error: ' + JSON.stringify(error)), // error message
-      {enableHighAccuracy: true, timeout: 20000}, // additional options
       );
   }
 

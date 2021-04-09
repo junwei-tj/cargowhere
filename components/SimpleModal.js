@@ -18,16 +18,30 @@ export default function SimpleModal(props) {
   const region = useSelector(state => state.region);
   const specificLocation = useSelector((state) => state.specificLocation);
   const selectedFavourite = useSelector((state) => state.selectedFavourite);
-  //const dispatch = useDispatch();
 
   const [name, setName] = useState();
   
+  
+  /**
+   * Cancel the addition of a new favourite or delete the currently selected favourite location 
+   * depending on the situation
+   * @name leftCloseModal 
+   * @function
+   * @param {boolean} bool Boolean value to close the modal
+   */
   const leftCloseModal = (bool, data) => {
     console.log(props.newlyCreated);
     props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
     props.changeModalVisible(bool);
   }
 
+  /**
+   * Addition of a new favourite or editing the name of the currently selected favourite location 
+   * depending on the situation
+   * @name rightCloseModal 
+   * @function
+   * @param {boolean} bool Boolean value to close the modal
+   */
   const rightCloseModal = (bool, data) => {
     props.changeModalVisible(bool); 
     props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
