@@ -145,20 +145,6 @@ export default function NearbyScreen(props) {
         <CarparkContainer
           press={goToDetailedView}
         />
-        {/* <FlatList
-          data={carparks.slice(0, maxCarparks)}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}) => {
-            return (
-              <CarparkContainer
-                carpark={item}
-                index={index}
-                currentRegion={specificLocation.latlng}
-                press={goToDetailedView}
-              />
-            );
-          }}
-        /> */}
       </Animated.View>
       <Animated.View
         style={[
