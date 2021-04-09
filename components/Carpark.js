@@ -16,11 +16,22 @@ import {useSelector} from 'react-redux';
  * Expected props include, carparkCode, carparkName, availableLots
  */
 
-// Haversine formula for calculating distance between two points using longitude and latitude
+/**
+   *
+   * Calculate distance between two points using longitude and latitude
+   * Used to calculate distance between current/specified location and nearby carparks
+   * @name getDistanceFromLatLonInM
+   * @function
+   * @param {Number} lat1 Latitude of the first location
+   * @param {Number} lon1 Longitude of the first location
+   * @param {Number} lat2 Latitude of the second location
+   * @param {Number} lon2 Longitude of the second location
+   * @returns {Number} Distance in metres
+   */
 
 export function getDistanceFromLatLonInM(lat1, lon1, lat2, lon2) {
   var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2 - lat1); // deg2rad below
+  var dLat = deg2rad(lat2 - lat1);
   var dLon = deg2rad(lon2 - lon1);
   var a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -29,10 +40,21 @@ export function getDistanceFromLatLonInM(lat1, lon1, lat2, lon2) {
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c * 1000; // Distance in m
+  var d = R * c * 1000;
   return d;
 }
 
+
+/**
+   *
+   * Convert values in degree to radian
+   * Helper function to convert values in degree to radian
+   * @name deg2rad
+   * @function
+   * @param {Number} deg Degree Value to be converted
+   * @returns {Number} Value in radian
+   */
+  
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }

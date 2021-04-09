@@ -276,18 +276,18 @@ export default function App() {
               />
             </View>
 
-            {/* Alert shown when there are no carparks or no search results */}     
+            {/* Alert shown when there are no carparks or no search results*/}     
             <AwesomeAlert 
-              show={alertState.alertData}
+              show={alertState.alertData} // alert status
               showProgress={false}
-              message={alertState.alertMessage}
+              message={alertState.alertMessage} // alert message 
               closeOnTouchOutside={true}
               closeOnHardwareBackPress={false}
               showCancelButton={false}
               showConfirmButton={true}
               confirmText="Ok :("
               confirmButtonColor="#0c39ed"
-              onConfirmPressed={() => dispatch(setAlert(false))}
+              onConfirmPressed={() => dispatch(setAlert(false))} // reset alert status 
             />
           </View>
         </TouchableWithoutFeedback>

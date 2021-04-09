@@ -1,5 +1,5 @@
 //import { createIconSetFromFontello } from '@expo/vector-icons';
-import axios from 'axios';=
+import axios from 'axios';
 
 /**
  * @module DataManager
