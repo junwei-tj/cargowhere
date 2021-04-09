@@ -1,4 +1,32 @@
-import React from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/SearchScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/SearchScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
 import {
   View,
   Image,
@@ -198,9 +226,9 @@ export default function SearchScreen(props) {
   }
   
   return (
-      <View style={styles.searchContainer}>
-          <View style={styles.searchField}>
-              <TextInput
+      &lt;View style={styles.searchContainer}>
+          &lt;View style={styles.searchField}>
+              &lt;TextInput
                 editable
                 style={styles.inputStyle}
                 placeholder={'Search...'}
@@ -209,33 +237,33 @@ export default function SearchScreen(props) {
                 onSubmitEditing={onSubmitSearch}
                 returnKeyType = {"search"}
               />
-              <Pressable
+              &lt;Pressable
                   style={styles.headerIcon}
                   onPress={() => {
                     setSearchValue('');
                     Keyboard.dismiss();
                   }}>
-                <Image
+                &lt;Image
                     style={styles.icon}
                     source={require('../images/cross.png')}
                 />
-              </Pressable>
-          </View>
-          <View style = {styles.overlay}>
-             <Overlay isVisible={visible} overlayStyle = {styles.resultsContainer}>
-               <Animated.View style={styles.searchOverlay}>
-                 <View style={styles.header}>
-                   <Text style={styles.headerText}>Search Results</Text>
-                   <Pressable
+              &lt;/Pressable>
+          &lt;/View>
+          &lt;View style = {styles.overlay}>
+             &lt;Overlay isVisible={visible} overlayStyle = {styles.resultsContainer}>
+               &lt;Animated.View style={styles.searchOverlay}>
+                 &lt;View style={styles.header}>
+                   &lt;Text style={styles.headerText}>Search Results&lt;/Text>
+                   &lt;Pressable
                        style={styles.headerIcon}
                        onPress={toggleOverlay}>
-                     <Image
+                     &lt;Image
                          style={styles.icon}
                          source={require('../images/cross.png')}
                      />
-                   </Pressable>
-                 </View>
-                 <FlatList
+                   &lt;/Pressable>
+                 &lt;/View>
+                 &lt;FlatList
                      data={results}
                      keyExtractor={(item, index) => index.toString()}
                      renderItem={({item, index}) => {
@@ -246,35 +274,58 @@ export default function SearchScreen(props) {
                            addresses.push(item.address.freeformAddress)
                            console.log(itemNames);
                            return (
-                               <Pressable onPress={() => {
+                               &lt;Pressable onPress={() => {
                                  onSelectResult(item);
                                }}>
-                                 <View style={styles.infoContainer}>
-                                   <Text style={styles.name}>{item.poi.name}</Text>
-                                   <Text style={styles.address}>{item.address.freeformAddress}</Text>
-                                 </View>
-                               </Pressable>
+                                 &lt;View style={styles.infoContainer}>
+                                   &lt;Text style={styles.name}>{item.poi.name}&lt;/Text>
+                                   &lt;Text style={styles.address}>{item.address.freeformAddress}&lt;/Text>
+                                 &lt;/View>
+                               &lt;/Pressable>
                            )
                          }
                        }
                        else{
                          return (
-                             <Pressable onPress={() => {
+                             &lt;Pressable onPress={() => {
                                onSelectResult(item);
                              }}>
-                               <View style={styles.infoContainer}>
-                                 <Text style={styles.name}>{item.address.freeformAddress}</Text>
-                               </View>
-                             </Pressable>
+                               &lt;View style={styles.infoContainer}>
+                                 &lt;Text style={styles.name}>{item.address.freeformAddress}&lt;/Text>
+                               &lt;/View>
+                             &lt;/Pressable>
                          )
 
                        }
 
                      }}
                  />
-               </Animated.View>
-            </Overlay>
-          </View>
-        </View>
+               &lt;/Animated.View>
+            &lt;/Overlay>
+          &lt;/View>
+        &lt;/View>
   )
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataManager.html">DataManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addFavourite">addFavourite</a></li><li><a href="global.html#backFromDetailedView">backFromDetailedView</a></li><li><a href="global.html#deg2rad">deg2rad</a></li><li><a href="global.html#filterCarparksJSON">filterCarparksJSON</a></li><li><a href="global.html#getCarparks">getCarparks</a></li><li><a href="global.html#getDistanceFromLatLonInM">getDistanceFromLatLonInM</a></li><li><a href="global.html#getLocation">getLocation</a></li><li><a href="global.html#goToDetailedView">goToDetailedView</a></li><li><a href="global.html#loadAllFavourites">loadAllFavourites</a></li><li><a href="global.html#onSelectResult">onSelectResult</a></li><li><a href="global.html#onSubmitSearch">onSubmitSearch</a></li><li><a href="global.html#openMap">openMap</a></li><li><a href="global.html#removeFavourite">removeFavourite</a></li><li><a href="global.html#sortCarparks">sortCarparks</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Apr 09 2021 15:31:31 GMT+0800 (Singapore Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

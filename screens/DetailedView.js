@@ -115,6 +115,13 @@ export default function DetailedView(props) {
     }
   }, [props.selectedCarpark]);
 
+
+  
+  /**
+   * Open Google Maps for navigation to the selected carpark 
+   * @name openMap 
+   * @function
+   */
   function openMap() {
     const scheme = Platform.select({
       ios: 'maps:0,0?q=',

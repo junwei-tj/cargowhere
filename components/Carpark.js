@@ -18,8 +18,7 @@ import {useSelector} from 'react-redux';
 
 /**
    *
-   * Calculate distance between two points using longitude and latitude
-   * Used to calculate distance between current/specified location and nearby carparks
+   * Calculate distance between two points using longitude and latitude. Used to calculate distance between current/specified location and nearby carparks
    * @name getDistanceFromLatLonInM
    * @function
    * @param {Number} lat1 Latitude of the first location
@@ -47,14 +46,13 @@ export function getDistanceFromLatLonInM(lat1, lon1, lat2, lon2) {
 
 /**
    *
-   * Convert values in degree to radian
-   * Helper function to convert values in degree to radian
+   * Convert values in degree to radian. Helper function to convert values in degree to radian
    * @name deg2rad
    * @function
    * @param {Number} deg Degree Value to be converted
    * @returns {Number} Value in radian
    */
-  
+
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }

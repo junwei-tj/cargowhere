@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/DetailedView.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/DetailedView.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useState, useEffect} from 'react';
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Text,
+  Pressable,
+  Image,
+  Button,
+  Linking,
+  Platform,
+} from 'react-native';
+import DataManager from '../managers/DataManager';
+import {useSelector} from 'react-redux';
+
+const styles = StyleSheet.create({
+  rootView: {
+    flex: 1,
+  },
+  header: {
+    borderBottomColor: '#eee',
+    flexDirection: 'row',
+    backgroundColor: '#eee',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 16,
+    paddingTop: 10,
+    paddingLeft: 20,
+    paddingBottom: 10,
+    width: '90%',
+  },
+  headerIcon: {
+    width: '10%',
+    paddingRight: 20,
+  },
+  icon: {
+    width: 15,
+    height: 15,
+    tintColor: 'grey',
+  },
+  bodyView: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 10,
+    paddingBottom: 40,
+  },
+  bodyGridTop: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  bodyGridRow: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    borderColor: 'grey',
+    padding: 5,
+    borderWidth: 1,
+    margin: -0.5,
+  },
+  bodyTitle: {
+    width: '35%',
+  },
+  bodyNormal: {
+    width: '65%',
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingVertical: 5,
+    paddingHorizontal: 30,
+    borderTopWidth: 1,
+  },
+  button: {
+    width: '20%',
+  },
+  favouritesButton: {
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+});
+
+export default function DetailedView(props) {
+  const availability = useSelector(
+    (state) => state.availability.availabilityData,
+  );
+  const [cp, setCp] = useState(null);
+  const [availableNum, setAvailableNum] = React.useState('--');
+
+  React.useEffect(() => {
+    if (
+      props.selectedCarpark &amp;&amp;
+      availability[props.selectedCarpark.identifier]
+    ) {
+      setAvailableNum(
+        availability[props.selectedCarpark.identifier].availableLots_car,
+      );
+    } else {
+      setAvailableNum('--');
+    }
+  }, [availability, props.selectedCarpark]);
+
+  // to get full carpark info
+  useEffect(() => {
+    if (props.selectedCarpark) {
+      var temp = DataManager._carparksData.filter((val) => {
+        return val.name.trim() === props.selectedCarpark.title.trim();
+      });
+      setCp(temp[0]);
+    }
+  }, [props.selectedCarpark]);
+
+
+  
+  /**
+   * Open Google Maps for navigation to the selected carpark 
+   * @name openMap 
+   * @function
+   */
+  function openMap() {
+    const scheme = Platform.select({
+      ios: 'maps:0,0?q=',
+      android: 'geo:0,0?q=',
+    });
+    const latlng = `${cp.latitude},${cp.longitude}`;
+    console.log(`Open map with lat: ${latlng}.`);
+    const url = Platform.select({
+      ios: `${scheme}@${latlng}`,
+      android: `${scheme}@${latlng}`,
+    });
+    Linking.openURL(url);
+  }
+
+  return (
+    &lt;>
+      {cp &amp;&amp; (
+        &lt;View style={styles.rootView} onStartShouldSetResponder={() => true}>
+          &lt;View style={styles.header}>
+            &lt;Text style={styles.headerText}>
+              {props.selectedCarpark.title} {cp.code ? `(${cp.code})` : ''}
+            &lt;/Text>
+            &lt;Pressable
+              style={styles.headerIcon}
+              onPress={props.backFromDetailedView}>
+              &lt;Image
+                style={styles.icon}
+                source={require('../images/cross.png')}
+              />
+            &lt;/Pressable>
+          &lt;/View>
+          &lt;ScrollView contentContainerStyle={styles.bodyView}>
+            &lt;View style={styles.bodyGridTop}>
+              &lt;View>
+                &lt;Text>Distance:&lt;/Text>
+                &lt;Text>{props.selectedCarpark.distance.toFixed(0)}m away&lt;/Text>
+              &lt;/View>
+              &lt;View>
+                &lt;Text>Agency:&lt;/Text>
+                &lt;Text>{cp.agency}&lt;/Text>
+              &lt;/View>
+              &lt;View>
+                &lt;Text>Car Available Lots: &lt;/Text>
+                &lt;Text>{availableNum}&lt;/Text>
+              &lt;/View>
+            &lt;/View>
+            &lt;Text>Details:&lt;/Text>
+            {/* for hdb carpark */}
+            {cp.agency === 'HDB' &amp;&amp; (
+              &lt;>
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>Short Term Parking&lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.hdbFields.short_term_parking}
+                  &lt;/Text>
+                &lt;/View>
+
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>Free Parking&lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.hdbFields.free_parking}
+                  &lt;/Text>
+                &lt;/View>
+
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>Night Parking&lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.hdbFields.night_parking}
+                  &lt;/Text>
+                &lt;/View>
+
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>Type&lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.hdbFields.car_park_type}
+                  &lt;/Text>
+                &lt;/View>
+
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>System&lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.hdbFields.type_of_parking_system}
+                  &lt;/Text>
+                &lt;/View>
+              &lt;/>
+            )}
+            {/* for ura carpark */}
+            {cp.agency === 'URA' &amp;&amp; (
+              &lt;>
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>Weekday Rate&lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.uraFields.weekdayRate}/{cp.uraFields.weekdayMin}
+                  &lt;/Text>
+                &lt;/View>
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>Saturday Rate&lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.uraFields.satdayRate}/{cp.uraFields.satdayMin}
+                  &lt;/Text>
+                &lt;/View>
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>
+                    Sunday/Public Holiday Rate
+                  &lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.uraFields.sunPHRate}/{cp.uraFields.sunPHMin}
+                  &lt;/Text>
+                &lt;/View>
+              &lt;/>
+            )}
+            {/* for lta carpark */}
+            {cp.agency === 'LTA' &amp;&amp; (
+              &lt;>
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>Weekday Rate 1&lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.ltaFields.weekdays_rate_1}
+                  &lt;/Text>
+                &lt;/View>
+
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>Weekday Rate 2&lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.ltaFields.weekdays_rate_2}
+                  &lt;/Text>
+                &lt;/View>
+
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>Saturday&lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.ltaFields.saturday_rate}
+                  &lt;/Text>
+                &lt;/View>
+
+                &lt;View style={styles.bodyGridRow}>
+                  &lt;Text style={styles.bodyTitle}>Sunday&lt;/Text>
+                  &lt;Text style={styles.bodyNormal}>
+                    {cp.ltaFields.sunday_publicholiday_rate}
+                  &lt;/Text>
+                &lt;/View>
+              &lt;/>
+            )}
+          &lt;/ScrollView>
+          &lt;View style={styles.footer}>
+            &lt;View style={styles.button}>
+              &lt;Button color="#00B3A6" title="GO" onPress={openMap} />
+            &lt;/View>
+          &lt;/View>
+        &lt;/View>
+      )}
+    &lt;/>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataManager.html">DataManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addFavourite">addFavourite</a></li><li><a href="global.html#backFromDetailedView">backFromDetailedView</a></li><li><a href="global.html#deg2rad">deg2rad</a></li><li><a href="global.html#filterCarparksJSON">filterCarparksJSON</a></li><li><a href="global.html#getCarparks">getCarparks</a></li><li><a href="global.html#getDistanceFromLatLonInM">getDistanceFromLatLonInM</a></li><li><a href="global.html#getLocation">getLocation</a></li><li><a href="global.html#goToDetailedView">goToDetailedView</a></li><li><a href="global.html#loadAllFavourites">loadAllFavourites</a></li><li><a href="global.html#onSelectResult">onSelectResult</a></li><li><a href="global.html#onSubmitSearch">onSubmitSearch</a></li><li><a href="global.html#openMap">openMap</a></li><li><a href="global.html#removeFavourite">removeFavourite</a></li><li><a href="global.html#sortCarparks">sortCarparks</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Apr 09 2021 15:31:31 GMT+0800 (Singapore Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
