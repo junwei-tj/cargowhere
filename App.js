@@ -141,48 +141,23 @@ export default function App() {
    * Function to obtain the User's current location using GPS
    */
   function currentLocation() {
-
     // settings for LocationEnabler
-    const {
-      PRIORITIES: { HIGH_ACCURACY },
-      checkSettings,
-      requestResolutionSettings,
-    } = LocationEnabler
-    
+    const { PRIORITIES: { HIGH_ACCURACY }, checkSettings, requestResolutionSettings,} = LocationEnabler
     // Define configuration for GPS settings
-    const config = {
-      priority: HIGH_ACCURACY, // default BALANCED_POWER_ACCURACY
-      alwaysShow: true, // default false
-      needBle: false, // default false
-    };
-    
+    const config = { priority: HIGH_ACCURACY, alwaysShow: true, needBle: false,};
     // Check if location is enabled or not
     checkSettings(config);
-    
     // If location is disabled, prompt the user to turn on device location
     requestResolutionSettings(config);
-
     // Get coordinates of user's current position
-    Geolocation.getCurrentPosition(info => {
-      console.log(info);
-      let currentRegion = {
-        latitude: info.coords.latitude,
-        longitude: info.coords.longitude,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
-      };
-      let currentLocationMarker = {
-        latlng: {
-          latitude: info.coords.latitude,
-          longitude: info.coords.longitude,
-        },
-        title: 'Current Location',
-      };
+    Geolocation.getCurrentPosition(info => { 
+      let currentRegion = { latitude: info.coords.latitude, longitude: info.coords.longitude, latitudeDelta: 0.015, longitudeDelta: 0.0121,};
+      let currentLocationMarker = { latlng: { latitude: info.coords.latitude, longitude: info.coords.longitude, }, title: 'Current Location', };
       // Update coordinates for current location and for the marker
       dispatch(setRegion(currentRegion));
-      dispatch(setSpecificLocation(currentLocationMarker));
-      },
+      dispatch(setSpecificLocation(currentLocationMarker));},
       error => console.log('Error: ' + JSON.stringify(error)), // error message
+      {enableHighAccuracy: true, timeout: 20000}, // additional options
       );
   }
 
@@ -203,7 +178,6 @@ export default function App() {
     carparkData
       .updateAvailabilityData()
       .then((data) => dispatch(setAvailability(data)));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carparks]);
 
   /**
@@ -302,17 +276,18 @@ export default function App() {
               />
             </View>
 
-            <AwesomeAlert
-              show={alertState.alertData}
+            {/* Alert shown when there are no carparks or no search results*/}     
+            <AwesomeAlert 
+              show={alertState.alertData} // alert status
               showProgress={false}
-              message={alertState.alertMessage}
+              message={alertState.alertMessage} // alert message 
               closeOnTouchOutside={true}
               closeOnHardwareBackPress={false}
               showCancelButton={false}
               showConfirmButton={true}
               confirmText="Ok :("
               confirmButtonColor="#0c39ed"
-              onConfirmPressed={() => dispatch(setAlert(false))}
+              onConfirmPressed={() => dispatch(setAlert(false))} // reset alert status 
             />
           </View>
         </TouchableWithoutFeedback>
