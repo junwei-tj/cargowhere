@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/Carpark.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/Carpark.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Pressable,
+  ImageBackground,
+  FlatList
+} from 'react-native';
+import {useSelector} from 'react-redux';
+/**
+ * Renders a Carpark Component based on the info available
+ * @param {*} props
+ * Expected props include, carparkCode, carparkName, availableLots
+ */
+
+// Haversine formula for calculating distance between two points using longitude and latitude
+
+export function getDistanceFromLatLonInM(lat1, lon1, lat2, lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2 - lat1); // deg2rad below
+  var dLon = deg2rad(lon2 - lon1);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c * 1000; // Distance in m
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
+}
+
+export default function CarparkContainer(props) {
+  const availability = useSelector(
+    (state) => state.availability.availabilityData,
+  );
+  const carparks = useSelector(
+    (state) => state.carparks.carparksData,
+  );
+  const maxCarparks = useSelector(
+    (state) => state.maxCarparks.limit,
+  );
+  const specificLocation = useSelector(
+    (state) => state.specificLocation,
+  );
+
+  const calculateDistance = (latlng) => {
+    let carparkLatitude = latlng.latitude;
+    let carparkLongitude = latlng.longitude;
+    return getDistanceFromLatLonInM(
+      specificLocation.latlng.latitude,
+      specificLocation.latlng.longitude,
+      carparkLatitude,
+      carparkLongitude
+    );
+  }
+
+  const getAvailableNum = (identifier) => {
+    if (availability[identifier]) {
+      return availability[identifier].availableLots_car;
+    } else {
+      return '--';
+    }
+  };
+  
+  return (
+    &lt;FlatList
+      data={carparks.slice(0, maxCarparks)}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({item, index}) => {
+        return (
+          &lt;Carpark
+            carpark={item}
+            index={index}
+            distanceBetween={calculateDistance(item.latlng)}
+            availableNum={getAvailableNum(item.identifier)}
+            press={props.press}
+          />
+        );
+      }}
+    />
+  );
+}
+
+function Carpark(props) {
+  return (
+    &lt;Pressable onPress={props.press(props.carpark)}>
+      &lt;View style={styles.container}>
+        &lt;View style={styles.markerContainer}>
+          &lt;ImageBackground
+            style={styles.marker}
+            source={require('../images/marker.png')}>
+            &lt;Text style={styles.carparkNumber}>{props.index + 1}&lt;/Text>
+          &lt;/ImageBackground>
+          &lt;Text style={styles.distance}>
+            {Math.round(props.distanceBetween) + 'm'}
+          &lt;/Text>
+        &lt;/View>
+        &lt;View style={styles.infoContainer}>
+          &lt;Text style={styles.name}>{props.carpark.title}&lt;/Text>
+          &lt;Text style={styles.lots}>Lots available: {props.availableNum}&lt;/Text>
+        &lt;/View>
+        &lt;TouchableOpacity style={styles.button}>
+        &lt;/TouchableOpacity>
+      &lt;/View>
+    &lt;/Pressable>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+  },
+  markerContainer: {
+    paddingTop: 5,
+    flexDirection: 'column',
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  marker: {
+    width: 30,
+    height: 30,
+    marginTop: 5,
+    marginBottom: 3,
+    //borderWidth: 1,
+  },
+  distance: {
+    color: '#6a94ff',
+    fontSize: 11,
+    marginBottom: 3,
+    width: 40,
+    textAlign: 'center',
+  },
+  infoContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginLeft: 15,
+  },
+  name: {
+    fontSize: 15,
+    color: '#494949',
+  },
+  lots: {
+    color: '#777777',
+    fontSize: 12,
+  },
+  carparkNumber: {
+    color: 'white',
+    textAlign: 'center',
+    paddingTop: 3,
+    fontSize: 12,
+  },
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataManager.html">DataManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#filterCarparksJSON">filterCarparksJSON</a></li><li><a href="global.html#getCarparks">getCarparks</a></li><li><a href="global.html#getDistanceFromLatLonInM">getDistanceFromLatLonInM</a></li><li><a href="global.html#sortCarparks">sortCarparks</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Apr 09 2021 13:20:28 GMT+0800 (Singapore Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
