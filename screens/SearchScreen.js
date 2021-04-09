@@ -18,6 +18,10 @@ import { setLatlng } from '../redux/regionSlice';
 import { setSpecificLocation } from '../redux/specificLocationSlice';
 import {setAlert, setMessage} from '../redux/alertSlice';
 
+/**
+ * @module SearchScreen
+ * */
+
 const styles = StyleSheet.create({
   resultsContainer: {
     width:'80%',

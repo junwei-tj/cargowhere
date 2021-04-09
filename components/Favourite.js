@@ -12,6 +12,10 @@ import { setLatlng } from '../redux/regionSlice';
 import { setSpecificLocation } from '../redux/specificLocationSlice';
 import { setSelectedFavourite } from '../redux/selectedFavouriteSlice';
 
+/**
+ * @module Favourite
+ * */
+
 export default function Favourite(props) {
   
   const dispatch = useDispatch();

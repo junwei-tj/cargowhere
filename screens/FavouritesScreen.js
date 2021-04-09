@@ -6,6 +6,10 @@ import SimpleModal from '../components/SimpleModal';
 import {setLatlng} from '../redux/regionSlice';
 import {useSelector, useDispatch} from 'react-redux';
 
+/**
+ * @module FavouritesScreen
+ * */
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

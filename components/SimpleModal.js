@@ -12,6 +12,9 @@ import {
 } from '../constants/screenConstants';
 import { useSelector, useDispatch } from 'react-redux';
 
+/**
+ * @module SimpleModal
+ * */
 
 export default function SimpleModal(props) {
     

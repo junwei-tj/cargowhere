@@ -10,6 +10,11 @@ import {
   FlatList
 } from 'react-native';
 import {useSelector} from 'react-redux';
+
+/**
+ * @module Carpark
+ * */
+
 /**
  * Renders a Carpark Component based on the info available
  * @param {*} props

@@ -21,6 +21,10 @@ import {setLatlng} from '../redux/regionSlice';
 import { setMaxCarparks } from '../redux/maxCarparksSlice';
 import CarparkContainer from '../components/Carpark';
 
+/**
+ * @module NearbyScreen
+ * */
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

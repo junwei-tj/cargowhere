@@ -3,6 +3,10 @@ import {getDistanceFromLatLonInM} from '../components/Carpark';
 import carparkData from './DataManager';
 
 /**
+ * @module CarparksManager
+ * */
+
+/**
  * Manager class for handling the retrieving and filtering of carparks for displaying.
  */
 
