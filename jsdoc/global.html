@@ -444,6 +444,165 @@
     
 
     
+    <h4 class="name" id="calculateDistance"><span class="type-signature"></span>calculateDistance<span class="signature">(latlng)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Calculate distance between the selected carpark and the specified location
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>latlng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Latitude and longitude of the selected carpark</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_Carpark.js.html">components/Carpark.js</a>, <a href="components_Carpark.js.html#line75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Distance in metres
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="deg2rad"><span class="type-signature"></span>deg2rad<span class="signature">(deg)</span><span class="type-signature"> &rarr; {Number}</span></h4>
     
 
@@ -545,7 +704,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_Carpark.js.html">components/Carpark.js</a>, <a href="components_Carpark.js.html#line47">line 47</a>
+        <a href="components_Carpark.js.html">components/Carpark.js</a>, <a href="components_Carpark.js.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -763,6 +922,165 @@
     
 
     
+    <h4 class="name" id="getAvailableNum"><span class="type-signature"></span>getAvailableNum<span class="signature">(identifier)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Retrieve the available number of parking lots of the selected carpark
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>identifier</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">unique code for the carpark selected</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_Carpark.js.html">components/Carpark.js</a>, <a href="components_Carpark.js.html#line94">line 94</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Number of available lots
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="getCarparks"><span class="type-signature"></span>getCarparks<span class="signature">(region)</span><span class="type-signature"></span></h4>
     
 
@@ -908,7 +1226,7 @@
 
 
 <div class="description">
-    Calculate distance between two points using longitude and latitude. Used to calculate distance between current/specified location and nearby carparks
+    Helper function based on the Haversine Formula to calculate distance between two points using longitude and latitude. Used to calculate distance between current/specified location and nearby carparks
 </div>
 
 
@@ -1230,6 +1548,231 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="screens_NearbyScreen.js.html">screens/NearbyScreen.js</a>, <a href="screens_NearbyScreen.js.html#line83">line 83</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="leftCloseModal"><span class="type-signature"></span>leftCloseModal<span class="signature">(bool)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Cancel the addition of a new favourite or delete the currently selected favourite location depending on the situation
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bool</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Boolean value to close the modal</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_SimpleModal.js.html">components/SimpleModal.js</a>, <a href="components_SimpleModal.js.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="onSelectFavourite"><span class="type-signature"></span>onSelectFavourite<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Updates the map view based on the location of the favourite. Also sets the indicator that an existing location has been selected
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_Favourite.js.html">components/Favourite.js</a>, <a href="components_Favourite.js.html#line19">line 19</a>
     </li></ul></dd>
     
 
@@ -1627,6 +2170,143 @@
     
 
     
+    <h4 class="name" id="rightCloseModal"><span class="type-signature"></span>rightCloseModal<span class="signature">(bool)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Addition of a new favourite or editing the name of the currently selected favourite location depending on the situation
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bool</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Boolean value to close the modal</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_SimpleModal.js.html">components/SimpleModal.js</a>, <a href="components_SimpleModal.js.html#line38">line 38</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="sortCarparks"><span class="type-signature"></span>sortCarparks<span class="signature">(carparks, availability, sortCriteria)</span><span class="type-signature"></span></h4>
     
 
@@ -1820,13 +2500,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataManager.html">DataManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addFavourite">addFavourite</a></li><li><a href="global.html#backFromDetailedView">backFromDetailedView</a></li><li><a href="global.html#deg2rad">deg2rad</a></li><li><a href="global.html#filterCarparksJSON">filterCarparksJSON</a></li><li><a href="global.html#getCarparks">getCarparks</a></li><li><a href="global.html#getDistanceFromLatLonInM">getDistanceFromLatLonInM</a></li><li><a href="global.html#getLocation">getLocation</a></li><li><a href="global.html#goToDetailedView">goToDetailedView</a></li><li><a href="global.html#loadAllFavourites">loadAllFavourites</a></li><li><a href="global.html#onSelectResult">onSelectResult</a></li><li><a href="global.html#onSubmitSearch">onSubmitSearch</a></li><li><a href="global.html#openMap">openMap</a></li><li><a href="global.html#removeFavourite">removeFavourite</a></li><li><a href="global.html#sortCarparks">sortCarparks</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataManager.html">DataManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addFavourite">addFavourite</a></li><li><a href="global.html#backFromDetailedView">backFromDetailedView</a></li><li><a href="global.html#calculateDistance">calculateDistance</a></li><li><a href="global.html#deg2rad">deg2rad</a></li><li><a href="global.html#filterCarparksJSON">filterCarparksJSON</a></li><li><a href="global.html#getAvailableNum">getAvailableNum</a></li><li><a href="global.html#getCarparks">getCarparks</a></li><li><a href="global.html#getDistanceFromLatLonInM">getDistanceFromLatLonInM</a></li><li><a href="global.html#getLocation">getLocation</a></li><li><a href="global.html#goToDetailedView">goToDetailedView</a></li><li><a href="global.html#leftCloseModal">leftCloseModal</a></li><li><a href="global.html#loadAllFavourites">loadAllFavourites</a></li><li><a href="global.html#onSelectFavourite">onSelectFavourite</a></li><li><a href="global.html#onSelectResult">onSelectResult</a></li><li><a href="global.html#onSubmitSearch">onSubmitSearch</a></li><li><a href="global.html#openMap">openMap</a></li><li><a href="global.html#removeFavourite">removeFavourite</a></li><li><a href="global.html#rightCloseModal">rightCloseModal</a></li><li><a href="global.html#sortCarparks">sortCarparks</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Apr 09 2021 15:31:31 GMT+0800 (Singapore Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Apr 09 2021 16:36:45 GMT+0800 (Singapore Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

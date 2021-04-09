@@ -16,8 +16,13 @@ export default function Favourite(props) {
   
   const dispatch = useDispatch();
 
-  //Updates the map view based on the location of the favourite
-  //Also sets the indicator that an existing location has been selected
+  /**
+   *
+   * Updates the map view based on the location of the favourite. 
+   * Also sets the indicator that an existing location has been selected
+   * @name onSelectFavourite 
+   * @function
+   */
   function onSelectFavourite(){
     dispatch(setLatlng({
       latitude: JSON.parse(props.favourite[1])[0],

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/Favourite.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/Favourite.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+
+import { useDispatch } from 'react-redux';
+import { setLatlng } from '../redux/regionSlice';
+import { setSpecificLocation } from '../redux/specificLocationSlice';
+import { setSelectedFavourite } from '../redux/selectedFavouriteSlice';
+
+export default function Favourite(props) {
+  
+  const dispatch = useDispatch();
+
+  /**
+   *
+   * Updates the map view based on the location of the favourite. 
+   * Also sets the indicator that an existing location has been selected
+   * @name onSelectFavourite 
+   * @function
+   */
+  function onSelectFavourite(){
+    dispatch(setLatlng({
+      latitude: JSON.parse(props.favourite[1])[0],
+      longitude: JSON.parse(props.favourite[1])[1],
+    }));
+    dispatch(setSpecificLocation({
+      latlng: {
+        latitude: JSON.parse(props.favourite[1])[0],
+        longitude: JSON.parse(props.favourite[1])[1],
+      },
+      title: props.favourite[0],
+    }));
+    dispatch(setSelectedFavourite(props.favourite)); 
+    props.changeIfNew(false);
+}
+
+  return (
+      &lt;View style={styles.container}>
+        &lt;TouchableOpacity style = {styles.touchable}
+        onPress = {onSelectFavourite}>
+          &lt;View style={styles.markerContainer}>
+            &lt;Image
+              style={styles.marker}
+              source={require('../images/heart.png')}
+            />
+          &lt;/View>
+          &lt;View style={styles.infoContainer}>
+            &lt;Text style={styles.name}>{props.favourite[0]}&lt;/Text>
+          &lt;/View>
+          &lt;/TouchableOpacity>
+          &lt;TouchableOpacity style={styles.button}
+          onPress={() => {
+            //Update map view and show modal 
+            onSelectFavourite();
+            props.changeModalVisible(true);
+          }}>
+              &lt;Image
+                  style={styles.marker}
+                  source={require('../images/edit.png')}
+              />
+        &lt;/TouchableOpacity>
+      &lt;/View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: "space-between",
+    paddingLeft: 20,
+    paddingRight: 35,
+  },
+  markerContainer: {
+    paddingTop: 5,
+    flexDirection: 'column',
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+  },
+  touchable : {
+    flexDirection:"row",
+    width: "100%",
+  },
+  marker: {
+    width: 20,
+    height: 20,
+    marginVertical: 5,
+    borderWidth: 1,
+  },
+  infoContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginLeft: 15,
+    marginVertical: 8,
+  },
+  name: {
+    fontSize: 15,
+    color: '#494949',
+  },
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataManager.html">DataManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addFavourite">addFavourite</a></li><li><a href="global.html#backFromDetailedView">backFromDetailedView</a></li><li><a href="global.html#calculateDistance">calculateDistance</a></li><li><a href="global.html#deg2rad">deg2rad</a></li><li><a href="global.html#filterCarparksJSON">filterCarparksJSON</a></li><li><a href="global.html#getAvailableNum">getAvailableNum</a></li><li><a href="global.html#getCarparks">getCarparks</a></li><li><a href="global.html#getDistanceFromLatLonInM">getDistanceFromLatLonInM</a></li><li><a href="global.html#getLocation">getLocation</a></li><li><a href="global.html#goToDetailedView">goToDetailedView</a></li><li><a href="global.html#leftCloseModal">leftCloseModal</a></li><li><a href="global.html#loadAllFavourites">loadAllFavourites</a></li><li><a href="global.html#onSelectFavourite">onSelectFavourite</a></li><li><a href="global.html#onSelectResult">onSelectResult</a></li><li><a href="global.html#onSubmitSearch">onSubmitSearch</a></li><li><a href="global.html#openMap">openMap</a></li><li><a href="global.html#removeFavourite">removeFavourite</a></li><li><a href="global.html#rightCloseModal">rightCloseModal</a></li><li><a href="global.html#sortCarparks">sortCarparks</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Apr 09 2021 16:36:45 GMT+0800 (Singapore Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
