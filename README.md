@@ -1,27 +1,15 @@
-# Temporary readme for troubleshooting
+# Introduction
+CarGoWhere is a mobile application for finding car parks in Singapore, developed using React Native.
 
-## Important Files/Folders
-- App.js: "main" file
-- BottomDisplay.js: as the name suggests
-- screens folder: where the 4 different screens are located. 
-- images folder: as the name suggests
+Features:
+- Find car parks near your current location 
+- Search for a location and find car parks near the location
+- Lists availability information for each car park, where available
+- Displays other information, such as pricing, for each car park
+- Redirect to Google Maps for navigation
+- Saving a location for quick access 
 
-## Set up React Native environment
-https://reactnative.dev/docs/environment-setup
-
-## After cloning the repo
-Run <code>npm install</code>. This might take a few minutes.
-
-## If you encounter a problem with 'cache' in the error message, it's most probably due to spaces in your user account (and hence file path)
-https://stackoverflow.com/questions/57747895/npm-err-code-enolocal-npm-err-could-not-install-from-ibrahi-appdata-roaming-n/66015070#66015070
-
-## If you encounter gradle issues (should not happen anymore)
-https://stackoverflow.com/a/63766111/14092223
-
-## Other troubleshooting 
-### Installing maps (should not need to install again for this project)
-https://github.com/react-native-maps/react-native-maps/blob/master/docs/installation.md
-
-## @react-native-community/geolocation
-Used to get current device location.
-[Installation details](https://github.com/react-native-geolocation/react-native-geolocation)
+# How to Use
+1. This project requires the [React Native environment](https://reactnative.dev/docs/environment-setup).
+2. After installing, run <code>npm install</code>.
+3. Run <code>npx react-native run-android</code> to run the application in developer mode.
