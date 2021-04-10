@@ -77,10 +77,8 @@ export default function NearbyScreen(props) {
   const transformXValue = React.useRef(new Animated.Value(0)).current;
   const [selectedCarpark, setSelectedCarpark] = useState(null);
 
-  const carparks = useSelector((state) => state.carparks.carparksData);
   const maxCarparks = useSelector((state) => state.maxCarparks.limit);
   const sortCriteria = useSelector((state) => state.sortCriteria.criteria);
-  const specificLocation = useSelector((state) => state.specificLocation);
 
   const dispatch = useDispatch();
 

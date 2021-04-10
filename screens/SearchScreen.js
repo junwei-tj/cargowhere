@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
 import axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setLatlng } from '../redux/regionSlice';
 import { setSpecificLocation } from '../redux/specificLocationSlice';
 import {setAlert, setMessage} from '../redux/alertSlice';
