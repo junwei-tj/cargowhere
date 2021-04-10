@@ -3,6 +3,10 @@ import {Text, ImageBackground} from 'react-native';
 import {Marker} from 'react-native-maps';
 import { useSelector } from 'react-redux';
 
+/**
+ * @module CarparkMarker
+ * */
+
 const styles = {
   marker: {
     width: 44,

@@ -13,6 +13,10 @@ import {
 import DataManager from '../managers/DataManager';
 import {useSelector} from 'react-redux';
 
+/**
+ * @module DetailedView
+ * */
+
 const styles = StyleSheet.create({
   rootView: {
     flex: 1,
@@ -115,6 +119,14 @@ export default function DetailedView(props) {
     }
   }, [props.selectedCarpark]);
 
+
+  
+  /**
+   * Opens Google Maps for navigation to the selected carpark.
+   * Google Maps will be preloaded with the coordinates of the selected carpark.
+   * @name openMap 
+   * @function
+   */
   function openMap() {
     const scheme = Platform.select({
       ios: 'maps:0,0?q=',
