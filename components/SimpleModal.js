@@ -34,6 +34,7 @@ export default function SimpleModal(props) {
    */
   const leftCloseModal = (bool, data) => {
     console.log(props.newlyCreated);
+    //Removes selected favourite only if an existing favourite has been selected
     props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
     props.changeModalVisible(bool);
   }
@@ -47,6 +48,7 @@ export default function SimpleModal(props) {
    */
   const rightCloseModal = (bool, data) => {
     props.changeModalVisible(bool); 
+    //Removes selected favourite only if an existing favourite has been selected
     props.newlyCreated === true ? null : props.removeFavourite(selectedFavourite.selected[0]);
     props.addFavourite(name, [specificLocation.latlng.latitude, specificLocation.latlng.longitude])
   }

@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> managers/CarparksManager.js</title>
+  <title> screens/NoInternetScreen.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -76,7 +76,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>managers/CarparksManager.js</h1>
+                    <h1>screens/NoInternetScreen.js</h1>
                 </header>
                 
 
@@ -85,106 +85,58 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { SORT_BY_AVAILABILITY } from '../constants/sortCriteriaConstants';
-import {getDistanceFromLatLonInM} from '../components/Carpark';
-import carparkData from './DataManager';
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native'
 
 /**
- * @module CarparksManager
- * */
-
-/**
- * Manager class for handling the retrieving and filtering of carparks for displaying.
+ * @module NoInternetScreen
  */
 
-
-/**
- * Function to retrieve carparks within the viewable map region.
- * @param {region} region the current region data of the map
- */
-function getCarparks(region) {
-  let bottomLeftLat = region.latitude - region.latitudeDelta / 2;
-  let bottomLeftLongitude = region.longitude - region.longitudeDelta / 2;
-  let topRightLat = region.latitude + region.latitudeDelta / 2;
-  let topRightLongitude = region.longitude + region.longitudeDelta / 2;
-
-  return carparkData.retrieveInLongLat(
-    bottomLeftLongitude,
-    bottomLeftLat,
-    topRightLongitude,
-    topRightLat,
-  );
+const NoInternetScreen = () => {
+  return (
+      &lt;View style={styles.container}>
+          &lt;Image source={require('../images/car.png')}/>
+          &lt;Text style={styles.text}>CarGoWhere&lt;/Text>
+          &lt;Text style={styles.title}>Unable to connect to the Internet.&lt;/Text>
+          &lt;Text style={styles.body}>Please connect to the Internet and restart the app.&lt;/Text>
+      &lt;/View>
+  )
 }
 
-/**
- * Function to filter the retrieved carparks to only include the desired fields.
- * Current fields kept are: latitude and longitude (combined to latlng), title, availableLots_car
- * @param {Array} carparkList
- * @param {region} pointOfReference coordinates (in latitude and longitude) of the point distance is to be calculated from
- */
-function filterCarparksJSON(carparkList, pointOfReference) {
-  let carparkObjs = [];
-  if (pointOfReference === undefined) {
-    throw 'Unable to sort by distance when pointOfReference is not provided';
+const styles = StyleSheet.create({
+  container: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+      width: '100%',
+      backgroundColor: '#eee',
+  },
+  text: {
+      paddingBottom: 8,
+      textAlign: 'center',
+      fontWeight: 'bold',
+      fontSize: 24,
+      color: '#333',
+  },
+  title: {
+      marginTop: 10,
+      textAlign: 'center',
+      fontWeight: 'bold',
+      fontSize: 20,
+      color: '#333',
+  }, 
+  body: {
+      marginTop: 10,
+      textAlign: 'center',
+      fontSize: 14,
+      color: '#333',
   }
-  carparkList.forEach((obj) => {
-    if (!carparkObjs.some((item) => item.title == obj.name)) {
-      // filter out duplicates
-      let carpark = {
-        identifier: obj.identifier,
-        latlng: {
-          latitude: obj.latitude,
-          longitude: obj.longitude,
-        },
-        title: obj.name,
-        availableLots_car: obj.availableLots_car,
-        distance: getDistanceFromLatLonInM(
-          pointOfReference.latitude,
-          pointOfReference.longitude,
-          obj.latitude,
-          obj.longitude,
-        ),
-      };
-      carparkObjs.push(carpark);
-    }
-  });
+})
 
-  return carparkObjs;
-}
+export default NoInternetScreen;
 
-/**
- * Function to handle sorting of carparks. Sorting can only be done based on distance and availability
- * @param {Array} carparks
- * @param {Array} availability
- * @param {string} sortCriteria accepts constants from ./constants/sortCriteriaConstants
- */
-function sortCarparks(carparks, availability, sortCriteria) {
-  switch (sortCriteria) {
-    case SORT_BY_AVAILABILITY:
-      // sort by availability
-      carparks.sort((a, b) => {
-        if (availability[b.identifier] &amp;&amp; availability[a.identifier]) {
-          return (
-            availability[b.identifier].availableLots_car -
-            availability[a.identifier].availableLots_car
-          );
-        } else if (availability[b.identifier]) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      break;
-    default:
-      // sort carparks by distance, in ascending order
-      carparks.sort((a, b) => {
-        return a.distance - b.distance;
-      });
-  }
-  return carparks;
-}
 
-export { getCarparks, filterCarparksJSON, sortCarparks };</code></pre>
+</code></pre>
         </article>
     </section>
 

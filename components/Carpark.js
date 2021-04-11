@@ -48,7 +48,6 @@ export function getDistanceFromLatLonInM(lat1, lon1, lat2, lon2) {
   return d;
 }
 
-
 /**
    *
    * Convert values in degree to radian. Helper function to convert values in degree to radian
