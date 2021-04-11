@@ -9,7 +9,6 @@ import {
   Text,
   FlatList,
   Animated,
-  Alert
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
 import axios from 'axios';
@@ -110,9 +109,6 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     fontWeight: "bold",
   },
-  overlay:{
-    //flex:1
-  },
 });
 
 
@@ -184,8 +180,6 @@ export default function SearchScreen(props) {
    * @param {object} location - Object that contains information e.g coordinates, address etc. of the location
    */
   function onSelectResult(location){
-      console.log(location.position);
-      console.log(location.address);
       // update map view
       dispatch(setLatlng({
         latitude: location.position.lat,
@@ -204,6 +198,7 @@ export default function SearchScreen(props) {
   return (
       <View style={styles.searchContainer}>
           <View style={styles.searchField}>
+              {/*Search Bar*/}
               <TextInput
                 editable
                 style={styles.inputStyle}
@@ -225,9 +220,11 @@ export default function SearchScreen(props) {
                 />
               </Pressable>
           </View>
-          <View style = {styles.overlay}>
+          <View style>
+            {/*Search Results Overlay*/}
              <Overlay isVisible={visible} overlayStyle = {styles.resultsContainer}>
                <Animated.View style={styles.searchOverlay}>
+                 {/*Overlay Header*/}
                  <View style={styles.header}>
                    <Text style={styles.headerText}>Search Results</Text>
                    <Pressable
@@ -239,16 +236,16 @@ export default function SearchScreen(props) {
                      />
                    </Pressable>
                  </View>
+                 {/*Search Results list*/}
                  <FlatList
                      data={results}
                      keyExtractor={(item, index) => index.toString()}
                      renderItem={({item, index}) => {
-                       console.log(item);
+                       // Only locations of type "POI" have names, for the rest, we use address
                        if(item.type === "POI") {
                          if (itemNames.indexOf(item.poi.name) === -1 || addresses.indexOf(item.address.freeformAddress) === -1) {
                            itemNames.push(item.poi.name);
                            addresses.push(item.address.freeformAddress)
-                           console.log(itemNames);
                            return (
                                <Pressable onPress={() => {
                                  onSelectResult(item);
