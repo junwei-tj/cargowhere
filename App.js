@@ -135,8 +135,6 @@ export default function App() {
    */
   const checkNetworkConnected = () => {
     NetInfo.fetch().then(state => {
-      console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
       setIsConnected(state.isConnected);
     });
   };
@@ -175,7 +173,6 @@ export default function App() {
     carparkData.updateCarparkStaticData();
     setTimeout(() => {
       setIsLoading(false);
-      console.log('Unmounting loading screen..');
     }, 2500);
   }, []);
 

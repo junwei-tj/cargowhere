@@ -7,9 +7,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import Carpark from '../components/Carpark';
 import DetailedView from './DetailedView';
-import {MAX_CARPARKS_TO_DISPLAY} from '../constants/carparkConstants';
 
 import {useSelector, useDispatch} from 'react-redux';
 import {setSortCriteria} from '../redux/sortCriteriaSlice';
@@ -28,8 +26,6 @@ import CarparkContainer from '../components/Carpark';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
   header: {
     borderBottomWidth: 1,
@@ -37,12 +33,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#eee',
   },
-  // sortBy: {
-  //   fontSize: 20,
-  //   paddingTop: 10,
-  //   textAlign: 'right',
-  //   flex: 1,
-  // },
   headerText: {
     fontSize: 15,
     paddingTop: 14,

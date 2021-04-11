@@ -133,7 +133,6 @@ export default function DetailedView(props) {
       android: 'geo:0,0?q=',
     });
     const latlng = `${cp.latitude},${cp.longitude}`;
-    console.log(`Open map with lat: ${latlng}.`);
     const url = Platform.select({
       ios: `${scheme}@${latlng}`,
       android: `${scheme}@${latlng}`,
